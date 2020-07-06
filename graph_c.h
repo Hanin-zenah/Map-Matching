@@ -20,8 +20,11 @@ struct node {
 };
 
 struct edge {
-    struct node src;
-    struct node target;
+    struct node* src;
+    struct node* target;
+    int srcid;
+    int trgtid;
+
     double cost;
 };
 

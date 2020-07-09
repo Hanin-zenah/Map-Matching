@@ -3,7 +3,6 @@
 #include <cmath>
 #include <math.h>
 #include "graph.h"
-// #include "Bounding_box.cpp"
 
 using namespace std;
 
@@ -31,15 +30,11 @@ public:
 }; 
 
 class euc_distance{
-private: double lat_1, lat_2,lon_1, lon_2, x_scale, y_scale, lon_min ;
+private: double lat_1, lat_2,lon_1, lon_2, x_scale, y_scale, lon_min , lat_min;
 
 public:
 
 double degree_to_radian(double a) {return a*M_PI/180.0;};
-
-double trans_range (double x){
-    return (1.0 + (x / M_PI))*0.5;
-}
 
 double lat_mercator_proj (double lat) {
     double lat_r=degree_to_radian(lat);
@@ -47,12 +42,12 @@ double lat_mercator_proj (double lat) {
     return y;
 }
 
-double euc_dist (double lat1,double lon1, double lat2,double lon2, double x_scale,double y_scale, double lon_min) {
+double euc_dist (double lat1,double lon1, double lat2,double lon2, double x_scale,double y_scale, double lon_min, double lat_min) {
     double x1= degree_to_radian(lon1-lon_min);
     double x2= degree_to_radian(lon2-lon_min);
 
-    double y1= lat_mercator_proj(lat1);
-    double y2= lat_mercator_proj(lat2);
+    double y1= lat_mercator_proj(lat1 - lat_min);
+    double y2= lat_mercator_proj(lat2 - lat_min);
 
     double dist= sqrt(pow((x2-x1)*x_scale,2.0)+pow((y2-y1)*y_scale,2.0));
     return dist;
@@ -80,19 +75,19 @@ int main(){
     euc_distance ed;
     double e_dist,e_dist1,e_dist2,e_dist3;
 
-    e_dist1=ed.euc_dist(lat_min,lon_min,lat_max,lon_min,lon_min, 1, 1);
-    e_dist2=ed.euc_dist(lat_min,lon_max,lat_min,lon_min,lon_min, 1, 1);
-    e_dist3=ed.euc_dist(lat_max,lon_max,lat_max,lon_min,lon_min, 1, 1);
+    e_dist1=ed.euc_dist(lat_min,lon_min,lat_max,lon_min, 1, 1,lon_min,lat_min);
+    e_dist2=ed.euc_dist(lat_min,lon_max,lat_min,lon_min, 1, 1,lon_min,lat_min);
+    e_dist3=ed.euc_dist(lat_max,lon_max,lat_max,lon_min, 1, 1,lon_min,lat_min);
 
     double lat_1, lat_2,lon_1, lon_2, x_scale,y_scale;
     
     cin>>lat_1>>lon_1>>lat_2>>lon_2;
 
-    x_scale=(g_dist2+g_dist3)*0.5/e_dist1;
+    x_scale=(g_dist2+g_dist3)*0.5/e_dist2;
     y_scale=g_dist1/e_dist1;
 
-    e_dist=ed.euc_dist(lat_1, lon_1, lat_2, lon_2, lon_min,x_scale,y_scale);
-    cout<<g_dist1<<endl<<e_dist1<<endl<<e_dist;
+    e_dist=ed.euc_dist(lat_1, lon_1, lat_2, lon_2, x_scale,y_scale,lon_min,lat_min);
+    //cout<<g_dist2<<endl<<e_dist2<<endl<<e_dist;
 
-    return 0;
+    return e_dist;
 }

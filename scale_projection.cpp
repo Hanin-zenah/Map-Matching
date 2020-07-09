@@ -62,7 +62,7 @@ double euc_dist (double lat1,double lon1, double lat2,double lon2, double x_scal
 int main(){
     double lat_min,lat_max,lon_min,lon_max;
     double g_dist1, g_dist2, g_dist3;
-    //cin>>lat_min>>lat_max>>lon_min>>lon_max;
+
     Graph graph = {
     0, 0, INT_MAX, INT_MIN, INT_MAX, INT_MIN
     };
@@ -77,21 +77,22 @@ int main(){
     g_dist2=bd.geodesic_dist(lat_min,lon_max,lat_min,lon_min);
     g_dist3=bd.geodesic_dist(lat_max,lon_max,lat_max,lon_min);
 
-    double lat_1, lat_2,lon_1, lon_2, x_scale,y_scale;
-    double e_dist,e_dist1,e_dist2,e_dist3;
-
-    cin>>lat_1>>lat_2>>lon_1>>lon_2;
-    x_scale=(g_dist2+g_dist3)*0.5/e_dist1;
-    y_scale=g_dist1/e_dist1;
-
     euc_distance ed;
+    double e_dist,e_dist1,e_dist2,e_dist3;
 
     e_dist1=ed.euc_dist(lat_min,lon_min,lat_max,lon_min,lon_min, 1, 1);
     e_dist2=ed.euc_dist(lat_min,lon_max,lat_min,lon_min,lon_min, 1, 1);
     e_dist3=ed.euc_dist(lat_max,lon_max,lat_max,lon_min,lon_min, 1, 1);
 
-    e_dist=ed.euc_dist(lat_1, lat_2,lon_1, lon_2, lon_min,x_scale,y_scale);
-    cout<<e_dist;
+    double lat_1, lat_2,lon_1, lon_2, x_scale,y_scale;
+    
+    cin>>lat_1>>lon_1>>lat_2>>lon_2;
+
+    x_scale=(g_dist2+g_dist3)*0.5/e_dist1;
+    y_scale=g_dist1/e_dist1;
+
+    e_dist=ed.euc_dist(lat_1, lon_1, lat_2, lon_2, lon_min,x_scale,y_scale);
+    cout<<g_dist1<<endl<<e_dist1<<endl<<e_dist;
 
     return 0;
 }

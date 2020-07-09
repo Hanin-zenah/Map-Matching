@@ -92,6 +92,7 @@ bool compare_indegree(struct edge edge1, struct edge edge2) {
     return edge1.trgtid < edge2.trgtid;
 }
 
+<<<<<<< HEAD
 void outdeg_offset_array(Graph* graph) {
 
     vector<struct edge> out_edges = graph -> edges;
@@ -142,9 +143,13 @@ void indeg_offset_array(Graph* graph) {
     for(int j = 0; j < to_add; j++) {
         offset.push_back(i);
     }
+=======
+// void* get_offset_arrays(Graph* graph) {
+>>>>>>> b31be5d6da2e511274283c771bfd0040675b8712
 
-}
+// }
 
+<<<<<<< HEAD
 int main() {
     Graph graph = {
         0, 0, INT_MAX, INT_MIN, INT_MAX, INT_MIN
@@ -154,3 +159,14 @@ int main() {
     outdeg_offset_array(&graph);
     return 0;
 }
+=======
+// int main() {
+    // Graph graph = {
+        // 0, 0, INT_MAX, INT_MIN, INT_MAX, INT_MIN
+    // };
+    // read_file("saarland-200601.car.txt", &graph);
+    // cout.precision(18);
+    // cout << "Max lat: " << graph.max_lat << "\nMin lat: " << graph.min_lat << "\nMax long: " << graph.max_long << "\nMin long: " << graph.min_long << endl;
+    // return 0;
+// }
+>>>>>>> b31be5d6da2e511274283c771bfd0040675b8712

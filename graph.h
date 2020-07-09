@@ -9,8 +9,6 @@
 
 using namespace std;
 
-
-
 #define PI (3.14159265358979323846)
 #define MAX_BUFF (100)
 #define IGNORE_LINES (5)
@@ -23,14 +21,9 @@ struct node {
 };
 
 struct edge {
-    // struct node* src;
-    // struct node* target;
-
     int srcid;
     int trgtid;
-
     int id;
-
     double cost;
 };
 
@@ -56,7 +49,7 @@ struct offset_array {
 
 
 void check_boundaries(double latitude, double longitude, Graph* g);
-Graph* read_file(string file_name);
+void read_file(string file_name, Graph* graph);
 
 
 #endif

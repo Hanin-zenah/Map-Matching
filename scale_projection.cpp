@@ -67,7 +67,7 @@ int main(){
     lon_min = graph.min_long;
     lon_max = graph.max_long;
 
-    Bounds bd;
+    Bounds bd; // pulling the data from txt file and generates the bounding pts geodesic distances, for the 3 bounding egdes
     g_dist1=bd.geodesic_dist(lat_min,lon_min,lat_max,lon_min);
     g_dist2=bd.geodesic_dist(lat_min,lon_max,lat_min,lon_min);
     g_dist3=bd.geodesic_dist(lat_max,lon_max,lat_max,lon_min);
@@ -75,15 +75,15 @@ int main(){
     euc_distance ed;
     double e_dist,e_dist1,e_dist2,e_dist3;
 
-    e_dist1=ed.euc_dist(lat_min,lon_min,lat_max,lon_min, 1, 1,lon_min,lat_min);
+    e_dist1=ed.euc_dist(lat_min,lon_min,lat_max,lon_min, 1, 1,lon_min,lat_min); //the original Euclidean distance of the 2 pts after the projection, without scaling
     e_dist2=ed.euc_dist(lat_min,lon_max,lat_min,lon_min, 1, 1,lon_min,lat_min);
     e_dist3=ed.euc_dist(lat_max,lon_max,lat_max,lon_min, 1, 1,lon_min,lat_min);
 
     double lat_1, lat_2,lon_1, lon_2, x_scale,y_scale;
     
-    cin>>lat_1>>lon_1>>lat_2>>lon_2;
+    cin>>lat_1>>lon_1>>lat_2>>lon_2; 
 
-    x_scale=(g_dist2+g_dist3)*0.5/e_dist2;
+    x_scale=(g_dist2+g_dist3)*0.5/e_dist2; //calculating the scale
     y_scale=g_dist1/e_dist1;
 
     e_dist=ed.euc_dist(lat_1, lon_1, lat_2, lon_2, x_scale,y_scale,lon_min,lat_min);

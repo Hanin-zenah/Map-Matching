@@ -19,6 +19,7 @@ struct node {
     uint64_t osmid;
     double longitude;
     double lat;
+    int id;
 };
 
 struct edge {

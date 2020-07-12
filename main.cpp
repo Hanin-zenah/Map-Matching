@@ -28,18 +28,19 @@ int main(int argc, char** argv) {
     Euc_distance ed;
     double e_dist, e_dist1, e_dist2, e_dist3;
 
-    e_dist1 = ed.euc_dist(lat_min,lon_min,lat_max,lon_min,lon_min, 1, 1);
-    e_dist2 = ed.euc_dist(lat_min,lon_max,lat_min,lon_min,lon_min, 1, 1);
-    e_dist3 = ed.euc_dist(lat_max,lon_max,lat_max,lon_min,lon_min, 1, 1);
+    //calculate the "pixel" euclidean distance between the bounding points 
+    e_dist1 = ed.euc_dist(lat_min,lon_min,lat_max,lon_min, 1, 1,lon_min,lat_min);
+    e_dist2 = ed.euc_dist(lat_min,lon_max,lat_min,lon_min, 1, 1,lon_min,lat_min);
+    e_dist3 = ed.euc_dist(lat_max,lon_max,lat_max,lon_min, 1, 1,lon_min,lat_min);
 
     double lat_1, lat_2, lon_1, lon_2, x_scale, y_scale;
     cin >> lat_1 >> lon_1 >> lat_2 >> lon_2;
 
-    x_scale = (g_dist2+g_dist3)*0.5/e_dist1;
+    x_scale = (g_dist2+g_dist3)*0.5/e_dist2; // e_dist2=_e_dist3 doesn't matter which one we use
     y_scale = g_dist1/e_dist1;
 
-    e_dist = ed.euc_dist(lat_1, lon_1, lat_2, lon_2, lon_min,x_scale,y_scale);
-    cout << g_dist1 << endl << e_dist1 << endl << e_dist;
+    e_dist = ed.euc_dist(lat_1, lon_1, lat_2, lon_2, x_scale, y_scale,lon_min,lat_min);
+    cout << e_dist;
 
     //get edges costs
 

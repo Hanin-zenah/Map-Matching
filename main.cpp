@@ -32,13 +32,15 @@ int main(int argc, char** argv) {
     e_dist2 = ed.euc_dist(lat_min,lon_max,lat_min,lon_min,lon_min, 1, 1);
     e_dist3 = ed.euc_dist(lat_max,lon_max,lat_max,lon_min,lon_min, 1, 1);
 
+    //calculates the cost of the edges 
     double lat_1, lat_2, lon_1, lon_2, x_scale, y_scale;
     cin >> lat_1 >> lon_1 >> lat_2 >> lon_2;
 
     x_scale = (g_dist2+g_dist3)*0.5/e_dist1;
     y_scale = g_dist1/e_dist1;
 
-    e_dist = ed.euc_dist(lat_1, lon_1, lat_2, lon_2, lon_min,x_scale,y_scale);
+    //returns the costs
+    e_dist = ed.euc_dist(lat_1, lon_1, lat_2, lon_2, lon_min, x_scale, y_scale);
     cout << g_dist1 << endl << e_dist1 << endl << e_dist;
 
     //get edges costs

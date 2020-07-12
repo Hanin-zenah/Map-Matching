@@ -78,7 +78,7 @@ bool compare_indegree(struct edge edge1, struct edge edge2) {
     return edge1.trgtid < edge2.trgtid;
 }
 
-void outdeg_offset_array(Graph* graph, char* file_name) {
+void outdeg_offset_array(Graph* graph, string file_name) {
     vector<struct edge> out_edges = graph -> edges;
     sort(out_edges.begin(), out_edges.end(), compare_outdegree);
     vector<int> offset{0};
@@ -118,7 +118,7 @@ void outdeg_offset_array(Graph* graph, char* file_name) {
     outdeg_file.close();
 }
 
-void indeg_offset_array(Graph* graph, char* file_name) {
+void indeg_offset_array(Graph* graph, string file_name) {
     vector<struct edge> in_edges = graph -> edges;
     sort(in_edges.begin(), in_edges.end(), compare_indegree);
     vector<int> offset{0};

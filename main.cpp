@@ -5,7 +5,7 @@
 int main(int argc, char** argv) {
 
     if(argc < 2) {
-        cerr << "Not enough arguments; please provide a file name to read\n";
+        cerr << "Not enough arguments; please provide a file name next to the program name to be read\n\nExample: ./a.out saarland.txt\n";
         return 1;
     }
 
@@ -28,26 +28,28 @@ int main(int argc, char** argv) {
     Euc_distance ed;
     double e_dist, e_dist1, e_dist2, e_dist3;
 
-    e_dist1 = ed.euc_dist(lat_min,lon_min,lat_max,lon_min,lon_min, 1, 1);
-    e_dist2 = ed.euc_dist(lat_min,lon_max,lat_min,lon_min,lon_min, 1, 1);
-    e_dist3 = ed.euc_dist(lat_max,lon_max,lat_max,lon_min,lon_min, 1, 1);
+    //calculate the "pixel" euclidean distance between the bounding points 
+    e_dist1 = ed.euc_dist(lat_min,lon_min,lat_max,lon_min, 1, 1,lon_min,lat_min);
+    e_dist2 = ed.euc_dist(lat_min,lon_max,lat_min,lon_min, 1, 1,lon_min,lat_min);
+    e_dist3 = ed.euc_dist(lat_max,lon_max,lat_max,lon_min, 1, 1,lon_min,lat_min);
 
     //calculates the cost of the edges 
-    double lat_1, lat_2, lon_1, lon_2, x_scale, y_scale;
-    cin >> lat_1 >> lon_1 >> lat_2 >> lon_2;
-
-    x_scale = (g_dist2+g_dist3)*0.5/e_dist1;
-    y_scale = g_dist1/e_dist1;
-
-    //returns the costs
-    e_dist = ed.euc_dist(lat_1, lon_1, lat_2, lon_2, lon_min, x_scale, y_scale);
-    cout << g_dist1 << endl << e_dist1 << endl << e_dist;
-
-    //get edges costs
-
+    double x_scale = (g_dist2+g_dist3)*0.5/e_dist2; // e_dist2=_e_dist3 doesn't matter which one we use
+    double y_scale = g_dist1/e_dist1;
+    ed.calc_edge_cost(&graph, x_scale, y_scale);
 
     //offset array
+    string file_name;
+    string file_name1;
 
+    cout << "Please provide file name to store the outdegree offset array in: ";
+    cin >> file_name;
+
+    cout << "\nPlease provide another file name to store the indegree offset array in: ";
+    cin >> file_name1;
+
+    outdeg_offset_array(&graph, file_name);
+    indeg_offset_array(&graph, file_name1);
 
     //strongly connectedd componetns
 

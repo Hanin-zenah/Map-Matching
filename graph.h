@@ -9,7 +9,6 @@
 
 using namespace std;
 
-// #define PI (3.14159265358979323846)
 #define MAX_BUFF (100)
 #define IGNORE_LINES (5)
 #define GRAPH_INIT {0, 0, INT_MAX, INT_MIN, INT_MAX, INT_MIN};
@@ -50,7 +49,6 @@ typedef struct graph {
 //     vector<int> edges;
 // };
 
-
 /* checks and updates the graph's bounding box corners accordingly */
 void check_boundaries(double latitude, double longitude, Graph* g);
 
@@ -64,13 +62,12 @@ bool compare_outdegree(struct edge edge1, struct edge edge2);
 bool compare_indegree(struct edge edge1, struct edge edge2);
 
 /* generates the out degree offset array and stores it in given file (file_name) */
-void outdeg_offset_array(Graph* graph, char* file_name);
+void outdeg_offset_array(Graph* graph, string file_name);
 
 /* generates the in degree offset array and stores it in given file (file_name) */
-void indeg_offset_array(Graph* graph, char* file_name);
+void indeg_offset_array(Graph* graph, string file_name);
 
 /* extracts the strongly connected components of the graph and ... */
 void str_cnctd_cmpnt(Graph* graph);
-
 
 #endif

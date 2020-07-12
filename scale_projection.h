@@ -35,7 +35,9 @@ class Euc_distance {
 
         double euc_dist (double lat1, double lon1, double lat2, double lon2, 
                             double x_scale, double y_scale, double lon_min, double lat_min);
+
+        void calc_edge_cost(Graph* graph, double x_scale, double y_scale);
+
 };
 
 #endif
-

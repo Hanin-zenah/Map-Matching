@@ -40,3 +40,15 @@ double Euc_distance::euc_dist(double lat1, double lon1, double lat2, double lon2
     double dist = sqrt(pow((x2-x1)*x_scale,2.0)+pow((y2-y1)*y_scale,2.0));
     return dist;
 }
+
+void Euc_distance::calc_edge_cost(Graph* graph, double x_scale, double y_scale) {
+    //calculate the cost for every edge in the graph
+    for(int i = 0; i < graph -> n_edges; i++) {
+        struct node src;
+        struct node trgt;
+        src = graph -> nodes[graph -> edges[i].srcid];
+        trgt = graph -> nodes[graph -> edges[i].trgtid];
+        graph -> edges[i].cost = euc_dist(src.lat, src.longitude, trgt.lat, trgt.longitude,
+                                            x_scale, y_scale, graph -> min_long, graph -> min_lat);
+    }
+}

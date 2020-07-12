@@ -16,7 +16,7 @@ class Bounds {
         Bounds() {
             earth_r = 6378000;
         }
-        
+
         double degree_to_radian(double a); 
 
         double geodesic_dist(double lat1,double lon1, double lat2,double lon2);
@@ -34,7 +34,7 @@ class Euc_distance {
         double lat_mercator_proj (double lat);
 
         double euc_dist (double lat1, double lon1, double lat2, double lon2, 
-                            double x_scale, double y_scale, double lon_min);
+                            double x_scale, double y_scale, double lon_min, double lat_min);
 };
 
 #endif

@@ -29,14 +29,14 @@ double Euc_distance::lat_mercator_proj(double lat) {
 }
 
 double Euc_distance::euc_dist(double lat1, double lon1, double lat2, double lon2, 
-                                double x_scale, double y_scale, double lon_min) {
+                                double x_scale, double y_scale, double lon_min, double lat_min) {
                                     
-    double x1= degree_to_radian(lon1-lon_min);
-    double x2= degree_to_radian(lon2-lon_min);
+    double x1 = degree_to_radian(lon1-lon_min);
+    double x2 = degree_to_radian(lon2-lon_min);
 
-    double y1= lat_mercator_proj(lat1);
-    double y2= lat_mercator_proj(lat2);
+    double y1 = lat_mercator_proj(lat1 - lat_min);
+    double y2 = lat_mercator_proj(lat2 - lat_min);
 
-    double dist= sqrt(pow((x2-x1)*x_scale,2.0)+pow((y2-y1)*y_scale,2.0));
+    double dist = sqrt(pow((x2-x1)*x_scale,2.0)+pow((y2-y1)*y_scale,2.0));
     return dist;
 }

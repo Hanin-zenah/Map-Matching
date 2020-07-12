@@ -63,7 +63,7 @@ void read_file(string file_name, Graph* graph) {
     return;
 }
 
-/* compares the src ids of the edges */
+
 bool compare_outdegree(struct edge edge1, struct edge edge2) {
     if(edge1.srcid == edge2.srcid) {
         return edge1.trgtid < edge2.trgtid;
@@ -78,7 +78,7 @@ bool compare_indegree(struct edge edge1, struct edge edge2) {
     return edge1.trgtid < edge2.trgtid;
 }
 
-void outdeg_offset_array(Graph* graph) {
+void outdeg_offset_array(Graph* graph, char* file_name) {
     vector<struct edge> out_edges = graph -> edges;
     sort(out_edges.begin(), out_edges.end(), compare_outdegree);
     vector<int> offset{0};
@@ -101,9 +101,24 @@ void outdeg_offset_array(Graph* graph) {
     for(int j = 0; j < to_add; j++) {
         offset.push_back(i);
     }
+    //write to a file (binary??) the edge id (or the full info for the edge struct?) array and the offset array 
+    ofstream outdeg_file(file_name);
+
+    //write the offsets to file
+    outdeg_file << offset.size() << endl;
+    outdeg_file << out_edges.size() << endl;
+
+    for(i = 0; i < offset.size(); i++) {
+        outdeg_file << offset[i] << endl;
+    }
+    //dont forget the cost as well
+    for(i = 0; i < out_edges.size(); i++) {
+        outdeg_file << out_edges[i].id << " " << out_edges[i].srcid << " " << out_edges[i].trgtid << " " << out_edges[i].cost << endl;
+    }
+    outdeg_file.close();
 }
 
-void indeg_offset_array(Graph* graph) {
+void indeg_offset_array(Graph* graph, char* file_name) {
     vector<struct edge> in_edges = graph -> edges;
     sort(in_edges.begin(), in_edges.end(), compare_indegree);
     vector<int> offset{0};
@@ -128,14 +143,23 @@ void indeg_offset_array(Graph* graph) {
         offset.push_back(i);
     }
 
+    ofstream outdeg_file(file_name);
+
+    //write the offsets to file
+    outdeg_file << offset.size() << endl;
+    outdeg_file << in_edges.size() << endl;
+
+    for(i = 0; i < offset.size(); i++) {
+        outdeg_file << offset[i] << endl;
+    }
+    //dont forget the cost as well
+    for(i = 0; i < in_edges.size(); i++) {
+        outdeg_file << in_edges[i].id << " " << in_edges[i].srcid << " " << in_edges[i].trgtid << " " << in_edges[i].cost << endl;
+    }
+    outdeg_file.close();
+
 }
 
-// int main() {
-    // Graph graph = {
-        // 0, 0, INT_MAX, INT_MIN, INT_MAX, INT_MIN
-    // };
-    // read_file("saarland-200601.car.txt", &graph);
-    // cout.precision(18);
-    // cout << "Max lat: " << graph.max_lat << "\nMin lat: " << graph.min_lat << "\nMax long: " << graph.max_long << "\nMin long: " << graph.min_long << endl;
-    // return 0;
-// }
+void str_cnctd_cmpnt(Graph* graph) {
+
+}

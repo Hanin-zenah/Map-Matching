@@ -34,12 +34,12 @@ int main(int argc, char** argv) {
     e_dist3 = ed.euc_dist(lat_max,lon_max,lat_max,lon_min, 1, 1,lon_min,lat_min);
 
     double lat_1, lat_2, lon_1, lon_2, x_scale, y_scale;
-    cin >> lat_1 >> lon_1 >> lat_2 >> lon_2;
+    cin >> lat_1 >> lon_1 >> lat_2 >> lon_2; //change this to the 2 vertices on the edge
 
     x_scale = (g_dist2+g_dist3)*0.5/e_dist2; // e_dist2=_e_dist3 doesn't matter which one we use
     y_scale = g_dist1/e_dist1;
 
-    e_dist = ed.euc_dist(lat_1, lon_1, lat_2, lon_2, x_scale, y_scale,lon_min,lat_min);
+    e_dist = ed.euc_dist(lat_1, lon_1, lat_2, lon_2, x_scale, y_scale,lon_min,lat_min); //this returns the cost for the edge
     cout << e_dist;
 
     //get edges costs

@@ -101,7 +101,7 @@ void outdeg_offset_array(Graph* graph, string file_name) {
     for(int j = 0; j < to_add; j++) {
         offset.push_back(i);
     }
-    //write to a file (binary??) the edge id (or the full info for the edge struct?) array and the offset array 
+    //write to a file (binary??) the edge array and the offset array 
     ofstream outdeg_file(file_name);
 
     //write the offsets to file
@@ -111,11 +111,15 @@ void outdeg_offset_array(Graph* graph, string file_name) {
     for(i = 0; i < offset.size(); i++) {
         outdeg_file << offset[i] << endl;
     }
-    //dont forget the cost as well
     for(i = 0; i < out_edges.size(); i++) {
         outdeg_file << out_edges[i].id << " " << out_edges[i].srcid << " " << out_edges[i].trgtid << " " << out_edges[i].cost << endl;
     }
     outdeg_file.close();
+
+    graph -> offsets = offset;
+    for(int i = 0; i < out_edges.size(); i++) {
+        graph -> off_edges.push_back(out_edges[i].id);
+    }
 }
 
 void indeg_offset_array(Graph* graph, string file_name) {
@@ -158,8 +162,13 @@ void indeg_offset_array(Graph* graph, string file_name) {
     }
     outdeg_file.close();
 
+    // graph -> offsets = offset;
+    // for(int i = 0; i < in_edges.size(); i++) {
+    //     graph -> off_edges[i] = in_edges[i].id;
+    // }
 }
 
-void str_cnctd_cmpnt(Graph* graph) {
+void strongly_connected_components(Graph* graph) {
+
 
 }

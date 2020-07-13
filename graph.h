@@ -28,6 +28,10 @@ struct edge {
     double cost;
 };
 
+// struct offset_array {
+//     vector<int> offsets;
+//     vector<int> edges;
+// };
 
 typedef struct graph {
     int n_edges;
@@ -42,12 +46,12 @@ typedef struct graph {
     vector<struct node> nodes;
     vector<struct edge> edges;
 
+    vector<int> offsets;
+    vector<int> off_edges;
+
 } Graph;
 
-// struct offset_array {
-//     vector<int> offsets;
-//     vector<int> edges;
-// };
+
 
 /* checks and updates the graph's bounding box corners accordingly */
 void check_boundaries(double latitude, double longitude, Graph* g);

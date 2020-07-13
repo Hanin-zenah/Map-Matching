@@ -168,7 +168,38 @@ void indeg_offset_array(Graph* graph, string file_name) {
     // }
 }
 
-void strongly_connected_components(Graph* graph) {
 
+void get_incident(struct node node) {
+    //get the node id and calculate the number of neighbours
+    //offset[node+1] - offset[node]
+    //traverse the edges array from edges[offset[node]] to edges[offset[node+1]] and get the target node id and modify its parent
+    //return the vector? containg the nodes? or a vector containing the node ids then traverse the nodes vector in graph (((containing the indices of the nodes)))
+}
+
+void DFS_visit(struct node cur_node, int index, vector<bool> visited, vector<struct node> parent, Graph* graph) {
+    visited[index] = true;
+    //visit all the neighbours of cur_node (check https://thispointer.com/c-how-to-find-an-element-in-vector-and-get-its-index/#:~:text=If%20element%20is%20found%20then%20we%20can,index%20from%20the%20iterator%20i.e.&text=int%20index%20%3D%20std%3A%3Adistance,%3D%20std%3A%3Adistance(vecOfNums.) to get the index of an element in a vector)
+    // for()
+}
+
+vector<struct node> DFS(Graph* graph) {
+    //initialize visited and parent vectors for DFS
+    vector<bool> visited(graph -> n_nodes, false);
+    vector<struct node> parent(graph -> n_nodes, DEF_NODE);
+
+    for(int i = 0; i < graph -> n_nodes; i++) {
+        if(!visited[i]) {
+            DFS_visit(graph -> nodes[i], i, visited, parent, graph);
+        }
+    }
+    return parent;
+}
+
+
+void strongly_connected_components(Graph* graph) {
+    //dfs and add nodes to stack 
+    //tanspose graph 
+    //pop every node on stack and do dfs again 
+    //
 
 }

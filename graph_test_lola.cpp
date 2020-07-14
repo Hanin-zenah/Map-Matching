@@ -63,6 +63,8 @@ void read_file(string file_name, Graph* graph) {
 
         graph -> edges.push_back(e);
     }
+
+    //overwrite the node's coordinates in mercator projection
     for(int i = 0; i < graph -> n_nodes; i++) {
     graph -> nodes[i].lat=ed.lat_mercator_proj(graph -> nodes[i].lat,graph -> min_lat);
     graph -> nodes[i].longitude=ed.lon_mercator_proj(graph -> nodes[i].longitude, graph -> min_long);}

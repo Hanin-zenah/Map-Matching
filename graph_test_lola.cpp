@@ -122,7 +122,7 @@ void outdeg_offset_array(Graph* graph, string file_name) {
         outdeg_file << offset[i] << endl;
     }
     for(i = 0; i < out_edges.size(); i++) {
-        outdeg_file << out_edges[i].id << " " << out_edges[i].srcid << " " << out_edges[i].trgtid << " " << out_edges[i].cost << endl;
+        outdeg_file << out_edges[i].id << " " << out_edges[i].srcid << " " << out_edges[i].trgtid << " " <<graph -> nodes[graph -> edges[i].srcid].lat<<" " <<graph -> nodes[graph -> edges[i].srcid].longitude<<" "<< graph -> nodes[graph -> edges[i].trgtid].lat<<" " <<graph -> nodes[graph -> edges[i].trgtid].longitude<<" "<<out_edges[i].cost << endl;
     }
     outdeg_file.close();
 
@@ -168,7 +168,7 @@ void indeg_offset_array(Graph* graph, string file_name) {
     }
     //dont forget the cost as well
     for(i = 0; i < in_edges.size(); i++) {
-        outdeg_file << in_edges[i].id << " " << in_edges[i].srcid << " " << in_edges[i].trgtid << " " << in_edges[i].cost << endl;
+        outdeg_file << in_edges[i].id << " " << in_edges[i].srcid << " " << in_edges[i].trgtid << " " <<graph -> nodes[graph -> edges[i].srcid].lat<<" " <<graph -> nodes[graph -> edges[i].srcid].longitude<<" "<< graph -> nodes[graph -> edges[i].trgtid].lat<<" " <<graph -> nodes[graph -> edges[i].trgtid].longitude<<" " << in_edges[i].cost << endl;
     }
     outdeg_file.close();
 

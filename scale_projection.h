@@ -31,10 +31,11 @@ class Euc_distance {
 
         double trans_range (double x);
 
-        double lat_mercator_proj (double lat);
+        double lon_mercator_proj(double lon, double lon_min);
 
-        double euc_dist (double lat1, double lon1, double lat2, double lon2, 
-                            double x_scale, double y_scale, double lon_min, double lat_min);
+        double lat_mercator_proj (double lat, double lat_min);
+
+        double euc_dist(double y1, double x1, double y2, double x2, double x_scale, double y_scale);
 
         void calc_edge_cost(Graph* graph, double x_scale, double y_scale);
 

@@ -6,12 +6,14 @@
 #include <sstream>
 #include <string>
 #include <vector> 
+// #include "scale_projection.h"
 
 using namespace std;
 
 #define MAX_BUFF (100)
 #define IGNORE_LINES (5)
-#define GRAPH_INIT {0, 0, INT_MAX, INT_MIN, INT_MAX, INT_MIN};
+#define GRAPH_INIT {0, 0, INT_MAX, INT_MIN, INT_MAX, INT_MIN}
+#define DEF_NODE {0, 0, 0, 0}
 
 
 struct node {
@@ -28,11 +30,6 @@ struct edge {
     double cost;
 };
 
-// struct offset_array {
-//     vector<int> offsets;
-//     vector<int> edges;
-// };
-
 typedef struct graph {
     int n_edges;
     int n_nodes;
@@ -46,12 +43,16 @@ typedef struct graph {
     vector<struct node> nodes;
     vector<struct edge> edges;
 
-    vector<int> offsets;
-    vector<int> off_edges;
+    vector<int> out_offsets;
+    vector<int> out_off_edges;
+
+    vector<int> in_offsets;
+    vector<int> in_off_edges;
 
 } Graph;
 
-
+/* writes the longitude, latitude of the end points of every edge of a given graph to a given file */
+void write_graph(Graph* graph, string file_name);
 
 /* checks and updates the graph's bounding box corners accordingly */
 void check_boundaries(double latitude, double longitude, Graph* g);
@@ -60,18 +61,31 @@ void check_boundaries(double latitude, double longitude, Graph* g);
 void read_file(string file_name, Graph* graph);
 
 /* function used for sorting the edges of the graph in order of their source id */
-bool compare_outdegree(struct edge edge1, struct edge edge2);
+bool compare_outedge(struct edge edge1, struct edge edge2);
 
 /* function used for sorting the edges of the graph in order of their target id */
-bool compare_indegree(struct edge edge1, struct edge edge2);
+bool compare_inedge(struct edge edge1, struct edge edge2);
 
-/* generates the out degree offset array and stores it in given file (file_name) */
-void outdeg_offset_array(Graph* graph, string file_name);
+/* generates the out degree offset array and stores it in graph */
+void outedge_offset_array(Graph* graph);
 
-/* generates the in degree offset array and stores it in given file (file_name) */
-void indeg_offset_array(Graph* graph, string file_name);
+/* generates the in degree offset array and stores it in graph */
+void inedge_offset_array(Graph* graph);
 
-/* extracts the strongly connected components of the graph and ... */
-void str_cnctd_cmpnt(Graph* graph);
+vector<int> get_incident(Graph* graph, int node_id);
+
+void DFS_visit(int node_id, vector<bool> &visited, stack<int> &Stack, Graph* graph);
+
+stack<int> DFS(Graph* graph);
+
+/* get the incident nodes for the given node_id in the transpose graph */
+vector<int> trans_get_incident(Graph* graph, int node_id);
+
+void trans_DFS_visit(int vertex, vector<bool> &visited, Graph* graph, Graph* scc_graph);
+
+void DFS_transpose(Graph* graph, Graph* scc_graph, stack<int> Stack); 
+
+/* extracts the strongly connected components of the graph */
+void scc_graph(Graph* graph, Graph* scc_graph);
 
 #endif

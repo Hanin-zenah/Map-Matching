@@ -26,7 +26,7 @@ void read_file(string file_name, Graph* graph) {
         getline(file, buffer);
         istringstream vals(buffer);
         struct node n;
-        vals >> n.id >> n.osmid >> n.lat >> n.longitude;
+        vals >> n.id>> n.lat >> n.longitude;
         // n.lat=ed.lat_mercator_proj(n.lat);
         // n.longitude=ed.lon_mercator_proj(n.lat);
         graph -> nodes.push_back(n);

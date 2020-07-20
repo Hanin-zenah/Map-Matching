@@ -303,9 +303,9 @@ void scc_graph(Graph* graph, Graph* SCC_graph) {
     //dfs and add nodes to stack 
     stack<int> Stack = DFS(graph);
     
-    // DFS_transpose(graph, SCC_graph, Stack);
+    DFS_transpose(graph, SCC_graph, Stack);
 
-    // write_graph(SCC_graph, "SCC_graph.dat");
+    write_graph(SCC_graph, "SCC_graph.dat");
 }
 
 //store all the SCC in separate graphs (graph array) and have the option to choose one of them 

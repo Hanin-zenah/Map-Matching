@@ -6,6 +6,9 @@
 #include <sstream>
 #include <string>
 #include <vector> 
+#include <stack>
+#include <algorithm>
+
 // #include "scale_projection.h"
 
 using namespace std;
@@ -81,9 +84,13 @@ stack<int> DFS(Graph* graph);
 /* get the incident nodes for the given node_id in the transpose graph */
 vector<int> trans_get_incident(Graph* graph, int node_id);
 
-void trans_DFS_visit(int vertex, vector<bool> &visited, Graph* graph, Graph* scc_graph);
+// void trans_DFS_visit(int vertex, vector<bool> &visited, Graph* graph, Graph* scc_graph);
+void trans_DFS_visit(int node_id, vector<bool> &visited, Graph* graph);
 
-void DFS_transpose(Graph* graph, Graph* scc_graph, stack<int> Stack); 
+
+// void DFS_transpose(Graph* graph, Graph* scc_graph, stack<int> Stack); 
+void DFS_transpose(Graph* graph, Graph* SCC_graph, stack<int> Stack);
+
 
 /* extracts the strongly connected components of the graph */
 void scc_graph(Graph* graph, Graph* scc_graph);

@@ -13,11 +13,6 @@ void read_file(string file_name, Graph* graph) {
     }
 
     string buffer;
-    /* skip the first five lines */
-    // for(int i = 0; i < IGNORE_LINES; i++) {
-        // getline(file, buffer);
-    // }
-    /* read the total number of nodes and edges, store them in graph struct */
     file >> graph -> n_nodes >> graph -> n_edges;
 
     /* now read everything
@@ -44,74 +39,84 @@ void read_file(string file_name, Graph* graph) {
     // void sort_for_subsamp(Graph* graph) {
     // vector<struct edge> all_edges = graph -> edges;
     // sort(all_edges.begin(), all_edges.end(), bi_dir);
-
+    //cout << "oo" << endl;
     for (int i = 0; i < graph -> n_edges; i++) {  // can I do this fater I close the file????
-        int num_new, length_new;//how many new nodes
+        int num_new, length_new, src_id, trgt_id;//how many new nodes
         double x1, x2, y1, y2, x_incre, y_incre;
         // edge curr_edge;
         // curr_edge = graph -> edges;
         if (graph->edges[i].cost>100){
         num_new=floor(graph->edges[i].cost/100);
-        //num_new=1;
-        //length_new = graph -> edges[i].cost/num_new;
+        cout<< "long edge id: "<< graph->edges[i].id<<endl;
+        num_new=floor(graph->edges[i].cost/100);
+        length_new = graph -> edges[i].cost/(num_new+1);
+        //cout<<"number of new nodes; "<< num_new<<" new length: "<<length_new<<endl;
         x1 = graph -> nodes[graph -> edges[i].srcid+1].lat; // the node id starts with 0, so need to + 1
         y1 = graph -> nodes[graph -> edges[i].srcid+1].longitude;
+        //src_id = graph -> nodes[graph -> edges[i].srcid+1].id;
         x2 = graph -> nodes[graph -> edges[i].trgtid+1].lat;
         y2 = graph -> nodes[graph -> edges[i].trgtid+1].longitude;
+        //trgt_id = graph -> nodes[graph -> edges[i].trgtid+1].id;
         x_incre=(x2-x1)/(num_new+1);
         y_incre=(y2-y1)/(num_new+1);
+        //cout<<"source id: "<< src_id<< " target id: "<<trgt_id<<endl;
+        //cout<< "source x1: " << x1 << "target x2: "<< x2<< " x_incre: "<< x_incre <<"source y1: "<<y1<<"target y2: "<< y2<< " y_incre: "<< y_incre <<endl;
         struct node nd;
         struct edge e;
         int ori_trg; //save the original target node
         ori_trg = graph->edges[i].trgtid;
-        //if (bool bi_dir(graph->edges[i], graph->edges[i+1])){} // discovering bidirectional edges
-        //only add edges for the second direction, as we already have the nodes
-        for (int j = 0; j < num_new+1; j++){
+        for (int j = 0; j < num_new; j++){
             nd.id = graph -> n_nodes;
+            cout<<"new nd.id: "<<nd.id<<endl;
             graph -> n_nodes= graph -> n_nodes+1;
             nd.lat= x1 + (1+j)*x_incre;     
             nd.longitude = y1+ (1+j)*y_incre;
+            //cout<<"x1: "<< x1 << " x2: "<< x2<<" x_incre: " << x_incre <<" nd.lat:  "<<nd.lat<<endl;
+            cout<<"new node: "<<nd.id << " " << nd.lat<<" "<< nd.longitude <<endl;
             graph -> nodes.push_back(nd);
+            cout<<"done looping for creating new node(s)"<<endl;
+            break;
             if (j==0){
+                cout<<"change the target id"<<endl;
                 graph->edges[i].trgtid=nd.id;
                 }
             else {
+                cout<<"intermediate nodes"<<endl;
                 e.id = graph -> n_edges;
                 graph -> n_edges = graph -> n_edges+1;
                 e.trgtid  = nd.id;
-                e.srcid = graph->nodes[nd.id].id; //last created node will be the new source node graph->edges[i-1].id;
-                e.cost = 44;
+                e.srcid = graph -> n_nodes - 1; //last created node will be the new source node graph->edges[i-1].id;
+                e.cost = length_new;
                 graph -> edges.push_back(e);
+                cout<<"new edge: "<<e.id<<" "<<e.srcid<<" "<<e.trgtid<<" "<<e.cost<<endl;
 
             }}
+            //graph -> nodes.push_back(nd);
         // number of new edges = number of new nodes + 1, need to create the last edge after looping through nodes
         e.id = graph -> n_edges;
         graph -> n_edges = graph -> n_edges+1;
-        e.srcid = graph->nodes[graph -> n_nodes + 1].id; ; // last created node
+        e.srcid = graph -> n_nodes - 1; // last created node
         e.trgtid = ori_trg; //the original target node
-        e.cost = 44 ;
+        e.cost = length_new ;
+        cout<<"new edge: "<<e.id<<" "<<e.srcid<<" "<<e.trgtid <<endl;
         graph -> edges.push_back(e);
         }
+
 }
     file.close();
     return;
 }
 
-void subsampled_array(Graph* graph, string file_name) {
-    vector<struct node> all_nodes = graph -> nodes;
-    vector<struct edge> all_edges = graph -> edges;
-
-//ofstream outdeg_file(file_name);
-    ofstream subsampling_file(file_name);
-
-    subsampling_file << all_nodes.size() << endl;
-    subsampling_file << all_edges.size() << endl;
-
-    for(int i = 0; i < all_nodes.size(); i++) {
-    subsampling_file << all_nodes[i].id << " " << all_nodes[i].lat << " " << all_nodes[i].longitude << endl;
+int main(int argc, char** argv) {
+    if(argc < 2) {
+        cerr << "Not enough arguments; please provide a file name next to the program name";
+        return 1;
     }
 
-    for(int i = 0; i < all_edges.size(); i++) {
-    subsampling_file << all_edges[i].id << " " << all_edges[i].srcid << " " << all_edges[i].trgtid << " " << all_edges[i].cost << endl;
-    }
-    subsampling_file.close();}
+    //read file
+    Graph graph = GRAPH_INIT; 
+    read_file(argv[1], &graph);
+
+
+    return 0;
+}

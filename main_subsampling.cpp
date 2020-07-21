@@ -10,12 +10,12 @@ int main(int argc, char** argv) {
     }
 
     //read file
-    Graph graph = GRAPH_INIT;
+    Graph graph = GRAPH_INIT; // graph initialization
     read_file(argv[1], &graph);
-    
+
     string file_name;
 
-    cout << "Please provide file name to store the outdegree offset array in: ";
+    cout << "Please provide file name to store the subsamplied graph in: ";
     cin >> file_name;
 
     subsampled_array(&graph, file_name);

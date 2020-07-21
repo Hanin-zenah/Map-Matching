@@ -41,18 +41,11 @@ void read_file(string file_name, Graph* graph) {
         graph -> edges.push_back(e);
     }
 
-    //  bool bi_dir(struct edge edge1, struct edge edge2) {
-    //  return (edge1.trgtid == edge2.srcid && edge1.srcid == edge2.trgtid);}
-
-    // void sort_for_subsamp(Graph* graph) {
-    // vector<struct edge> all_edges = graph -> edges;
-    // sort(all_edges.begin(), all_edges.end(), bi_dir);
 
     for (int i = 0; i < graph -> n_edges; i++) {  // can I do this fater I close the file????
         int num_new;//how many new nodes
         double x1, x2, y1, y2, x_incre, y_incre;
-        // edge curr_edge;
-        // curr_edge = graph -> edges;
+
         if (graph->edges[i].cost>100){
         num_new=floor(graph->edges[i].cost/100);
         x1 = graph -> nodes[graph -> edges[i].srcid].lat;
@@ -67,10 +60,10 @@ void read_file(string file_name, Graph* graph) {
         ori_trg = graph->edges[i].trgtid;
         //if (bool bi_dir(graph->edges[i], graph->edges[i+1])){} // discovering bidirectional edges
         //only add edges for the second direction, as we already have the nodes
-        for (int j = 0; j < num_new+1; i=j++){
+        for (int j = 0; j < num_new + 1; j++){
             nd.id = graph -> n_nodes+j;
-            graph -> n_nodes= graph -> n_nodes+1;
-            nd.lat= x1 + (1+j)*x_incre;     
+            graph -> n_nodes = graph -> n_nodes+1;
+            nd.lat= x1 + (1+j) * x_incre;     
             nd.longitude = y1+ (1+j)*y_incre;
             graph -> nodes.push_back(nd);
             if (j==0){

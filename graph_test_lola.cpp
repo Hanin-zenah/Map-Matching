@@ -66,8 +66,8 @@ void read_file(string file_name, Graph* graph) {
 
     //overwrite the node's coordinates in mercator projection
     for(int i = 0; i < graph -> n_nodes; i++) {
-    graph -> nodes[i].lat=ed.lat_mercator_proj(graph -> nodes[i].lat,graph -> min_lat);
-    graph -> nodes[i].longitude=ed.lon_mercator_proj(graph -> nodes[i].longitude, graph -> min_long);}
+    graph -> nodes[i].lat = ed.lat_mercator_proj(graph -> nodes[i].lat, graph -> min_lat);
+    graph -> nodes[i].longitude = ed.lon_mercator_proj(graph -> nodes[i].longitude, graph -> min_long);}
     file.close();
     return;
 }
@@ -122,7 +122,7 @@ void outdeg_offset_array(Graph* graph, string file_name) {
         outdeg_file << offset[i] << endl;
     }
     for(i = 0; i < out_edges.size(); i++) {
-        outdeg_file << out_edges[i].id << " " << out_edges[i].srcid << " " << out_edges[i].trgtid << " " <<graph -> nodes[graph -> edges[i].srcid].lat<<" " <<graph -> nodes[graph -> edges[i].srcid].longitude<<" "<< graph -> nodes[graph -> edges[i].trgtid].lat<<" " <<graph -> nodes[graph -> edges[i].trgtid].longitude<<" "<<out_edges[i].cost << endl;
+        outdeg_file << out_edges[i].id << " " << out_edges[i].srcid << " " << out_edges[i].trgtid << " " <<graph -> nodes[graph -> edges[i].srcid].lat<< " " <<graph -> nodes[graph -> edges[i].srcid].longitude<<" "<< graph -> nodes[graph -> edges[i].trgtid].lat<<" " <<graph -> nodes[graph -> edges[i].trgtid].longitude<<" "<<out_edges[i].cost << endl;
     }
     outdeg_file.close();
 

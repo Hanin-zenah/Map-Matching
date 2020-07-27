@@ -275,8 +275,6 @@ bool comp_nodes(struct node n1, struct node n2) {
 }
 
 int binary_search_node(int node_id, Graph* graph) {
-    //node vector is sorted 
-    //node is either at index node_id or lower
     int lower = 0; 
     int higher;
     if(node_id >= graph -> nodes.size()) {
@@ -307,20 +305,15 @@ int binary_search_node(int node_id, Graph* graph) {
 void scc_graph(Graph* graph, Graph* SCC_graph) {
     vector<bool> visited_fwd = DFS_fwd(graph);
     vector<bool> visited_bwd = DFS_bwd(graph);
-    cout << "finished dfs\n";
-
 
     //check for any nodes that have both their flags checked
     for(int i = 0; i < graph -> n_nodes; i++) {
         if(visited_fwd[i] && visited_bwd[i]) {
             SCC_graph -> nodes.push_back(graph -> nodes[i]);
-            // SCC_graph -> nodes.back().id = SCC_graph -> n_nodes;
             SCC_graph -> n_nodes += 1;
         }
     }
     sort(SCC_graph -> nodes.begin(), SCC_graph -> nodes.end(), comp_nodes); //for binary search
-    cout << "sorted\n";
-
 
     //now add all the edges 
     for(int i = 0; i < graph -> n_edges; i++) {
@@ -333,73 +326,22 @@ void scc_graph(Graph* graph, Graph* SCC_graph) {
             SCC_graph -> n_edges += 1;
         }
     }
-    cout << "added edges\n";
 
-
-    //change the ids to the new ones 
-    // for(int i = 0; i < SCC_graph -> n_nodes; i++) {
-    //     int node_id = SCC_graph -> nodes[i].id;
-    //     //loop through all the edges that have node_id as:
-    //     //source id
-    //     stack<int> out_edges;
-
-    //     //target id
-    //     stack<int> in_edges;
-
-    //     for(int j = 0; j < SCC_graph -> n_edges; j++) {
-    //         if(SCC_graph -> edges[j].srcid == node_id) {
-    //             out_edges.push(j);
-    //         }
-    //         if(SCC_graph -> edges[j].trgtid == node_id) {
-    //             in_edges.push(j);
-    //         }
-    //     }
-    //     //change them all to the new value
-    //     node_id = i;
-    //     SCC_graph -> nodes[i].id = node_id;
-
-    //     while(!out_edges.empty()) {
-    //         int edge = out_edges.top();
-    //         out_edges.pop();
-    //         SCC_graph -> edges[edge].srcid = node_id;
-    //     }
-    //     while(!in_edges.empty()) {
-    //         int edge = in_edges.top();
-    //         in_edges.pop();
-    //         SCC_graph -> edges[edge].trgtid = node_id;
-    //     }
-    // }
-
-    //want to parallelize this part 
+    //parallelize this?
     for(int i = 0; i < SCC_graph -> n_edges; i++) {
-        // cout << i << endl;
         int source = SCC_graph -> edges[i].srcid;
         int target = SCC_graph -> edges[i].trgtid;
         int indx = binary_search_node(source, SCC_graph);
         SCC_graph -> edges[i].srcid = indx;
         indx = binary_search_node(target, SCC_graph);
         SCC_graph -> edges[i].trgtid = indx;
-        
-        // for(int j = 0; j < SCC_graph -> n_nodes; j++) {
-        //     if(SCC_graph -> nodes[j].id == source) {
-        //         SCC_graph -> edges[i].srcid = j;
-        //     }
-        //     if(SCC_graph -> nodes[j].id == target) {
-        //         SCC_graph -> edges[i].trgtid = j;
-        //     }
-        // }
     }
-    cout << "changed ids\n";
-
     for(int i = 0; i < SCC_graph -> n_nodes; i++) {
         SCC_graph -> nodes[i].id = i;
     }
     write_graph(SCC_graph, "SCC_graph.dat");
-    cout << "wrote file\n";
-
 
     //compute the inedge and outedge offsets for the graph
     inedge_offset_array(SCC_graph);
     outedge_offset_array(SCC_graph);
-    cout << "done\n";
 }

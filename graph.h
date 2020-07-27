@@ -67,6 +67,9 @@ bool compare_outedge(struct edge edge1, struct edge edge2);
 /* used for std::sort() the edges of the graph in order of their target id */
 bool compare_inedge(struct edge edge1, struct edge edge2);
 
+/* used for std::sort() for the nodes of the graph in ascending order of their id */
+bool comp_nodes(struct node n1, struct node n2);
+
 /* generates the out going edge offset array and stores it in graph */
 void outedge_offset_array(Graph* graph);
 
@@ -85,9 +88,6 @@ int get_indeg(Graph* graph, int node_id);
 /* returns the edge id for the kth in edge of a given node id */
 int get_in_edge(Graph* graph, int node_id, int k);
 
-
-
-
 /* returns a vector containing the node ids of all the incidents node to a given node */
 vector<int> get_incident(Graph* graph, int node_id);
 
@@ -99,6 +99,10 @@ vector<bool> DFS_fwd(Graph* graph);
 
 /* performs a dfs from node 0 in the transpose graph and returns a visited flag array */
 vector<bool> DFS_bwd(Graph* graph);
+
+/* return the index of a given node id in the nodes vector of a graph 
+    uses binary search -> O(log n) */
+int binary_search_node(int node_id, Graph* graph);
 
 /* extracts the strongly connected component of the graph */
 void scc_graph(Graph* graph, Graph* scc_graph);

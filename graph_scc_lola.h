@@ -46,8 +46,8 @@ typedef struct graph {
     vector<struct node> nodes;
     vector<struct edge> edges;
 
-    //vector<int> offsets;
-    //vector<int> off_edges;
+    vector<int> offsets;
+    vector<int> off_edges;
 
 } Graph;
 

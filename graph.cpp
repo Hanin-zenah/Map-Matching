@@ -1,17 +1,6 @@
 #include "graph.h"
 #include "scale_projection.h"
 
-
-
-
-
-/*
-    Graph class 
-    this will store all the attributes of our graph (nodes, edges, )
-*/
-
-//add get out deg and get outedge from a node id given the wanted k edge 
-
 void write_graph(Graph* graph, string file_name) { 
     ofstream file(file_name);
     for(int i = 0; i < graph -> n_edges; i++) {
@@ -102,7 +91,6 @@ void read_file(string file_name, Graph* graph) {
     return;
 }
 
-
 bool compare_outedge(struct edge edge1, struct edge edge2) {
     if(edge1.srcid == edge2.srcid) {
         return edge1.trgtid < edge2.trgtid;
@@ -178,7 +166,6 @@ void inedge_offset_array(Graph* graph) {
     }
 }
 
-
 int get_outdeg(Graph* graph, int node_id) {
     return graph -> out_offsets[node_id + 1] - graph -> out_offsets[node_id];
 }
@@ -192,7 +179,21 @@ int get_out_edge(Graph* graph, int node_id, int k) {
 
     int index = graph -> out_offsets[node_id] + k;
     return graph -> out_off_edges[index];
+}
 
+int get_indeg(Graph* graph, int node_id) {
+    return graph -> in_offsets[node_id + 1] - graph -> in_offsets[node_id];
+}
+
+int get_in_edge(Graph* graph, int node_id, int k) {
+    int neighbours = get_indeg(graph, node_id);
+    if(k >= neighbours) {
+        //invalid
+        return -1;
+    }
+
+    int index = graph -> in_offsets[node_id] + k;
+    return graph -> in_off_edges[index];
 }
 
 vector<int> get_incident(Graph* graph, int node_id) {
@@ -210,45 +211,6 @@ vector<int> get_incident(Graph* graph, int node_id) {
     return incidents;
 }
 
-
-void DFS_visit(int node_id, vector<bool> &visited, stack<int> &dfs_order, Graph* graph) {
-    stack<int> Stack;
-
-    Stack.push(node_id);
-    while(!Stack.empty()) {
-        node_id = Stack.top();
-        Stack.pop();
-        if(!visited[node_id]) {
-            dfs_order.push(node_id);
-            cout << node_id << " ";
-            visited[node_id] = true;
-        }
-        vector<int> incidents = get_incident(graph, node_id);
-
-        for(int i = incidents.size() - 1; i >= 0; i--) {
-            if(!visited[incidents[i]]){
-                Stack.push(incidents[i]);
-            }
-        }
-    }
-}
-
-stack<int> DFS(Graph* graph) {
-    vector<bool> visited(graph -> n_nodes, false);
-    stack<int> dfs_order;
-    
-    // for(int i = 0; i < graph -> n_nodes; i++) {
-    //     if(!visited[i]) {
-    //         DFS_visit(i, visited, dfs_order, graph);
-    //     }
-    // }
-    DFS_visit(0, visited, dfs_order, graph);
-    cout << endl;
-    return dfs_order;
-}
-
-
-
 vector<int> trans_get_incident(Graph* graph, int node_id) {
     vector<int> incidents;
 
@@ -263,138 +225,131 @@ vector<int> trans_get_incident(Graph* graph, int node_id) {
     return incidents;
 }
 
-void trans_DFS_visit(int node_id, vector<bool> &visited, Graph* graph) {
-    stack<int> stack;
-    stack.push(node_id);
+vector<bool> DFS_fwd(Graph* graph) {
+    vector<bool> visited_fwd(graph -> n_nodes, false);
+    stack<int> Stack;
+    //start node is the first node in the graph
+    int node_id = 0;
+    Stack.push(node_id);
+    while(!Stack.empty()) {
+        node_id = Stack.top();
+        Stack.pop();
 
-    while(!stack.empty()) {
-        node_id = stack.top();
-        stack.pop();
-        if(!visited[node_id]) {
-            cout << node_id << " ";
-            visited[node_id] = true;
+        if(!visited_fwd[node_id]) {
+            visited_fwd[node_id] = true;
+        }
+
+        vector<int> incidents = get_incident(graph, node_id);
+        for(int i = incidents.size() - 1; i >= 0; i--) {
+            if(!visited_fwd[incidents[i]]){
+                Stack.push(incidents[i]);
+            }
+        }
+    }
+    return visited_fwd;
+}
+
+vector<bool> DFS_bwd(Graph* graph) {
+    vector<bool> visited_bwd(graph -> n_nodes, false);
+    stack<int> Stack;
+    int node_id = 0;
+    Stack.push(node_id);
+    while(!Stack.empty()) {
+        node_id = Stack.top();
+        Stack.pop();
+        if(!visited_bwd[node_id]) {
+            visited_bwd[node_id] = true;
         }
         vector<int> incidents = trans_get_incident(graph, node_id);
         for(int i = incidents.size() - 1; i >= 0; i--) {
-            if(!visited[incidents[i]]){
-                stack.push(incidents[i]);
+            if(!visited_bwd[incidents[i]]){
+                Stack.push(incidents[i]);
             }
         }
-
     }
+    return visited_bwd;
 }
-
-void DFS_transpose(Graph* graph, Graph* SCC_graph, stack<int> Stack) {
-    vector<bool> visited(graph -> n_nodes, false);
-    while(!Stack.empty()) {
-        int vrtx = Stack.top();
-        Stack.pop();
-        if(!visited[vrtx]) {
-            trans_DFS_visit(vrtx, visited, graph);
-            cout << endl;
-        }
-    }
-}
-
-// void DFS_visit(int node_id, vector<bool> &visited, stack<int> &Stack, Graph* graph) {
-//     visited[node_id] = true;
-
-//     //visit all the neighbours of current node
-//     vector<int> incidents = get_incident(graph, node_id);
-//     for(int i = 0; i < incidents.size(); i++) {
-//         if(!visited[incidents[i]]) {
-//             DFS_visit(incidents[i], visited, Stack, graph);
-//         }
-//     }
-//     Stack.push(node_id);
-// }
-
-// stack<int> DFS(Graph* graph) {
-//     //initialize visited and the stack for DFS
-//     vector<bool> visited(graph -> n_nodes, false);
-//     stack<int> Stack;
-
-//     for(int i = 0; i < graph -> n_nodes; i++) {
-//         if(!visited[i]) {
-//             DFS_visit(i, visited, Stack, graph);
-//         }
-//     }
-
-//     return Stack;
-// }
-
-// bool comp_scc(Graph g1, Graph g2) {
-//     return g1.n_nodes > g2.n_nodes;
-// };
-
-// void trans_DFS_visit(int vertex, vector<bool> &visited, Graph* graph, Graph* SCC_graph) {
-//     visited[vertex] = true;
-//     cout << vertex << " ";
-
-//     // SCC_graph -> n_nodes += 1;
-//     // struct node n = {
-//     //     .id = vertex,
-//     //     .lat = graph -> nodes[vertex].lat,
-//     //     .longitude = graph -> nodes[vertex].longitude
-//     // };
-//     // SCC_graph -> nodes.push_back(n);
-
-//     vector<int> incidents = trans_get_incident(graph, vertex);
-//     for(int i = 0; i < incidents.size(); i++) {
-//         if(!visited[incidents[i]]) {
-//             //this only keeps the edges visited in the DFS
-//             // struct edge e = {
-//             //     .id = SCC_graph -> n_edges,
-//             //     .srcid = incidents[i], 
-//             //     .trgtid = vertex
-//             // };
-//             // SCC_graph -> edges.push_back(e);
-//             // SCC_graph -> n_edges += 1;
-//             trans_DFS_visit(incidents[i], visited, graph, SCC_graph);
-//         }
-//     }
-// }
-
-// void DFS_transpose(Graph* graph, Graph* SCC_graph, stack<int> Stack) {
-//     vector<bool> visited(graph -> n_nodes, false);
-
-//     vector<Graph> scc_graphs;
-//     while(!Stack.empty()) {
-//         int vrtx = Stack.top();
-//         Stack.pop();
-
-//         if(!visited[vrtx]) {
-//             trans_DFS_visit(vrtx, visited, graph, SCC_graph);
-//             cout << endl;
-//             // if(SCC_graph -> n_nodes >= 50) {
-//             //     scc_graphs.push_back(*SCC_graph);
-//             // }
-
-//             // SCC_graph -> n_nodes = 0;
-//             // SCC_graph -> n_edges = 0;
-//             // SCC_graph -> edges.clear();
-//             // SCC_graph -> nodes.clear();
-//         }
-//     }
-//     // sort(scc_graphs.begin(), scc_graphs.end(), comp_scc);
-
-//     // SCC_graph -> n_edges = scc_graphs[0].n_edges;
-//     // SCC_graph -> n_nodes = scc_graphs[0].n_nodes;
-//     // SCC_graph -> edges = scc_graphs[0].edges;
-//     // SCC_graph -> nodes = scc_graphs[0].nodes;
-// }
-
-//check tarjan's algorithm ==> change later?
 
 void scc_graph(Graph* graph, Graph* SCC_graph) {
-    //dfs and add nodes to stack 
-    stack<int> Stack = DFS(graph);
-    
-    DFS_transpose(graph, SCC_graph, Stack);
+    vector<bool> visited_fwd = DFS_fwd(graph);
+    vector<bool> visited_bwd = DFS_bwd(graph);
 
+    //check for any nodes that have both their flags checked
+    for(int i = 0; i < graph -> n_nodes; i++) {
+        if(visited_fwd[i] && visited_bwd[i]) {
+            SCC_graph -> nodes.push_back(graph -> nodes[i]);
+            // SCC_graph -> nodes.back().id = SCC_graph -> n_nodes;
+            SCC_graph -> n_nodes += 1;
+        }
+    }
+
+
+    //now add all the edges 
+    for(int i = 0; i < graph -> n_edges; i++) {
+        //get the end points for each edge and see if they are in the scc graph
+        int src = graph -> edges[i].srcid;
+        int trgt = graph -> edges[i].trgtid;
+        if(visited_fwd[src] && visited_bwd[src] && visited_bwd[trgt] && visited_bwd[trgt]) {
+            SCC_graph -> edges.push_back(graph -> edges[i]);
+            SCC_graph -> edges.back().id = SCC_graph -> n_edges;
+            SCC_graph -> n_edges += 1;
+        }
+    }
+
+    //change the ids to the new ones 
+    // for(int i = 0; i < SCC_graph -> n_nodes; i++) {
+    //     int node_id = SCC_graph -> nodes[i].id;
+    //     //loop through all the edges that have node_id as:
+    //     //source id
+    //     stack<int> out_edges;
+
+    //     //target id
+    //     stack<int> in_edges;
+
+    //     for(int j = 0; j < SCC_graph -> n_edges; j++) {
+    //         if(SCC_graph -> edges[j].srcid == node_id) {
+    //             out_edges.push(j);
+    //         }
+    //         if(SCC_graph -> edges[j].trgtid == node_id) {
+    //             in_edges.push(j);
+    //         }
+    //     }
+    //     //change them all to the new value
+    //     node_id = i;
+    //     SCC_graph -> nodes[i].id = node_id;
+
+    //     while(!out_edges.empty()) {
+    //         int edge = out_edges.top();
+    //         out_edges.pop();
+    //         SCC_graph -> edges[edge].srcid = node_id;
+    //     }
+    //     while(!in_edges.empty()) {
+    //         int edge = in_edges.top();
+    //         in_edges.pop();
+    //         SCC_graph -> edges[edge].trgtid = node_id;
+    //     }
+    // }
+
+    //want to parallelize this part 
+    for(int i = 0; i < SCC_graph -> n_edges; i++) {
+        cout << i << endl;
+        int source = SCC_graph -> edges[i].srcid;
+        int target = SCC_graph -> edges[i].trgtid;
+        for(int j = 0; j < SCC_graph -> n_nodes; j++) {
+            if(SCC_graph -> nodes[j].id == source) {
+                SCC_graph -> edges[i].srcid = j;
+            }
+            if(SCC_graph -> nodes[j].id == target) {
+                SCC_graph -> edges[i].trgtid = j;
+            }
+        }
+    }
+    for(int i = 0; i < SCC_graph -> n_nodes; i++) {
+        SCC_graph -> nodes[i].id = i;
+    }
     write_graph(SCC_graph, "SCC_graph.dat");
+
+    //compute the inedge and outedge offsets for the graph
+    inedge_offset_array(SCC_graph);
+    outedge_offset_array(SCC_graph);
 }
-
-//store all the SCC in separate graphs (graph array) and have the option to choose one of them 
-
-// or create a heap and keep track of the largest number of edges for each subgraph 

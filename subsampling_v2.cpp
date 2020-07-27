@@ -46,50 +46,51 @@ void read_file(string file_name, Graph* graph) {
         int num_new;//how many new nodes
         double x1, x2, y1, y2, x_incre, y_incre;
 
-        if (graph->edges[i].cost>100){
-        num_new=floor(graph->edges[i].cost/100);
-        x1 = graph -> nodes[graph -> edges[i].srcid].lat;
-        x2 = graph -> nodes[graph -> edges[i].trgtid].lat;
-        y1 = graph -> nodes[graph -> edges[i].srcid].longitude;
-        y2 = graph -> nodes[graph -> edges[i].trgtid].longitude;
-        x_incre=(x2-x1)/(num_new+1);
-        y_incre=(y2-y1)/(num_new+1);
-        struct node nd;
-        struct edge e;
-        int ori_trg; //save the original target node
-        ori_trg = graph->edges[i].trgtid;
-        //if (bool bi_dir(graph->edges[i], graph->edges[i+1])){} // discovering bidirectional edges
-        //only add edges for the second direction, as we already have the nodes
-        for (int j = 0; j < num_new + 1; j++){
-            nd.id = graph -> n_nodes+j;
-            graph -> n_nodes = graph -> n_nodes+1;
-            nd.lat= x1 + (1+j) * x_incre;     
-            nd.longitude = y1+ (1+j)*y_incre;
-            graph -> nodes.push_back(nd);
-            if (j==0){
-                graph->edges[i].trgtid=nd.id;
+        if (graph -> edges[i].cost > 100) {
+            num_new = floor(graph->edges[i].cost/100);
+            x1 = graph -> nodes[graph -> edges[i].srcid].lat;
+            x2 = graph -> nodes[graph -> edges[i].trgtid].lat;
+            y1 = graph -> nodes[graph -> edges[i].srcid].longitude;
+            y2 = graph -> nodes[graph -> edges[i].trgtid].longitude;
+            x_incre = (x2 - x1) / (num_new + 1);
+            y_incre = (y2 - y1) / (num_new + 1);
+            struct node nd;
+            struct edge e;
+            int ori_trg; //save the original target node
+            ori_trg = graph -> edges[i].trgtid;
+            //if (bool bi_dir(graph->edges[i], graph->edges[i+1])){} // discovering bidirectional edges
+            //only add edges for the second direction, as we already have the nodes
+            for (int j = 0; j < num_new + 1; j++) {
+                nd.id = (graph -> n_nodes) + j;
+                graph -> n_nodes += 1;
+                nd.lat = x1 + (1 + j) * x_incre;     
+                nd.longitude = y1 + (1 + j) * y_incre;
+                graph -> nodes.push_back(nd);
+                if (j == 0) {
+                    graph -> edges[i].trgtid = nd.id;
                 }
-            // else if (j=num_new){
-                // e.id = graph -> n_edges+1;
-                // graph -> n_edges = graph -> n_edges+1;
-                // e.srcid = nd.id;
-                // e.trgtid = graph->nodes[nd.id - 1].id; //last created node will be the new source node
-                // graph -> edges.push_back(e);
-                // }
-            else {
-                e.id = graph -> n_edges+1;
-                graph -> n_edges = graph -> n_edges+1;
-                e.trgtid  = nd.id;
-                e.srcid = graph->nodes[nd.id - 1].id; //last created node will be the new source node graph->edges[i-1].id;
-                graph -> edges.push_back(e);
+                // else if (j=num_new){
+                    // e.id = graph -> n_edges+1;
+                    // graph -> n_edges = graph -> n_edges+1;
+                    // e.srcid = nd.id;
+                    // e.trgtid = graph->nodes[nd.id - 1].id; //last created node will be the new source node
+                    // graph -> edges.push_back(e);
+                    // }
+                else {
+                    e.id = graph -> n_edges+1;
+                    graph -> n_edges = graph -> n_edges+1;
+                    e.trgtid  = nd.id;
+                    e.srcid = graph->nodes[nd.id - 1].id; //last created node will be the new source node graph->edges[i-1].id;
+                    graph -> edges.push_back(e);
 
-            }}
-        // number of new edges = number of new nodes + 1, need to create the last edge after looping through nodes
-        e.id = graph -> n_edges+1;
-        graph -> n_edges = graph -> n_edges+1;
-        e.srcid = graph->nodes[graph -> n_nodes].id; // last created node
-        e.trgtid = ori_trg; //the original target node
-        graph -> edges.push_back(e);
+                }
+            }
+            // number of new edges = number of new nodes + 1, need to create the last edge after looping through nodes
+            e.id = graph -> n_edges+1;
+            graph -> n_edges += 1;
+            e.srcid = graph -> nodes[graph -> n_nodes - 1].id; // last created node
+            e.trgtid = ori_trg; //the original target node
+            graph -> edges.push_back(e);
         }
     //graph->edges[graph->edges[i]].srcid;
 }

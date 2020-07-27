@@ -44,21 +44,9 @@ int main(int argc, char** argv) {
     double y_scale = g_dist1/e_dist1;
     ed.calc_edge_cost(&graph, x_scale, y_scale);
 
-
-    // test DFS here 
-    stack<int> nodes = DFS(&graph);
-    while(!nodes.empty()) {
-        int node = nodes.top();
-        cout << node << endl;
-        nodes.pop();
-    }
-
     //strongly connected componetns
-    // Graph SCC_graph = GRAPH_INIT;
-    // scc_graph(&graph, &SCC_graph);
-    // for(int i = 0; i < SCC_graph.n_nodes; i++) {
-    //     cout << SCC_graph.nodes[i].id;
-    // }
+    Graph SCC_graph = GRAPH_INIT;
+    scc_graph(&graph, &SCC_graph);
 
     //sub sampling 
 

@@ -78,14 +78,14 @@ std::pair<bool, int > findInVector(const std::vector<T>  & vecOfElements, const 
 void read_file(string file_name, Graph* graph);
 
 /* function used to find all bidirectional paths*/
-int bi_dir(Graph* graph, int edgeID, vector<int>& in_edgeID,vector<int>& in_offset);
+int bi_dir(Graph* graph, int edgeID);
 //vector<int> bi_dir(Graph* graph, vector<int> edgeID, vector<int> offset);
 
 /* function used to split single direction edges*/
-void split_edge(Graph* graph, int edgeID, vector<int>& in_edge, vector<int>& in_offset, vector<int>& out_edge, vector<int>& out_offset);
+void split_edge(Graph* graph, int edgeID);
 
 /* function used to split bi-directional edges*/
-void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2, vector<int>& in_edge, vector<int>& in_offset, vector<int>& out_edge, vector<int>& out_offset);
+void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2);
 
 /* process subsampling*/
 void subsampling(Graph* graph, double threshold, vector<int>& in_edge, vector<int>& in_offset, vector<int>& out_edge, vector<int>& out_offset);

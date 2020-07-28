@@ -44,12 +44,9 @@ int main(int argc, char** argv) {
     double y_scale = g_dist1/e_dist1;
     ed.calc_edge_cost(&graph, x_scale, y_scale);
 
-
     //strongly connected componetns
     Graph SCC_graph = GRAPH_INIT;
     scc_graph(&graph, &SCC_graph);
-    // write_graph(&SCC_graph, "SCC.dat");
-    // cout << SCC_graph.n_edges << endl;
 
     //sub sampling 
 

@@ -40,8 +40,6 @@ void read_file(string file_name, Graph* graph) {
     return;
 }
 
-//void break_edge(Graph* graph, int edgeID, double threshold){
-
 void split_edge(Graph* graph, int edgeID) {
     int n_nodes, n_edges; //how many new nodes and edges 
     double x1, x2, y1, y2, x_incre, y_incre, num_new;

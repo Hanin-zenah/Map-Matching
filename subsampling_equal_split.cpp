@@ -42,58 +42,60 @@ void read_file(string file_name, Graph* graph) {
 
 //void break_edge(Graph* graph, int edgeID, double threshold){
 
-void split_edge(Graph* graph, int edgeID){
-    int n_nodes, n_edges;//how many new nodes
-    double x1, x2, y1, y2, x_incre, y_incre, num_new, length_new;
-    length_new = graph -> edges[edgeID].cost/2;
+void split_edge(Graph* graph, int edgeID) {
+    int n_nodes, n_edges; //how many new nodes and edges 
+    double x1, x2, y1, y2, x_incre, y_incre, num_new;
+    double length_new = graph -> edges[edgeID].cost/2;
 
-    x1 = graph -> nodes[graph -> edges[edgeID].srcid+1].lat; // the node id sta
-    y1 = graph -> nodes[graph -> edges[edgeID].srcid+1].longitude;
-    x2 = graph -> nodes[graph -> edges[edgeID].trgtid+1].lat;
-    y2 = graph -> nodes[graph -> edges[edgeID].trgtid+1].longitude;
-    // x_incre=(x2-x1)/2;
-    // y_incre=(y2-y1)/2;
-    struct node nd;
+    /* dont need the +1 */
+    x1 = graph -> nodes[graph -> edges[edgeID].srcid].lat; // the node id sta
+    y1 = graph -> nodes[graph -> edges[edgeID].srcid].longitude;
+    x2 = graph -> nodes[graph -> edges[edgeID].trgtid].lat;
+    y2 = graph -> nodes[graph -> edges[edgeID].trgtid].longitude;
+
+    struct node nd; //new node to be added 
     struct edge e;
-    int ori_trg; //save the original target node
-    ori_trg = graph->edges[edgeID].trgtid;
-    nd.id = graph -> nodes.size();
-    nd.lat= (x1+x2)/2;   
-    nd.longitude = (y1+y2)/2;
+    int ori_trg = graph->edges[edgeID].trgtid; //save the original target node
+    nd.id = graph -> nodes.size(); 
+    nd.lat = (x1 + x2) / 2;   
+    nd.longitude = (y1 + y2) / 2;
     graph -> nodes.push_back(nd);
-    // graph -> out_offset.push_back(graph -> edges.size() + 1);
-    // graph -> in_offset.push_back(graph -> edges.size() + 1);
-    graph -> edges[edgeID].trgtid=nd.id;
-    graph -> edges[edgeID].cost=length_new;
-    e.id = graph -> edges.size();//
+
+    graph -> edges[edgeID].trgtid = nd.id;
+    graph -> edges[edgeID].cost = length_new;
+    e.id = graph -> edges.size();
     e.srcid = graph -> nodes.size() - 1;//n_nodes; // last created node
     e.trgtid = ori_trg; //the original target node
     e.cost = length_new ;
     graph -> edges.push_back(e);
+
+    graph -> n_nodes += 1;
+    graph -> n_edges += 1;
+
     cout<<"out_edge pushback: "<<e.id<<endl;
     graph -> out_edge.push_back(e.id);
     pair<bool, int> result = findInVector<int>(graph -> in_edge, edgeID);
-    //nt pos_in_inedge = result.second;
-    graph -> in_edge[result.second] = e.id;
+    if(result.first) {
+        graph -> in_edge[result.second] = e.id;
+    }
     graph -> in_edge.push_back(edgeID); //need to do swapping
-    //cout<<"out_offset pushback: "<<graph -> edges.size()<<endl;
-    graph -> out_offset.push_back(graph -> edges.size());
     graph -> in_offset.push_back(graph -> edges.size());
-    return;}
 
-void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2){
-    int n_nodes, n_edges;//how many new nodes
+    graph -> out_offset.push_back(graph -> edges.size()); 
+
+    return;
+}
+
+void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2) {
+    int n_nodes, n_edges; //how many new nodes
     double x1, x2, y1, y2, x_incre, y_incre, num_new, length_new;
-    length_new = graph -> edges[edgeID1].cost/2; // can use either edgeID1 or edgeID2
-    // graph -> in_edge = in_edge;
-    // graph -> in_offset = in_offset;
-    // graph -> out_edge = out_edge;
-    // graph -> out_offset = out_offset;
+    length_new = graph -> edges[edgeID1].cost / 2; // can use either edgeID1 or edgeID2
 
-    x1 = graph -> nodes[graph -> edges[edgeID1].srcid+1].lat; // can use either edgeID1 or edgeID2
-    y1 = graph -> nodes[graph -> edges[edgeID1].srcid+1].longitude;
-    x2 = graph -> nodes[graph -> edges[edgeID1].trgtid+1].lat;
-    y2 = graph -> nodes[graph -> edges[edgeID1].trgtid+1].longitude;
+    x1 = graph -> nodes[graph -> edges[edgeID1].srcid].lat; // can use either edgeID1 or edgeID2
+    y1 = graph -> nodes[graph -> edges[edgeID1].srcid].longitude;
+    x2 = graph -> nodes[graph -> edges[edgeID1].trgtid].lat;
+    y2 = graph -> nodes[graph -> edges[edgeID1].trgtid].longitude;
+
     struct node nd;
     struct edge e;
     int ori_trg1, ori_trg2; //save the original target node
@@ -103,10 +105,10 @@ void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2){
     nd.lat= (x1+x2)/2;   
     nd.longitude = (y1+y2)/2;
     graph -> nodes.push_back(nd);
-    graph->edges[edgeID1].trgtid=nd.id;
-    graph->edges[edgeID1].cost=length_new;
-    e.id = graph -> edges.size();//
-    e.srcid = graph -> nodes.size() - 1;//n_nodes; // last created node
+    graph -> edges[edgeID1].trgtid = nd.id;
+    graph -> edges[edgeID1].cost = length_new;
+    e.id = graph -> edges.size();
+    e.srcid = graph -> nodes.size() - 1; //n_nodes; // last created node
     e.trgtid = ori_trg1; //the original target node
     e.cost = length_new ;
     graph -> edges.push_back(e);
@@ -117,8 +119,8 @@ void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2){
     graph -> in_edge.push_back(edgeID1); //need to do swapping
 
     //repeat the same process for the other edge
-    graph->edges[edgeID2].trgtid=nd.id;
-    graph->edges[edgeID2].cost=length_new;
+    graph->edges[edgeID2].trgtid = nd.id;
+    graph->edges[edgeID2].cost = length_new;
     e.id = graph -> edges.size();//
     e.srcid = graph -> nodes.size() - 1;//n_nodes; // last created node
     e.trgtid = ori_trg2; //the original target node
@@ -132,36 +134,34 @@ void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2){
 
     graph -> out_offset.push_back(graph -> edges.size()); //edge ID starts with zero, so the sentinal val = size = last edge id +1
     graph -> in_offset.push_back(graph -> edges.size());
-    return;}
+    return;
+}
 
-int bi_dir(Graph* graph, int edgeID){
-        // cout<<"i = "<<i<<" i+1 = "<<i+1<<endl;
+int bi_dir(Graph* graph, int edgeID) {
     int b_edge = -1;
     int index, start_in_offset, end_in_offset, start_in_edge_array, end_in_edge_array;
     start_in_offset = graph -> edges[edgeID].srcid;
     end_in_offset = start_in_offset + 1; 
-    // cout<<"start_pos_in_offset "<<start_in_offset<<endl;
-    // cout<<"end_pos_in_offset "<<end_in_offset<<endl;
+
     start_in_edge_array = graph -> in_offset[start_in_offset];
     end_in_edge_array = graph -> in_offset[end_in_offset];
-    // cout<<"start_pos_in_edge_array "<<start_in_edge_array<<endl;//their starting position in the inEdge array
-    // cout<<"end_pos_in_edge_array "<<end_in_edge_array<<endl;//looping until this position
-    for (int j = start_in_edge_array; j < end_in_edge_array; j++){ //finding what nodes goes to the target node in the given edge.id
+
+    for (int j = start_in_edge_array; j < end_in_edge_array; j++) { //finding what nodes goes to the target node in the given edge.id
         int start_in_offset2, end_in_offset2, start_in_edge_array2, end_in_edge_array2;
-        //cout<<"j= "<<j<<" in_edgeID[j] "<<in_edgeID[j]<<endl;
-        start_in_offset2 = graph->edges[graph -> in_edge[j]].srcid; //graph->edges[in_edgeID[j]].srcid are the nodes that goes to the same target node in given edge.id
+
+        start_in_offset2 = graph -> edges[graph -> in_edge[j]].srcid; //graph->edges[in_edgeID[j]].srcid are the nodes that goes to the same target node in given edge.id
         end_in_offset2 = start_in_offset2 + 1;
-        //cout<<"start_in_offset2: "<<start_in_offset2<<" end_in_offset2: "<<end_in_offset2<<endl;
-        if (graph->edges[edgeID].trgtid == graph->edges[graph -> in_edge[j]].srcid){
+
+        if (graph -> edges[edgeID].trgtid == graph -> edges[graph -> in_edge[j]].srcid) {
             cout<<"push back: graph->edges[in_edgeID[k]].id: "<<graph->edges[graph -> in_edge[j]].id<<endl;
             cout<<" "<<endl;
             b_edge = graph->edges[graph -> in_edge[j]].id;
-            }
+        }
     }
     return b_edge;
 }
 
-void subsampling(Graph* graph, double threshold, vector<int>& in_edge, vector<int>& in_offset, vector<int>& out_edge, vector<int>& out_offset){
+void subsampling(Graph* graph, double threshold, vector<int>& in_edge, vector<int>& in_offset, vector<int>& out_edge, vector<int>& out_offset) {
     graph -> in_edge = in_edge;
     graph -> in_offset = in_offset;
     graph -> out_edge = out_edge;
@@ -170,19 +170,21 @@ void subsampling(Graph* graph, double threshold, vector<int>& in_edge, vector<in
         if (graph -> edges[i].cost > threshold) {
             int b_edge = bi_dir(graph, graph -> edges[i].id);
             if (b_edge != -1){
-                for (int k = 0; graph -> edges[i].cost > threshold; k++){
-                //split_bi_dir_edge(graph, i, b_edge, graph -> in_edge, graph -> in_offset, graph -> out_edge, graph -> out_offset);}
-                split_bi_dir_edge(graph, i, b_edge);        
-            } 
+                for (int k = 0; graph -> edges[i].cost > threshold; k++) {
+                    //split_bi_dir_edge(graph, i, b_edge, graph -> in_edge, graph -> in_offset, graph -> out_edge, graph -> out_offset);}
+                    split_bi_dir_edge(graph, i, b_edge);        
+                } 
             }
-            else {for (int k = 0; graph -> edges[i].cost > threshold; k++){
-                //split_edge(graph, i, graph -> in_edge, graph -> in_offset, graph -> out_edge, graph -> out_offset);}
-                split_edge(graph, i);
+            else {
+                for (int k = 0; graph -> edges[i].cost > threshold; k++) {
+                    //split_edge(graph, i, graph -> in_edge, graph -> in_offset, graph -> out_edge, graph -> out_offset);}
+                    split_edge(graph, i);
                 }
             }
         }
     }
-    return;}
+    return;
+}
 
 
 void subsampled_graph(Graph* graph, string file_name) {
@@ -200,31 +202,35 @@ void subsampled_graph(Graph* graph, string file_name) {
     subsampled_file << all_edges.size() << endl;
 
     for(int i = 0; i < all_nodes.size(); i++) {
-    subsampled_file << all_nodes[i].id << " " << all_nodes[i].lat << " " << all_nodes[i].longitude << endl;
+        subsampled_file << all_nodes[i].id << " " << all_nodes[i].lat << " " << all_nodes[i].longitude << endl;
     }
 
     for(int i = 0; i < all_edges.size(); i++) {
-    subsampled_file << all_edges[i].id << " " << all_edges[i].srcid << " " << all_edges[i].trgtid << " " << all_edges[i].cost << endl;
+        subsampled_file << all_edges[i].id << " " << all_edges[i].srcid << " " << all_edges[i].trgtid << " " << all_edges[i].cost << endl;
     }
 
     subsampled_file<< "out_edge" << endl;
     for(int i = 0; i < out_edge.size(); i++) {
-    subsampled_file<< out_edge[i] << endl;}
+        subsampled_file<< out_edge[i] << endl;
+    }
 
     subsampled_file<< "out_offset" << endl;
     for(int i = 0; i < out_offset.size(); i++) {
-    subsampled_file<< out_offset[i] << endl;}
+        subsampled_file<< out_offset[i] << endl;
+    }
 
     subsampled_file<< "in_edge" << endl;
     for(int i = 0; i < in_edge.size(); i++) {
-    subsampled_file<< in_edge[i] << endl;}
+        subsampled_file<< in_edge[i] << endl;
+    }
 
     subsampled_file<< "in_offset" << endl;
     for(int i = 0; i < in_offset.size(); i++) {
-    subsampled_file<< in_offset[i] << endl;}
+        subsampled_file<< in_offset[i] << endl;
+    }
 
     subsampled_file.close();
     return;
-    }
+}
 
 

@@ -2,46 +2,6 @@
 #include <cmath>
 #include <vector> 
 
-void split_edge(Graph* graph, int edgeID) {
-    double x1, x2, y1, y2, num_new;
-    double length_new = graph -> edges[edgeID].cost/2;
-
-    x1 = graph -> nodes[graph -> edges[edgeID].srcid].lat; 
-    y1 = graph -> nodes[graph -> edges[edgeID].srcid].longitude;
-    x2 = graph -> nodes[graph -> edges[edgeID].trgtid].lat;
-    y2 = graph -> nodes[graph -> edges[edgeID].trgtid].longitude;
-
-    struct node nd; //new node to be added 
-    struct edge e;
-    int ori_trg = graph->edges[edgeID].trgtid; //save the original target node
-    nd.id = graph -> nodes.size(); 
-    nd.lat = (x1 + x2) / 2;   
-    nd.longitude = (y1 + y2) / 2;
-    graph -> nodes.push_back(nd);
-
-    graph -> edges[edgeID].trgtid = nd.id;
-    graph -> edges[edgeID].cost = length_new;
-    e.id = graph -> edges.size();
-    e.srcid = graph -> nodes.size() - 1;//n_nodes; // last created node
-    e.trgtid = ori_trg; //the original target node
-    e.cost = length_new ;
-    graph -> edges.push_back(e);
-
-    graph -> n_nodes += 1;
-    graph -> n_edges += 1;
-
-    cout<<"out_edge pushback: "<<e.id<<endl;
-    graph -> out_off_edges.push_back(e.id);
-    pair<bool, int> result = findInVector<int>(graph -> in_off_edges, edgeID);
-    graph -> in_off_edges[result.second] = e.id;
-    graph -> in_off_edges.push_back(edgeID); //need to do swapping
-    graph -> in_offsets.push_back(graph -> edges.size());
-
-    graph -> out_offsets.push_back(graph -> edges.size()); 
-
-    return;
-}
-
 void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2) {
     double x1, x2, y1, y2, num_new;
     double length_new = graph -> edges[edgeID1].cost / 2; // can use either edgeID1 or edgeID2

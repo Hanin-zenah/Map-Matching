@@ -49,6 +49,7 @@ int main(int argc, char** argv) {
     scc_graph(&graph, &SCC_graph);
 
     //sub sampling 
+    subsampling(&graph, 100);
 
     return 0;
 }

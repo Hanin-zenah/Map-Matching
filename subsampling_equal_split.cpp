@@ -89,8 +89,10 @@ void subsampling(Graph* graph, double threshold){ //, vector<int>& in_edge, vect
             } 
         }
     }
+    write_graph(graph, "graph_subsampled.dat");
     return;
 }
+
 
 void output_graph(Graph* graph, string file_name) {
     vector<struct node> all_nodes = graph -> nodes;

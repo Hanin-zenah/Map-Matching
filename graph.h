@@ -107,4 +107,39 @@ int binary_search_node(int node_id, Graph* graph);
 /* extracts the strongly connected component of the graph */
 void scc_graph(Graph* graph, Graph* scc_graph);
 
+template < typename T>
+std::pair<bool, int > findInVector(const std::vector<T>  & vecOfElements, const T  & element)
+{
+    std::pair<bool, int > result;
+    // Find given element in vector
+    auto it = std::find(vecOfElements.begin(), vecOfElements.end(), element);
+    if (it != vecOfElements.end())
+    {   result.second = distance(vecOfElements.begin(), it);
+        result.first = true;
+    }
+    else
+    {
+        result.first = false;
+        result.second = -1;
+    }
+    return result;
+}
+
+/* function used to find all bidirectional paths*/
+int bi_dir(Graph* graph, int edgeID);
+//vector<int> bi_dir(Graph* graph, vector<int> edgeID, vector<int> offset);
+
+/* function used to split single direction edges*/
+void split_edge(Graph* graph, int edgeID);
+
+/* function used to split bi-directional edges*/
+void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2);
+
+/* process subsampling*/
+void subsampling(Graph* graph, double threshold); //, vector<int>& in_edge, vector<int>& in_offset, vector<int>& out_edge, vector<int>& out_offset);
+
+/* generates graph with subsampling*/
+void subsampled_graph(Graph* graph, string file_name);
+
+
 #endif

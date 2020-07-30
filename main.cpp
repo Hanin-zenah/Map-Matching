@@ -1,5 +1,6 @@
 /* here goes the main function which will call all the necessary function to preprocess the graph */
 #include "graph.h" 
+#include "graph_subsampling.h"
 #include "scale_projection.h"
 
 int main(int argc, char** argv) {

@@ -1,6 +1,5 @@
 /* here goes the main function which will call all the necessary function to preprocess the graph */
 //#include "graph_scc_lola_v3.h"
-#include <vector> 
 #include "graph.h" 
 #include "scale_projection.h" 
 

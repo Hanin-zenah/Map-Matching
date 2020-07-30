@@ -1,6 +1,5 @@
 #include "graph.h"
 #include <cmath>
-#include <vector> 
 
 void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2) {
     double x1, x2, y1, y2, num_new;
@@ -47,7 +46,7 @@ void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2) {
         pair<bool, int> result2 = findInVector<int>(graph -> in_off_edges, edgeID2);
         graph -> in_off_edges[result2.second] = e.id;
         graph -> in_off_edges.push_back(edgeID2); //need to do swapping
-        }
+    }
 
     graph -> out_offsets.push_back(graph -> edges.size()); //edge ID starts with zero, so the sentinal val = size = last edge id +1
     graph -> in_offsets.push_back(graph -> edges.size());
@@ -76,11 +75,7 @@ int bi_dir(Graph* graph, int edgeID) {
     return b_edge;
 }
 
-void subsampling(Graph* graph, double threshold){ //, vector<int>& in_edge, vector<int>& in_offset, vector<int>& out_edge, vector<int>& out_offset) {
-    // graph -> in_edge = in_edge;
-    // graph -> in_offset = in_offset;
-    // graph -> out_edge = out_edge;
-    // graph -> out_offset = out_offset;
+void subsampling(Graph* graph, double threshold) { //, vector<int>& in_edge, vector<int>& in_offset, vector<int>& out_edge, vector<int>& out_offset) {
     for (int i = 0; i < graph -> edges.size(); i++) {  
         if (graph -> edges[i].cost > threshold) {
             for (int k = 0; graph -> edges[i].cost > threshold; k++) {

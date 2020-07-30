@@ -1,3 +1,4 @@
+#include "graph_subsampling.h"
 #include "graph.h"
 #include <cmath>
 
@@ -83,10 +84,12 @@ void subsampling(Graph* graph, double threshold) { //, vector<int>& in_edge, vec
             } 
         }
     }
+    write_graph(graph, "graph_subsampled.dat");
     return;
 }
 
-void subsampled_graph(Graph* graph, string file_name) {
+
+void output_graph(Graph* graph, string file_name) {
     vector<struct node> all_nodes = graph -> nodes;
     vector<struct edge> all_edges = graph -> edges;
     vector<int> out_off_edges = graph -> out_off_edges;
@@ -94,40 +97,40 @@ void subsampled_graph(Graph* graph, string file_name) {
     vector<int> in_off_edges = graph -> in_off_edges;
     vector<int> in_offsets = graph -> in_offsets;
 
-    ofstream subsampled_file(file_name);
+    ofstream txt_file(file_name);
 
-    subsampled_file << all_nodes.size() << endl;
-    subsampled_file << all_edges.size() << endl;
+    txt_file << all_nodes.size() << endl;
+    txt_file << all_edges.size() << endl;
 
     for(int i = 0; i < all_nodes.size(); i++) {
-        subsampled_file << all_nodes[i].id << " " << all_nodes[i].lat << " " << all_nodes[i].longitude << endl;
+        txt_file << all_nodes[i].id << " " << all_nodes[i].osmid << " " << all_nodes[i].lat << " " << all_nodes[i].longitude << endl;
     }
 
     for(int i = 0; i < all_edges.size(); i++) {
-        subsampled_file << all_edges[i].id << " " << all_edges[i].srcid << " " << all_edges[i].trgtid << " " << all_edges[i].cost << endl;
+        txt_file << all_edges[i].id << " " << all_edges[i].srcid << " " << all_edges[i].trgtid << " " << all_edges[i].cost << endl;
     }
 
-    subsampled_file<< "out_edge" << endl;
+    txt_file<< "out_edge" << endl;
     for(int i = 0; i < out_off_edges.size(); i++) {
-        subsampled_file<< out_off_edges[i] << endl;
+        txt_file<< out_off_edges[i] << endl;
     }
 
-    subsampled_file<< "out_offset" << endl;
+    txt_file<< "out_offset" << endl;
     for(int i = 0; i < out_offsets.size(); i++) {
-        subsampled_file<< out_offsets[i] << endl;
+        txt_file<< out_offsets[i] << endl;
     }
 
-    subsampled_file<< "in_edge" << endl;
+    txt_file<< "in_edge" << endl;
     for(int i = 0; i < in_off_edges.size(); i++) {
-        subsampled_file<< in_off_edges[i] << endl;
+        txt_file<< in_off_edges[i] << endl;
     }
 
-    subsampled_file<< "in_offset" << endl;
+    txt_file<< "in_offset" << endl;
     for(int i = 0; i < in_offsets.size(); i++) {
-        subsampled_file<< in_offsets[i] << endl;
+        txt_file<< in_offsets[i] << endl;
     }
 
-    subsampled_file.close();
+    txt_file.close();
     return;
 }
 

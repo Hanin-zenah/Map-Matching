@@ -40,9 +40,6 @@ int bi_dir(Graph* graph, int edgeID);
 void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2);
 
 /* process subsampling*/
-void subsampling(Graph* graph, double threshold); //, vector<int>& in_edge, vector<int>& in_offset, vector<int>& out_edge, vector<int>& out_offset);
-
-/* generates graph with subsampling*/
-void output_graph(Graph* graph, string file_name);
+void subsampling(Graph* graph, double threshold); 
 
 #endif

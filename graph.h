@@ -107,5 +107,7 @@ int binary_search_node(int node_id, Graph* graph);
 /* extracts the strongly connected component of the graph */
 void scc_graph(Graph* graph, Graph* scc_graph);
 
+/* outputs a graph to a text file*/
+void output_graph(Graph* graph, string file_name);
 
 #endif

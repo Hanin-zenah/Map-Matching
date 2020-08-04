@@ -77,11 +77,7 @@ int bi_dir(Graph* graph, int edgeID) {
     return b_edge;
 }
 
-void subsampling(Graph* graph, double threshold){ //, vector<int>& in_edge, vector<int>& in_offset, vector<int>& out_edge, vector<int>& out_offset) {
-    // graph -> in_edge = in_edge;
-    // graph -> in_offset = in_offset;
-    // graph -> out_edge = out_edge;
-    // graph -> out_offset = out_offset;
+void subsampling(Graph* graph, double threshold){
     for (int i = 0; i < graph -> edges.size(); i++) {  
         if (graph -> edges[i].cost > threshold) {
             for (int k = 0; graph -> edges[i].cost > threshold; k++) {
@@ -96,49 +92,40 @@ void subsampling(Graph* graph, double threshold){ //, vector<int>& in_edge, vect
 }
 
 
-void output_graph(Graph* graph, string file_name) {
-    vector<struct node> all_nodes = graph -> nodes;
-    vector<struct edge> all_edges = graph -> edges;
-    vector<int> out_off_edges = graph -> out_off_edges;
-    vector<int> out_offsets = graph -> out_offsets;
-    vector<int> in_off_edges = graph -> in_off_edges;
-    vector<int> in_offsets = graph -> in_offsets;
 
-    ofstream txt_file(file_name);
 
-    txt_file << all_nodes.size() << endl;
-    txt_file << all_edges.size() << endl;
 
-    for(int i = 0; i < all_nodes.size(); i++) {
-        txt_file << all_nodes[i].id << " " << all_nodes[i].osmid << " " << all_nodes[i].lat << " " << all_nodes[i].longitude << endl;
-    }
 
-    for(int i = 0; i < all_edges.size(); i++) {
-        txt_file << all_edges[i].id << " " << all_edges[i].srcid << " " << all_edges[i].trgtid << " " << all_edges[i].cost << endl;
-    }
 
-    txt_file<< "out_edge" << endl;
-    for(int i = 0; i < out_off_edges.size(); i++) {
-        txt_file<< out_off_edges[i] << endl;
-    }
 
-    txt_file<< "out_offset" << endl;
-    for(int i = 0; i < out_offsets.size(); i++) {
-        txt_file<< out_offsets[i] << endl;
-    }
 
-    txt_file<< "in_edge" << endl;
-    for(int i = 0; i < in_off_edges.size(); i++) {
-        txt_file<< in_off_edges[i] << endl;
-    }
 
-    txt_file<< "in_offset" << endl;
-    for(int i = 0; i < in_offsets.size(); i++) {
-        txt_file<< in_offsets[i] << endl;
-    }
 
-    txt_file.close();
-    return;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

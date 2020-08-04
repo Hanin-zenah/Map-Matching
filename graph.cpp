@@ -345,3 +345,48 @@ void scc_graph(Graph* graph, Graph* SCC_graph) {
     inedge_offset_array(SCC_graph);
     outedge_offset_array(SCC_graph);
 }
+
+void output_graph(Graph* graph, string file_name) {
+    vector<struct node> all_nodes = graph -> nodes;
+    vector<struct edge> all_edges = graph -> edges;
+    vector<int> out_off_edges = graph -> out_off_edges;
+    vector<int> out_offsets = graph -> out_offsets;
+    vector<int> in_off_edges = graph -> in_off_edges;
+    vector<int> in_offsets = graph -> in_offsets;
+
+    ofstream txt_file(file_name);
+
+    txt_file << all_nodes.size() << endl;
+    txt_file << all_edges.size() << endl;
+
+    for(int i = 0; i < all_nodes.size(); i++) {
+        txt_file << all_nodes[i].id << " " << all_nodes[i].osmid << " " << all_nodes[i].lat << " " << all_nodes[i].longitude << endl;
+    }
+
+    for(int i = 0; i < all_edges.size(); i++) {
+        txt_file << all_edges[i].id << " " << all_edges[i].srcid << " " << all_edges[i].trgtid << " " << all_edges[i].cost << endl;
+    }
+
+    txt_file<< "out_edge" << endl;
+    for(int i = 0; i < out_off_edges.size(); i++) {
+        txt_file<< out_off_edges[i] << endl;
+    }
+
+    txt_file<< "out_offset" << endl;
+    for(int i = 0; i < out_offsets.size(); i++) {
+        txt_file<< out_offsets[i] << endl;
+    }
+
+    txt_file<< "in_edge" << endl;
+    for(int i = 0; i < in_off_edges.size(); i++) {
+        txt_file<< in_off_edges[i] << endl;
+    }
+
+    txt_file<< "in_offset" << endl;
+    for(int i = 0; i < in_offsets.size(); i++) {
+        txt_file<< in_offsets[i] << endl;
+    }
+
+    txt_file.close();
+    return;
+}

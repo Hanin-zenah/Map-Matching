@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
     ed.calc_edge_cost(&graph, x_scale, y_scale);
 
     //generate a graph with only edge costs to plot histogram
-    //graph_edge_cost(&graph, "graph_for_hist.dat");
+    graph_edge_cost(&graph, "graph_for_hist.dat");
 
     //strongly connected componetns
     Graph SCC_graph = GRAPH_INIT;
@@ -72,16 +72,8 @@ int main(int argc, char** argv) {
     
 
     //checking if there is any self-looping nodes and print out
-    // vector<int> self_looped_nodes = self_loop_nodes(&graph);
-    // output_self_looping_nodes(self_looped_nodes, "self_looped_nodes.txt");
+    vector<int> self_looped_nodes = self_loop_nodes(&SCC_graph);
+    output_self_looping_nodes(self_looped_nodes, "self_looped_nodes.txt");
 
-    // cout<<"graph -> in_offsets.size() : "<<graph.in_offsets.size()<<endl;
-    // cout<<"graph -> in_off_edges.size() : "<<graph.in_off_edges.size()<<endl;
-    // cout<<"SCC_graph -> in_offsets.size() : "<<SCC_graph.in_offsets.size()<<endl;
-    // cout<<"SCC_graph -> in_off_edges.size() : "<<SCC_graph.in_off_edges.size()<<endl;
-
-    //cout<<"SCC_graph -> edges.size() before: "<<SCC_graph.edges.size()<<endl;
-    //subsampling(&SCC_graph, 100);
-    //cout<<"SCC_graph -> edges.size() after: "<< SCC_graph.edges.size()<<endl;
     return 0;
 }

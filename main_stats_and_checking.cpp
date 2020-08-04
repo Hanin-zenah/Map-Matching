@@ -58,15 +58,16 @@ int main(int argc, char** argv) {
     //sub-sampling 
     subsampling(&SCC_graph, 100);
 
-    //cout<<"graph.n_nodes: "<<graph.n_nodes<<endl;
-    SCC_graph.n_nodes = SCC_graph.nodes.size();
+    cout<<"number of nodes after subsampling before second SCC: "<<SCC_graph.nodes.size()<<endl;
+    cout<<"number of edges after subsampling before second SCC: "<<SCC_graph.edges.size()<<endl;
+    //SCC_graph.n_nodes = SCC_graph.nodes.size();
 
     //generate strongly connected components again
     Graph SCC_graph2 = GRAPH_INIT;
     scc_graph(&SCC_graph, &SCC_graph2);
-    cout<<SCC_graph2.nodes.size()<<endl;
-    cout<<SCC_graph2.edges.size()<<endl;
-    write_graph(&SCC_graph, "SCC_graph_subsampled.dat");
+    cout<<"number of nodes after second SCC: "<<SCC_graph2.nodes.size()<<endl;
+    cout<<"number of nodes after second SCC: "<<SCC_graph2.edges.size()<<endl;
+    //write_graph(&SCC_graph, "SCC_graph_subsampled.dat");
 
     
 

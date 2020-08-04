@@ -89,7 +89,8 @@ void subsampling(Graph* graph, double threshold){ //, vector<int>& in_edge, vect
             } 
         }
     }
-    graph -> n_nodes = graoh -> nodes.size()
+    graph -> n_nodes = graoh -> nodes.size();
+    graph -> n_edges = graoh -> edges.size()
     write_graph(graph, "graph_subsampled.dat");
     return;
 }

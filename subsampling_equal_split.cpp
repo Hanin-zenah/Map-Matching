@@ -19,6 +19,7 @@ void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2) {
     nd.id = graph -> nodes.size();
     nd.lat= (x1+x2)/2;   
     nd.longitude = (y1+y2)/2;
+    nd.osmid = 999999999;
     graph -> nodes.push_back(nd);
     graph -> edges[edgeID1].trgtid = nd.id;
     graph -> edges[edgeID1].cost = length_new;

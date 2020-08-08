@@ -8,20 +8,6 @@
 
 using namespace std;
 
-class Coupling {
-    private:
-        int n, m; // polyline V has n nodes, and T has m nodes
-        int c_array[n][m];
-
-    public:
-        Coupling(n , m){
-            n = n;
-            m = m;
-            c_array[n][m];
-        }   
-};
-
-
 typedef struct fsnode{
     int vid;
     int tid;

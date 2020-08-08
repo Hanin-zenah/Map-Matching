@@ -13,31 +13,27 @@ double nodes_dist(node g_nd, node t_nd){
 // }
 
 double min_eps(FSgraph* fsgraph){
-    vector<double> list_all_dist;
     int n = fsgraph -> n_V;
     int m = fsgraph -> n_T;
+    vector<double> botlnecl_val;
 
-    Coupling cp(n,m);
     for (int i = 0; i < n; i){
         for (int j = 0; j < m; j){
             if ( i == 0 && j == 0){
-                cp.c_array(i,j) = nodes_dist(v[0], t[0]); // think about if we can replace the c_array with eps annd just recalc
+                botlnecl_val.push_back( nodes_dist(v[0], t[0])); // think about if we can replace the c_array with eps annd just recalc
                                                         // eps every step -> might only able to give local optimum??
             }
             else if ( i == 0 && j > 0){
-                double temp_dist = nodes_dist(v[0], t[j]);
-                cp.c_array(i,j) = max(cp.c_array(0,j - 1), temp_dist);
+                botlnecl_val.push_back( max(cp.c_array(0,j - 1), nodes_dist(v[0], t[j]))); //unitl the length of the vector reaches m
             }
             else if ( i > 0 && j == 0){
-                double temp_dist = nodes_dist(v[i], t[0]);
-                cp.c_array(i,j) = max(cp.c_array(i - 1,0), temp_dist);
+                botlnecl_val[0] = max(cp.c_array(i - 1,0), nodes_dist(v[i], t[0]));
             }
             else{
-                double temp_dist = nodes_dist(v[i], t[j]);
-                cp.c_array(i,j) = max(min(cp.c_array(i - 1, j),cp.c_array(i, j - 1), cp.c_array(i - 1,j - 1)), temp_dist);
+                botlnecl_val[j] = max(min(cp.c_array(i - 1, j),cp.c_array(i, j - 1), cp.c_array(i - 1,j - 1)), nodes_dist(v[i], t[j]));
             }
             }}
-    return cp.c_array(i,j)
+    return botlnecl_val[m-1];}
 
 
             // double dist1 = nodes_dist(v[i+1], t[j]);
@@ -58,9 +54,4 @@ double min_eps(FSgraph* fsgraph){
             // else {
                 // i++;
                 // j++;}
-        // }
-        
-
-    }
-return eps;
-}
+        // 

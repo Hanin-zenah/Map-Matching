@@ -6,6 +6,12 @@
 #include <math.h>
 #include "graph.h" 
 
+
+#include <string>
+#include <vector> 
+
+#include <algorithm>
+
 using namespace std;
 
 typedef struct fsnode{
@@ -34,6 +40,6 @@ typedef struct static_fsgraph{
 } FSgraph;
 
 /* calculate the minimal leash length for discrete frechet */
-double min_eps(FSgraph* fsgraph);
+double min_eps(Graph* graph, Graph* traj);
 
 #endif

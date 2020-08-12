@@ -1,6 +1,7 @@
 /* here goes the main function which will call all the necessary function to preprocess the graph */
 #include "graph.h" 
 #include "scale_projection.h"
+#include "graph_subsampling.h"
 
 int main(int argc, char** argv) {
 
@@ -49,7 +50,7 @@ int main(int argc, char** argv) {
     scc_graph(&graph, &SCC_graph);
 
     //sub sampling 
-    subsampling(&graph, 100);
+    // subsampling(&SCC_graph, 100);
 
     return 0;
 }

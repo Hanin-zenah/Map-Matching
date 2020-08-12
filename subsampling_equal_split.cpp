@@ -18,6 +18,7 @@ void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2) {
     nd.id = graph -> nodes.size();
     nd.lat= (x1+x2)/2;   
     nd.longitude = (y1+y2)/2;
+    nd.osmid = 999999999;
     graph -> nodes.push_back(nd);
     graph -> edges[edgeID1].trgtid = nd.id;
     graph -> edges[edgeID1].cost = length_new;
@@ -76,62 +77,55 @@ int bi_dir(Graph* graph, int edgeID) {
     return b_edge;
 }
 
-void subsampling(Graph* graph, double threshold) { //, vector<int>& in_edge, vector<int>& in_offset, vector<int>& out_edge, vector<int>& out_offset) {
+void subsampling(Graph* graph, double threshold){
     for (int i = 0; i < graph -> edges.size(); i++) {  
         if (graph -> edges[i].cost > threshold) {
-            for (int k = 0; graph -> edges[i].cost > threshold; k++) {
+            while (graph -> edges[i].cost > threshold) {
                 split_bi_dir_edge(graph, i, bi_dir(graph, graph -> edges[i].id));        
             } 
         }
     }
+    graph -> n_nodes = graph -> nodes.size();
+    graph -> n_edges = graph -> edges.size();
     write_graph(graph, "graph_subsampled.dat");
     return;
 }
 
 
-void output_graph(Graph* graph, string file_name) {
-    vector<struct node> all_nodes = graph -> nodes;
-    vector<struct edge> all_edges = graph -> edges;
-    vector<int> out_off_edges = graph -> out_off_edges;
-    vector<int> out_offsets = graph -> out_offsets;
-    vector<int> in_off_edges = graph -> in_off_edges;
-    vector<int> in_offsets = graph -> in_offsets;
 
-    ofstream txt_file(file_name);
 
-    txt_file << all_nodes.size() << endl;
-    txt_file << all_edges.size() << endl;
 
-    for(int i = 0; i < all_nodes.size(); i++) {
-        txt_file << all_nodes[i].id << " " << all_nodes[i].osmid << " " << all_nodes[i].lat << " " << all_nodes[i].longitude << endl;
-    }
 
-    for(int i = 0; i < all_edges.size(); i++) {
-        txt_file << all_edges[i].id << " " << all_edges[i].srcid << " " << all_edges[i].trgtid << " " << all_edges[i].cost << endl;
-    }
 
-    txt_file<< "out_edge" << endl;
-    for(int i = 0; i < out_off_edges.size(); i++) {
-        txt_file<< out_off_edges[i] << endl;
-    }
 
-    txt_file<< "out_offset" << endl;
-    for(int i = 0; i < out_offsets.size(); i++) {
-        txt_file<< out_offsets[i] << endl;
-    }
 
-    txt_file<< "in_edge" << endl;
-    for(int i = 0; i < in_off_edges.size(); i++) {
-        txt_file<< in_off_edges[i] << endl;
-    }
 
-    txt_file<< "in_offset" << endl;
-    for(int i = 0; i < in_offsets.size(); i++) {
-        txt_file<< in_offsets[i] << endl;
-    }
 
-    txt_file.close();
-    return;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

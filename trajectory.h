@@ -3,6 +3,45 @@
 
 #include <iostream> 
 #include <fstream> 
+<<<<<<< HEAD
+#include <cmath>
+#include <cstdlib>
+#include <vector>
+
+#define TRAJ_VAL_SIZE (4)
+#define LON_LAT_COMMA_SHIFT (7)
+#define DEF_TRAJ {NULL, NULL, 0, 0, 0};
+
+using namespace std;
+
+typedef struct point {
+    double longitude;
+    double latitude;
+    double timestamp; //??
+    struct point* next;
+    struct point* prev;
+} Point;
+
+typedef struct trajectory {
+    Point* head;
+    Point* tail;
+    int length; //nPoints
+    uint32_t traceId;
+    uint32_t subId;
+} Trajectory;
+
+void add_point(Trajectory* traj, double longitude, double latitude, int timestamp);
+
+void read_next_k_bytes(ifstream& file, char* buffer, int k);
+
+void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj);
+
+vector<Trajectory> read_trajectories(string file_path, int k);
+
+
+
+
+=======
 #include <sstream>
 #include <string>
 #include <vector> 
@@ -113,5 +152,6 @@ void graph_grid(Graph* graph, int grid_h, int grid_w, double box_height, double 
 
 /* find all the nodes in the same grid */
 vector<int> nodes_in_same_grid(node traj_nd, int grid_h, int grid_w, double box_height, double box_width, double x_scale, double y_scale);
+>>>>>>> 3ec7f28b16d8e4a67b5647939df177192961e252
 
 #endif

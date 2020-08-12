@@ -2,6 +2,7 @@
 #include "graph.h" 
 #include "graph_subsampling.h"
 #include "scale_projection.h"
+#include "graph_subsampling.h"
 
 int main(int argc, char** argv) {
 

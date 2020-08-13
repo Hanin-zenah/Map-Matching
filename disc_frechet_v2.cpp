@@ -32,23 +32,23 @@ double build_node(FSgraph* fsgraph, Graph* graph, Graph* traj, fsnode fsnd, int 
         fedge.trg = &fnd;
     }
     else {
-         fedge.trg = fsgraph -> pair_dict.find(pairing(fnd.vid, fnd.tid));
+         fedge.trg = *fsgraph -> pair_dict.find(pairing(fnd.vid, fnd.tid));
          fnd.dist = fedge.trg -> dist; 
     }
     fedge.edgeid = fsgraph -> fsedges.size() + 2 - up - right;
     fedge.src = &fsnd;
-    fedge.botlneck_val = max(fnd.dist,fsgraph -> eps); // the fnd.dist would be the same regardless the prior existence of this new corner
+    fedge.botlneck_val = max(fnd.dist, fsgraph -> eps); // the fnd.dist would be the same regardless the prior existence of this new corner
     fsgraph -> fsedges.push_back(fedge);
     return fedge.botlneck_val;
     }
 
-unsigned long long int traversal(FSgraph* fsgraph, unsigned long long int corner,
+unsigned long long int traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, unsigned long long int corner, 
                          priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack){
     
-   FSnode* fnd = fsgraph -> pair_dict.find(corner);
-   double eps1 = build_node(fsgraph, fnd, 1, 1); // always create diagonal move first
-   double eps2 = build_node(fsgraph, fnd, 0, 1);
-   double eps3 = build_node(fsgraph, fnd, 1, 0);
+   FSnode fnd = *fsgraph -> pair_dict.find(corner);
+   double eps1 = build_node(fsgraph, graph, traj, fnd, 1, 1); // always create diagonal move first
+   double eps2 = build_node(fsgraph, graph, traj, fnd, 0, 1);
+   double eps3 = build_node(fsgraph, graph, traj, fnd, 1, 0);
    int size = fsgraph -> fsnodes.size();
    fsgraph -> fsnodes[size - 4].edgelist = {fsgraph -> fsedges[size - 3].edgeid, fsgraph -> fsedges[size - 2].edgeid, fsgraph -> fsedges[size - 1].edgeid};
    vector<double> btl_neck_vals = {eps1, eps2, eps3};
@@ -125,7 +125,7 @@ double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph){
     fsgraph -> fsnodes.push_back(fnd);
     fsgraph -> pair_dict[fnd.fspair] = &fnd;
     while (fsgraph -> pair_dict.find(fnd.fspair) -> tid < m) {
-         fnd.fspair = traversal(fsgraph, fnd.fspair, bigger_eps, Stack);
+         fnd.fspair = traversal(fsgraph, graph, traj, fnd.fspair, bigger_eps, Stack);
     }
     return fsgraph -> eps;
 }

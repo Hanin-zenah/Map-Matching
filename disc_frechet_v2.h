@@ -38,7 +38,7 @@ typedef struct fsedge{
 
 typedef struct static_fsgraph {
     double eps; //the min traversal distance, initial = distance(v1, t1) // global leashlength value for the freespace graph
-    unordered_map<unsigned long long int, FSnode*> pair_dict;
+    unordered_map<unsigned long long int, FSnode*> pair_dict; 
     vector<struct fsnode> fsnodes;
     vector<struct fsedge> fsedges;
 } FSgraph;
@@ -64,6 +64,5 @@ double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph);
 double build_node(FSgraph* fsgraph, fsnode fsnd, int up, int right);
 
 /* given a nodes pair on a FS graph, returns the node pair after the next traversal */
-pair<int,int> traversal(FSgraph* fsgraph, pair<int,int> corner , priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack);
-
+unsigned long long int traversal(FSgraph* fsgraph, unsigned long long int corner, Graph* graph, Graph* traj, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack);
 #endif

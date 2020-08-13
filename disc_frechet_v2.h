@@ -19,7 +19,7 @@
 using namespace std;
 
 typedef struct fsnode{
-    pair<int,int> fspair; // are fsnode IDs and edge ID neccesary?
+    unsigned long long int fspair; // are fsnode IDs and edge ID neccesary?
     int vid;
     int tid;
     double dist;
@@ -30,15 +30,15 @@ typedef struct fsnode{
 
 typedef struct fsedge{
     int edgeid;
-    fsnode* src; //how do I point to a FSnode without using a sort of ID
-    fsnode* trg;
+    FSnode* src; //how do I point to a FSnode without using a sort of ID
+    FSnode* trg;
     double botlneck_val;
 } FSedge;
 
 
 typedef struct static_fsgraph {
     double eps; //the min traversal distance, initial = distance(v1, t1) // global leashlength value for the freespace graph
-    unordered_map<pair<int, int>, FSnode*> pair_dict;
+    unordered_map<unsigned long long int, FSnode*> pair_dict;
     vector<struct fsnode> fsnodes;
     vector<struct fsedge> fsedges;
 } FSgraph;
@@ -50,6 +50,9 @@ struct Comp_eps {
 };
 /* to sort the min priority queue */
 // bool compare_eps(FSedge* edge1, FSedge* edge2);
+
+/* Cantor pairing function */
+unsigned long long int pairing(int n, int m);
 
 /* distance of Vi, Tj in a corner */
 double nodes_dist(node g_nd, node t_nd);

@@ -5,6 +5,11 @@
     // return edge1 -> botlneck_val > edge2 -> botlneck_val;
 // }
 // 
+
+unsigned long long int pairing(int n, int m){
+    return 0.5*(n+m)*(n+m+1)+m;
+}
+
 double nodes_dist(node g_nd, node t_nd) {
     double dist = sqrt(pow((t_nd.lat - g_nd.lat), 2) + pow((t_nd.longitude - g_nd.longitude), 2));
     return dist;
@@ -17,18 +22,17 @@ double build_node(FSgraph* fsgraph, Graph* graph, Graph* traj, fsnode fsnd, int 
     fnd.vid = fsnd.vid + up ;
     fnd.tid = fsnd.vid + right;
     /* test if the corner/node pair already exists, if not, build a new node, but need to build a new edge regardless */
-    if(fsgraph -> pair_dict.find(<fsnd.vid + up, fsnd.vid + right>) == fsgraph -> pair_dict.end()){
-        fnd.fspair.first = fnd.vid;
-        fnd.fspair.second = fnd.tid;
+    if(fsgraph -> pair_dict.find(pairing(fnd.vid, fnd.tid)) == fsgraph -> pair_dict.end()){
+        fnd.fspair = pairing(fnd.vid, fnd.tid);
         fnd.visited = false;
         fnd.dist = nodes_dist(graph -> nodes[fnd.vid], traj -> nodes[fnd.tid]);
         fnd.edgelist = {0,0,0}; // initialization? can be overwritten later??
         fsgraph -> fsnodes.push_back(fnd);
-        fsgraph -> pair_dict[fnd.fspair] = fnd;
+        fsgraph -> pair_dict[fnd.fspair] = &fnd;
         fedge.trg = &fnd;
     }
     else {
-         fedge.trg = pair_dict.find(<fsnd.vid + up, fsnd.vid + right>);
+         fedge.trg = fsgraph -> pair_dict.find(pairing(fnd.vid, fnd.tid));
          fnd.dist = fedge.trg -> dist; 
     }
     fedge.edgeid = fsgraph -> fsedges.size() + 2 - up - right;
@@ -38,9 +42,10 @@ double build_node(FSgraph* fsgraph, Graph* graph, Graph* traj, fsnode fsnd, int 
     return fedge.botlneck_val;
     }
 
-pair<int,int> traversal(FSgraph* fsgraph, pair<int,int> corner,
+unsigned long long int traversal(FSgraph* fsgraph, unsigned long long int corner,
                          priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack){
-   FSnode fnd = fsgraph -> pair_dict.find(corner);
+    
+   FSnode* fnd = fsgraph -> pair_dict.find(corner);
    double eps1 = build_node(fsgraph, fnd, 1, 1); // always create diagonal move first
    double eps2 = build_node(fsgraph, fnd, 0, 1);
    double eps3 = build_node(fsgraph, fnd, 1, 0);
@@ -48,7 +53,6 @@ pair<int,int> traversal(FSgraph* fsgraph, pair<int,int> corner,
    fsgraph -> fsnodes[size - 4].edgelist = {fsgraph -> fsedges[size - 3].edgeid, fsgraph -> fsedges[size - 2].edgeid, fsgraph -> fsedges[size - 1].edgeid};
    vector<double> btl_neck_vals = {eps1, eps2, eps3};
    queue <FSedge*> temp_queue;
-
    for(int i = 0; i < btl_neck_vals.size(); i++) {
        if(btl_neck_vals[i] > fsgraph -> eps) {
             // store these local eps for potential global min eps increase
@@ -60,7 +64,7 @@ pair<int,int> traversal(FSgraph* fsgraph, pair<int,int> corner,
         }
     }
     //go forward with the traversal 
-
+    unsigned long long int next_fspair;
     //if there are no more available edges in the current cell
     if(temp_queue.empty()) {
        if(Stack.empty()) {
@@ -72,9 +76,7 @@ pair<int,int> traversal(FSgraph* fsgraph, pair<int,int> corner,
            fsgraph -> eps = min_eps_fedge -> botlneck_val;
            FSnode* next_nd = min_eps_fedge -> trg; //does the .trg need to be a pointer? does the bigger_eps need to be a queue of pointers?
            next_nd -> visited = true; //change the actual flag on memory and not the copy of it?
-           pair<int, int> next_fspair;
-           next_fspair.first = next_nd -> vid;
-           next_fspair.second = next_nd -> tid;
+           next_fspair = pairing(next_nd -> vid, next_nd -> tid);
        }
        else { 
            //case 2: 
@@ -83,25 +85,23 @@ pair<int,int> traversal(FSgraph* fsgraph, pair<int,int> corner,
            Stack.pop();
            FSnode* next_nd = back_edge -> trg;
            next_nd -> visited = true; 
-           pair<int, int> next_fspair;
-           next_fspair.first = next_nd -> vid;
-           next_fspair.second = next_nd -> tid;
+           next_fspair = pairing(next_nd -> vid, next_nd -> tid);
+
         }
     }
    else { 
        // case 3: proceed to a node within the cell, favouring diagonal movement
-       FSedge* selected_edge = temp_queue.top(); //the first one in is always the diagonal move, then right move then up move.
+       FSedge* selected_edge = temp_queue.front(); //the first one in is always the diagonal move, then right move then up move.
        temp_queue.pop();
        while(!temp_queue.empty()) {
-           Stack.push(temp_queue.top());
+           //FSedge* reachable_edge = temp_queue.top();
+           Stack.push(temp_queue.front());
            temp_queue.pop();
        }
-       
+
        FSnode* next_nd = selected_edge -> trg; //.trg is a FS node.
        next_nd -> visited = true;
-       pair<int, int> next_fspair;
-       next_fspair.first = next_nd -> vid;
-       next_fspair.second = next_nd -> tid;
+       next_fspair = pairing(next_nd -> vid, next_nd -> tid);
    }
    return next_fspair;
 }
@@ -111,28 +111,24 @@ double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph){
     int m = traj -> nodes.size();
 
     // int m = traj -> length;
-
     FSnode fnd;
     FSedge fedge;
     priority_queue<FSedge*, vector<FSedge*>, Comp_eps> bigger_eps;
     stack <FSedge*> Stack; 
     /* building the starting node (V0,T0) */
     fsgraph -> eps = nodes_dist(graph -> nodes[0] /* this needs to be the closest found node on the graph for the map matching*/, traj -> nodes[0]); //change this to be the closest node 
-    fnd.fspair.first = 0;
-    fnd.fspair.second = 0;
     fnd.vid = graph -> nodes[0].id;
     fnd.tid = traj -> nodes[0].id;
+    fnd.fspair = pairing(fnd.vid, fnd.tid);
     fnd.visited = true;
     fnd.edgelist = {0,1,2};// can be overwritten later??
     fsgraph -> fsnodes.push_back(fnd);
-    fsgraph -> pair_dict[fnd.fspair] = fnd;
-
-    while (fnd.fspair.second < m) {
+    fsgraph -> pair_dict[fnd.fspair] = &fnd;
+    while (fsgraph -> pair_dict.find(fnd.fspair) -> tid < m) {
          fnd.fspair = traversal(fsgraph, fnd.fspair, bigger_eps, Stack);
     }
     return fsgraph -> eps;
 }
-
 
 
 void read_file(string file_name, Graph* graph) {
@@ -172,7 +168,6 @@ void read_file(string file_name, Graph* graph) {
 
         graph -> edges.push_back(e);
     }}
-
 
 
 int main(int argc, char** argv){

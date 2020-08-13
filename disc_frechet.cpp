@@ -21,6 +21,7 @@ double min_eps(Graph* graph, Graph* traj){
     int m = traj -> nodes.size();
     vector<double> botlneck_val;
     vector<double> plc_holder;
+ 
 
     for (int i = 0; i < n; i++){
         if ( i > 1){
@@ -45,6 +46,31 @@ double min_eps(Graph* graph, Graph* traj){
             }
             }}
     return botlneck_val[m-1];}
+
+vector<pair <int, int>> route(raph* graph, Graph* traj, double eps){
+    vector<pair <int, int>> best_route;
+    vector<double> dist_list;
+    for (int j = 0; j < m; j++){
+        if ( i == 0 && j == 0){
+            //best_route.push_back(<0,0>);
+            dist_list.push_back(nodes_dist(graph -> nodes[0], traj -> nodes[0]));
+        }
+        else if ( i == 0 && j > 0){
+            dist_list.push_back(nodes_dist(graph -> nodes[0], traj -> nodes[j]));
+        }
+        else if ( i > 0 && j == 0){
+            dist_list.push_back(nodes_dist(graph -> nodes[i], traj -> nodes[0]));
+        }
+        else{
+            dist_list.push_back(nodes_dist(graph -> nodes[i], traj -> nodes[0]));
+        }
+        }
+
+
+
+
+    return best_route;
+}
 
 
 void read_file(string file_name, Graph* graph) {

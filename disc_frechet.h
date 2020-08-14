@@ -6,40 +6,48 @@
 #include <math.h>
 #include "graph.h" 
 
-
 #include <string>
 #include <vector> 
 
 #include <algorithm>
+#include <queue> 
+#include <stack>
+#include <unordered_map> 
+
+
+#define FSGRAPH_INIT {0}
 
 using namespace std;
 
+
 typedef struct fsnode{
+    pair<int,int> fsID; // are fsnode IDs and edge ID neccesary?
     int vid;
     int tid;
+    double dist;
     bool reachable;
+    bool visited;
     vector<int> edgelist;
 } FSnode;
 
 
 typedef struct fsedge{
-    FSnode src;
-    FSnode trg;
-    double btlneck_val;
+    int edgeid;
+    fsnode src; //how do I point to a FSnode without using a sort of ID
+    fsnode trg;
+    double botlneck_val;
 } FSedge;
 
 
 typedef struct static_fsgraph{
     double eps; //the min traversal distance, initial = distance(v1, t1)
-    int n_V, n_T;
-    // n_FSnodes = (n+1)*(m+1);
-    // n_FSedges = 3*n*m + m , if m > n, or else 3*n*m + n
-    vector<struct FSnode> FSnodes;
-    vector<struct FSedge> FSedges;
-
+    //vector<struct fsnode> fsnodes;
+    //unordered_map<fsnode.fsID, fsnode> fsnodes;
+    vector<struct fsnode> fsnodes;
+    vector<struct fsedge> fsedges;
 } FSgraph;
 
 /* calculate the minimal leash length for discrete frechet */
-double min_eps(Graph* graph, Graph* traj);
+double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph);
 
 #endif

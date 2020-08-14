@@ -1,4 +1,3 @@
-#include "graph.h" // a copy of graph.h with change of nodes struct
 #include "disc_frechet_v2.h"
 
 // bool compare_eps(FSedge* edge1, FSedge* edge2) {
@@ -15,18 +14,27 @@ double nodes_dist(node g_nd, node t_nd) {
     return dist;
 }
 
-double build_node(FSgraph* fsgraph, Graph* graph, Graph* traj, fsnode fsnd, int up, int right){
+double build_node(FSgraph* fsgraph, Graph* graph, Graph* traj, fsnode fsnd, int neighbor_id, int up, int right){
     FSnode fnd;
     FSedge fedge;
 
-    fnd.vid = fsnd.vid + up ;
-    fnd.tid = fsnd.vid + right;
+    //Point* traj
+    //traj -> nodes[fsnd.tid] 
+    if (up == 0){
+         fnd.vid = fsnd.vid;
+    }
+    else{
+        fnd.vid =  neighbor_id;
+    }
+
+    //fnd.vid = fsnd.vid + up; // up = 1 means get_incident() [i]
+    fnd.tid = fsnd.tid + right; // right = 1 means Point next.
     /* test if the corner/node pair already exists, if not, build a new node, but need to build a new edge regardless */
     if(fsgraph -> pair_dict.find(pairing(fnd.vid, fnd.tid)) == fsgraph -> pair_dict.end()){
         fnd.fspair = pairing(fnd.vid, fnd.tid);
         fnd.visited = false;
         fnd.dist = nodes_dist(graph -> nodes[fnd.vid], traj -> nodes[fnd.tid]);
-        fnd.edgelist = {0,0,0}; // initialization? can be overwritten later??
+        //fnd.edgelist = {}; // initialization? can be overwritten later??
         fsgraph -> fsnodes.push_back(fnd);
         fsgraph -> pair_dict[fnd.fspair] = &fnd;
         fedge.trg = &fnd;
@@ -46,20 +54,30 @@ unsigned long long int traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, un
                          priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack){
     
    FSnode fnd = *fsgraph -> pair_dict.find(corner);
-   double eps1 = build_node(fsgraph, graph, traj, fnd, 1, 1); // always create diagonal move first
-   double eps2 = build_node(fsgraph, graph, traj, fnd, 0, 1);
-   double eps3 = build_node(fsgraph, graph, traj, fnd, 1, 0);
+   vector<int> incidents = get_incident(graph, fnd.vid);
+   vector<double> btl_neck_vals;
+   double eps = build_node(fsgraph, graph, traj, fnd, fnd.vid, 0, 1);
+   btl_neck_vals.push_back(eps);
+
+   for (int i; i < incidents.size(); i++){
+       int neighbour_id  = incidents[i];
+       
+       double eps1 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 1);
+       btl_neck_vals.push_back(eps1);
+       double eps2 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 0);
+       btl_neck_vals.push_back(eps2);
+   }
+
    int size = fsgraph -> fsnodes.size();
-   fsgraph -> fsnodes[size - 4].edgelist = {fsgraph -> fsedges[size - 3].edgeid, fsgraph -> fsedges[size - 2].edgeid, fsgraph -> fsedges[size - 1].edgeid};
-   vector<double> btl_neck_vals = {eps1, eps2, eps3};
    queue <FSedge*> temp_queue;
    for(int i = 0; i < btl_neck_vals.size(); i++) {
        if(btl_neck_vals[i] > fsgraph -> eps) {
-            // store these local eps for potential global min eps increase
-            //store the edges with higher eps to be accessed later if needed
+            /*store these local eps for potential global min eps increase
+            store the edges with higher eps to be accessed later if needed */
             bigger_eps.push(&fsgraph -> fsedges[fsgraph -> fsedges.size() - i - 1]);
         }
-       else { //only store the current 3 outgoing edges, if they meet the condition; refresh at each iteration
+       else { /* only store the current 3 outgoing edges, if they meet the condition;
+                 refresh at each iteration */
            temp_queue.push(&fsgraph -> fsedges[fsgraph -> fsedges.size() - i - 1]);
         }
     }
@@ -107,7 +125,6 @@ unsigned long long int traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, un
 }
        
 double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph){
-    int n = graph -> nodes.size();
     int m = traj -> nodes.size();
 
     // int m = traj -> length;
@@ -121,7 +138,7 @@ double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph){
     fnd.tid = traj -> nodes[0].id;
     fnd.fspair = pairing(fnd.vid, fnd.tid);
     fnd.visited = true;
-    fnd.edgelist = {0,1,2};// can be overwritten later??
+    //fnd.edgelist = {0,1,2};// can be overwritten later??
     fsgraph -> fsnodes.push_back(fnd);
     fsgraph -> pair_dict[fnd.fspair] = &fnd;
     while (fsgraph -> pair_dict.find(fnd.fspair) -> tid < m) {

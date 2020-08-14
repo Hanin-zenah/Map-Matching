@@ -34,7 +34,6 @@ double build_node(FSgraph* fsgraph, Graph* graph, Graph* traj, fsnode fsnd, int 
         fnd.fspair = pairing(fnd.vid, fnd.tid);
         fnd.visited = false;
         fnd.dist = nodes_dist(graph -> nodes[fnd.vid], traj -> nodes[fnd.tid]);
-        //fnd.edgelist = {}; // initialization? can be overwritten later??
         fsgraph -> fsnodes.push_back(fnd);
         fsgraph -> pair_dict[fnd.fspair] = &fnd;
         fedge.trg = &fnd;
@@ -61,7 +60,6 @@ unsigned long long int traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, un
 
    for (int i; i < incidents.size(); i++){
        int neighbour_id  = incidents[i];
-       
        double eps1 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 1);
        btl_neck_vals.push_back(eps1);
        double eps2 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 0);
@@ -78,55 +76,38 @@ unsigned long long int traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, un
         }
        else { /* only store the current 3 outgoing edges, if they meet the condition;
                  refresh at each iteration */
-           temp_queue.push(&fsgraph -> fsedges[fsgraph -> fsedges.size() - i - 1]);
+            Stack.push(&fsgraph -> fsedges[fsgraph -> fsedges.size() - i - 1]);
         }
     }
-    //go forward with the traversal 
+
+/* Traversaling */
     unsigned long long int next_fspair;
     //if there are no more available edges in the current cell
-    if(temp_queue.empty()) {
-       if(Stack.empty()) {
-           //case 1: 
-           //if there are no more readily traversable edges in the freespace graph
-           //update the eps (leash length)
-           FSedge* min_eps_fedge = bigger_eps.top();
-           bigger_eps.pop();
-           fsgraph -> eps = min_eps_fedge -> botlneck_val;
-           FSnode* next_nd = min_eps_fedge -> trg; //does the .trg need to be a pointer? does the bigger_eps need to be a queue of pointers?
-           next_nd -> visited = true; //change the actual flag on memory and not the copy of it?
-           next_fspair = pairing(next_nd -> vid, next_nd -> tid);
-       }
-       else { 
-           //case 2: 
-           //cannot proceed with the current cell but doesn't need to change eps yet
-           FSedge* back_edge = Stack.top(); //back to the nearest edge that is still reachable and unvisited with this current eps
-           Stack.pop();
-           FSnode* next_nd = back_edge -> trg;
-           next_nd -> visited = true; 
-           next_fspair = pairing(next_nd -> vid, next_nd -> tid);
-
-        }
+    if(Stack.empty()) {
+        /* case 1: if there are no more readily traversable edges in the freespace graph,
+        update the eps (leash length) */
+        FSedge* min_eps_fedge = bigger_eps.top();
+        bigger_eps.pop();
+        fsgraph -> eps = min_eps_fedge -> botlneck_val;
+        FSnode* next_nd = min_eps_fedge -> trg; //does the .trg need to be a pointer? does the bigger_eps need to be a queue of pointers?
+        next_nd -> visited = true; //change the actual flag on memory and not the copy of it?
+        next_fspair = pairing(next_nd -> vid, next_nd -> tid);
     }
-   else { 
-       // case 3: proceed to a node within the cell, favouring diagonal movement
-       FSedge* selected_edge = temp_queue.front(); //the first one in is always the diagonal move, then right move then up move.
-       temp_queue.pop();
-       while(!temp_queue.empty()) {
-           //FSedge* reachable_edge = temp_queue.top();
-           Stack.push(temp_queue.front());
-           temp_queue.pop();
-       }
+    else { 
+        /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
+            the current cell, might be from the previous cells if there are no reachable nodes in this cell */
+         FSedge* back_edge = Stack.top();
+         Stack.pop();
+         FSnode* next_nd = back_edge -> trg;
+         next_nd -> visited = true; 
+         next_fspair = pairing(next_nd -> vid, next_nd -> tid);
+        }
 
-       FSnode* next_nd = selected_edge -> trg; //.trg is a FS node.
-       next_nd -> visited = true;
-       next_fspair = pairing(next_nd -> vid, next_nd -> tid);
-   }
    return next_fspair;
 }
        
 double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph){
     int m = traj -> nodes.size();
-
     // int m = traj -> length;
     FSnode fnd;
     FSedge fedge;
@@ -141,8 +122,10 @@ double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph){
     //fnd.edgelist = {0,1,2};// can be overwritten later??
     fsgraph -> fsnodes.push_back(fnd);
     fsgraph -> pair_dict[fnd.fspair] = &fnd;
-    while (fsgraph -> pair_dict.find(fnd.fspair) -> tid < m) {
-         fnd.fspair = traversal(fsgraph, graph, traj, fnd.fspair, bigger_eps, Stack);
+    bool finished = false;
+    while (!finished) {
+        fnd.fspair = traversal(fsgraph, graph, traj, fnd.fspair, bigger_eps, Stack);
+        finished = fsgraph -> pair_dict.find(fnd.fspair) -> tid < m;
     }
     return fsgraph -> eps;
 }

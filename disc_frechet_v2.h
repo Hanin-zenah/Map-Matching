@@ -36,7 +36,7 @@ typedef struct fsedge{
 } FSedge;
 
 
-typedef struct static_fsgraph {
+typedef struct fsgraph {
     double eps; //the min traversal distance, initial = distance(v1, t1) // global leashlength value for the freespace graph
     unordered_map<unsigned long long int, FSnode*> pair_dict; 
     vector<struct fsnode> fsnodes;

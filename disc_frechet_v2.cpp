@@ -27,7 +27,6 @@ double build_node(FSgraph* fsgraph, Graph* graph, Graph* traj, fsnode fsnd, int 
         // fnd.fspair = pairing(fnd.vid, fnd.tid);
         fnd.visited = false;
         fnd.dist = nodes_dist(graph -> nodes[fnd.vid], traj -> nodes[fnd.tid]);
-        //fnd.edgelist = {}; // initialization? can be overwritten later??
         fsgraph -> fsnodes.push_back(fnd);
         fsgraph -> pair_dict[pair] = &fnd; //fsgraph -> pair_dict.insert({pair, &fnd});
         fedge.trg = &fnd;
@@ -73,7 +72,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, FSpair corner,
         }
         else { /* only store the current 3 outgoing edges, if they meet the condition;
                  refresh at each iteration */
-           temp_queue.push(&fsgraph -> fsedges[fsgraph -> fsedges.size() - i - 1]);
+            Stack.push(&fsgraph -> fsedges[fsgraph -> fsedges.size() - i - 1]);
         }
     }
         //go forward with the traversal 
@@ -102,7 +101,6 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, FSpair corner,
                 next_nd -> visited = true; 
                 next_fspair.first = next_nd -> vid;
                 next_fspair.second = next_nd -> tid;
-
             }
         }
     else { 
@@ -125,7 +123,6 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, FSpair corner,
        
 double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph){
     int m = traj -> nodes.size();
-
     // int m = traj -> length;
     FSnode fnd;
     FSedge fedge;
@@ -142,7 +139,7 @@ double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph){
     fsgraph -> fsnodes.push_back(fnd);
     FSpair pair = {fnd.vid, fnd.tid};
     fsgraph -> pair_dict[pair] = &fnd;
-
+    bool finsihed = false;
     while (fsgraph->pair_dict.find(pair)->second->tid < m) {
          pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack);
     }

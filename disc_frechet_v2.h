@@ -63,7 +63,7 @@ struct KeyHash {
 
 };
 
-typedef struct static_fsgraph {
+typedef struct fsgraph {
     double eps; //the min traversal distance, initial = distance(v1, t1) // global leashlength value for the freespace graph
     unordered_map<FSpair, FSnode*, KeyHash> pair_dict; 
     vector<FSnode> fsnodes;

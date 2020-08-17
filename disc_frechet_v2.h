@@ -20,6 +20,7 @@ using namespace std;
 
 typedef struct fsnode {
     // unsigned long long int fspair; //are fsnode IDs and edge ID neccesary?
+    //FSpair fspair;
     int vid;
     int tid;
     double dist;
@@ -29,11 +30,16 @@ typedef struct fsnode {
 
 
 typedef struct fsedge {
-    int edgeid;
     FSnode* src; //how do I point to a FSnode without using a sort of ID
     FSnode* trg;
     double botlneck_val;
 } FSedge;
+
+typedef struct superedge {
+    bool src;
+    FSnode* trg;
+    double botlneck_val;
+} SuperEdge;
 
 
 typedef struct FSPair_key {
@@ -66,7 +72,7 @@ struct KeyHash {
 typedef struct fsgraph {
     double eps; //the min traversal distance, initial = distance(v1, t1) // global leashlength value for the freespace graph
     unordered_map<FSpair, FSnode*, KeyHash> pair_dict; 
-    vector<FSnode> fsnodes;
+    vector<FSnode> fsnodes;// can be changed to pointers?? only used them to count the number of nodes/edges in the FSgraph so far
     vector<FSedge> fsedges;
 } FSgraph;
 
@@ -80,7 +86,6 @@ struct Comp_eps {
 
 /* Cantor pairing function */
 // unsigned long long int pairing(int n, int m);
-
 
 
 /* distance of Vi, Tj in a corner */

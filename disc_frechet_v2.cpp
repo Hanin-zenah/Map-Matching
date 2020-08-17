@@ -25,19 +25,11 @@ double build_node(FSgraph* fsgraph, Graph* graph, Graph* traj, fsnode fsnd, int 
     pair.second = fnd.tid;
     auto it = fsgraph -> pair_dict.find(pair);
     auto it2 = fsgraph -> pair_dict.end();
-    // FSnode* fndtest = it -> second;
-    // int test = fndtest -> tid;
+    FSnode* fndtest = it -> second;
+    int test = fndtest -> tid;
 
     //cout<<it -> second -> vid <<it2 -> second -> vid;//<<endl;
-    if(fsgraph -> pair_dict.find(pair) != fsgraph -> pair_dict.end()) {  //switched with ==
-        
-        // /* pair already exists on graph */
-        auto it = fsgraph -> pair_dict.find(pair);
-        // /* if (it -> visited){ } won't build this node nor edge */
-        fedge.trg = it -> second;
-        fnd.dist = fedge.trg -> dist; 
-     }
-    else { 
+    if(fsgraph -> pair_dict.find(pair) == fsgraph -> pair_dict.end()) {  //switched with ==
         //if pair not in map 
         cout<<"pair not in map!!!!!! fnd.vid:    "<<fnd.vid<<endl;
         fnd.visited = false; /* didn't really end up making this bool value */
@@ -45,6 +37,13 @@ double build_node(FSgraph* fsgraph, Graph* graph, Graph* traj, fsnode fsnd, int 
         fsgraph -> fsnodes.push_back(fnd);
         fsgraph -> pair_dict[pair] = &fnd; //fsgraph -> pair_dict.insert({pair, &fnd});
         fedge.trg = &fnd;
+     }
+    else { 
+         // /* pair already exists on graph */
+        auto it = fsgraph -> pair_dict.find(pair);
+        // /* if (it -> visited){ } won't build this node nor edge */
+        fedge.trg = it -> second;
+        fnd.dist = fedge.trg -> dist; 
     }
     fedge.src = &fsnd;
     fedge.botlneck_val = max(fnd.dist, fsgraph -> eps); // the fnd.dist would be the same regardless the prior existence of this new corner
@@ -86,7 +85,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, FSpair corner,
         else { /* only store the current 3 outgoing edges, if they meet the condition;
                  refresh at each iteration */
             cout<<"fsgraph -> fsedges.size() - i - 1: "<<fsgraph -> fsedges.size() - i - 1<<endl;
-            cout<<"fsgraph -> fsedges[fsgraph -> fsedges.size() - i - 1].trg -> vid: "<<fsgraph -> fsedges[size-1].trg -> vid<<endl;
+            cout<<"fsgraph -> fsedges[fsgraph -> fsedges.size() - i - 1].trg -> vid: "<<fsgraph -> fsedges[fsgraph -> fsedges.size() - i - 1].trg -> vid<<endl;
             Stack.push(&fsgraph -> fsedges[fsgraph -> fsedges.size() - i - 1]);
         }
     }
@@ -151,7 +150,7 @@ double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph){
     pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack);
     finished = pair.second >= m;
     cout<<"pair.second"<<" "<<pair.second<<endl;
-    break;
+   // break;
 }
 // 
     return fsgraph -> eps;

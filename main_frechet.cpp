@@ -22,12 +22,15 @@ int main(int argc, char** argv) {
     traj.nodes[0].longitude = 20;
     traj.nodes[2].lat = 16;
 
+
     // for (int i; i < graph.nodes.size();i++){
         // cout<<"graph.nodes[i].id: "<<graph.nodes[i].id<<endl;
     // }
   
     FSgraph fsgraph = FSGRAPH_INIT;
     cout<<min_eps(&graph, &traj, &fsgraph);
+
+    cleanup(&fsgraph);
 
 
     return 0;

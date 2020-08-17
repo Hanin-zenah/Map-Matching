@@ -13,6 +13,7 @@
 #include <queue> 
 #include <stack>
 #include <unordered_map> 
+#include <cstdlib>
 
 #define FSGRAPH_INIT {0}
 
@@ -30,16 +31,17 @@ typedef struct fsnode {
 
 
 typedef struct fsedge {
-    FSnode* src; //how do I point to a FSnode without using a sort of ID
+    FSnode* src; //super edge will have no source 
     FSnode* trg;
     double botlneck_val;
+    // bool superEdge;
 } FSedge;
 
-typedef struct superedge {
-    bool src;
-    FSnode* trg;
-    double botlneck_val;
-} SuperEdge;
+// typedef struct superedge {
+//     bool src;
+//     FSnode* trg;
+//     double botlneck_val;
+// } SuperEdge;
 
 
 typedef struct FSPair_key {
@@ -72,8 +74,8 @@ struct KeyHash {
 typedef struct fsgraph {
     double eps; //the min traversal distance, initial = distance(v1, t1) // global leashlength value for the freespace graph
     unordered_map<FSpair, FSnode*, KeyHash> pair_dict; 
-    vector<FSnode> fsnodes;// can be changed to pointers?? only used them to count the number of nodes/edges in the FSgraph so far
-    vector<FSedge> fsedges;
+    vector<FSnode*> fsnodes;// can be changed to pointers?? only used them to count the number of nodes/edges in the FSgraph so far
+    vector<FSedge*> fsedges;
 } FSgraph;
 
 
@@ -99,4 +101,7 @@ double build_node(FSgraph* fsgraph, fsnode fsnd, int neighbor_id, int up, int ri
 
 /* given a nodes pair on a FS graph, returns the node pair after the next traversal */
 FSpair traversal(FSgraph* fsgraph, FSpair corner, Graph* graph, Graph* traj, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack);
+
+void cleanup(FSgraph* fsgraph);
+
 #endif

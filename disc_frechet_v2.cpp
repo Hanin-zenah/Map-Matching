@@ -19,12 +19,6 @@ double build_node(FSgraph* fsgraph, Graph* graph, Graph* traj, fsnode* fsnd, int
         fnd -> vid = neighbor_id;
     }
 
-    // if(right == 0) {
-    //     fnd -> tid = fsnd -> tid;
-    // }
-    // else {
-
-    // }
     fnd -> tid = fsnd -> tid + right; // right = 1 means Point next.
     // /* test if the corner/node pair already exists, if not, build a new node, but need to build a new edge regardless */
     FSpair pair; // = {fnd.vid, fnd.tid};
@@ -140,7 +134,7 @@ double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph){
                                 /* this needs to be the closest found node on the graph for the map matching*/
     fsgraph -> eps = nodes_dist(graph -> nodes[0], traj -> nodes[0]); //change this to be the closest node 
                                                     /*traj -> head */
-                                                    
+
     fnd -> vid = graph -> nodes[0].id;
     fnd -> tid = 0;
     // fnd.fspair = pairing(fnd.vid, fnd.tid);

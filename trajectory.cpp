@@ -1,6 +1,7 @@
 //read the binary trajectory files to extract the polyline (sampled trajectory) 
 // #include "graph.h"
 #include "trajectory.h"
+#include "scale_projection.h"
 
 void add_point(Trajectory* traj, double longitude, double latitude, int timestamp) {
     Point* cur = traj -> head;
@@ -41,7 +42,7 @@ void read_next_k_bytes(ifstream& file, char* buffer, int k) {
 // lat lon timestamp
 // nPoints traceId subId
 // ...
-void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj) {
+void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, double min_long, double min_lat) {
     file.seekg(offset, ios::beg);
     if(file.eof()) {
         return;
@@ -65,14 +66,20 @@ void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj) {
     double longitude;
     double latitude; 
     int timestamp; 
+    Euc_distance ed;
+
     for(int i = 0; i < traj -> length; i++) {
         read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
         longitude = *(int*)buffer;
         longitude /= pow(10, LON_LAT_COMMA_SHIFT);
+        /* overwrite the node's longitude in mercator projection */
+        longitude = ed.lon_mercator_proj(longitude, min_long);
 
         read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
         latitude = *(int*)buffer;
         latitude /= pow(10, LON_LAT_COMMA_SHIFT);
+        /* overwrite the node's latitude in mercator projection */
+        latitude = ed.lon_mercator_proj(latitude, min_lat);
 
         read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
         timestamp = *(int*)buffer;

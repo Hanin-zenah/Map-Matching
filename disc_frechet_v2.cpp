@@ -25,13 +25,13 @@ double build_node(FSgraph* fsgraph, Graph* graph, Graph* traj, fsnode* fsnd, int
     pair.first = fnd -> vid;
     pair.second = fnd -> tid;
 
-    //cout<<it -> second -> vid <<it2 -> second -> vid;//<<endl;
     if(fsgraph -> pair_dict.find(pair) == fsgraph -> pair_dict.end()) {  //switched with ==
         //if pair not in map 
-        cout<<"pair not in map!!!!!! fnd.vid:    "<<fnd -> vid<<endl;
         fnd -> visited = false; /* didn't really end up making this bool value */
                                                             /* traj_node -> next */
-        fnd -> dist = nodes_dist(graph -> nodes[fnd -> vid], traj -> nodes[fnd -> tid]); //error is here 
+        fnd -> dist = nodes_dist(graph -> nodes[fnd -> vid], traj -> nodes[fnd -> tid]); //error is here
+        double distance = fnd -> dist; 
+        cout<<"creating pair dist: " << distance <<" from: "<<pair.first<<" "<<pair.second<<endl;
         fsgraph -> fsnodes.push_back(fnd);
         fsgraph -> pair_dict[pair] = fnd; //fsgraph -> pair_dict.insert({pair, &fnd});
         fedge -> trg = fnd; 
@@ -42,14 +42,14 @@ double build_node(FSgraph* fsgraph, Graph* graph, Graph* traj, fsnode* fsnd, int
         // /* if (it -> visited){ } won't build this node nor edge */
         fedge -> trg = it -> second;
         fnd -> dist = fedge -> trg -> dist; 
+        double distance = fnd -> dist; 
+        cout<<"existing pair dist: " << distance <<" from: "<<pair.first<<" "<<pair.second<<endl;
     }
     fedge -> src = fsnd; ///and fix this
     fedge -> botlneck_val = max(fnd -> dist, fsgraph -> eps); // the fnd.dist would be the same regardless the prior existence of this new corner
     fsgraph -> fsedges.push_back(fedge);
     int size = fsgraph -> fsedges.size();
-    cout<<"---------pushed back an edge--------------"<<endl;
-    cout<<"fsgraph -> fsedges[size-1].trg -> vid"<<fsgraph -> fsedges[size-1] -> trg -> vid<<" fsgraph -> fsedges[size-1].trg ->tid: "<<fsgraph -> fsedges[size-1] -> trg ->tid<<endl;
-    cout<<endl;
+
     return fedge -> botlneck_val;
 }
 
@@ -63,9 +63,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, FSpair corner,
     btl_neck_vals.push_back(eps);
 
     for(int i = 0 ; i < incidents.size(); i++) {
-        cout<<"-------building upward edge and diagonal edge---------"<<endl;
         int neighbour_id  = incidents[i];
-        //cout<<"neighbour_id: "<<neighbour_id<<endl;
         double eps1 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 1); // build diagonal node //change to return edges 
         btl_neck_vals.push_back(eps1);
         double eps2 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 0); //build upwards node 
@@ -75,15 +73,17 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, FSpair corner,
     int size = fsgraph -> fsedges.size();
     for(int i = 0; i < btl_neck_vals.size(); i++) {
         if(btl_neck_vals[i] > fsgraph -> eps) {
+            cout<<"btl_neck_vals "<<i<<" : "<<btl_neck_vals[i]<<" src vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i] ->src -> vid<<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->src -> tid<<" trg vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> vid
+            <<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> tid<<endl;
                 /*store these local eps for potential global min eps increase
                 store the edges with higher eps to be accessed later if needed */
-                bigger_eps.push(fsgraph -> fsedges[size - i -1]); //is this always going to be the right index of the edge?? yes because btlneck_vals is gonna stroe the last k built edges 
+                bigger_eps.push(fsgraph -> fsedges[size - btl_neck_vals.size()+ i]); //is this always going to be the right index of the edge?? yes because btlneck_vals is gonna stroe the last k built edges 
         }
         else { /* only store the current 3 outgoing edges, if they meet the condition;
                  refresh at each iteration */
-            cout<<"fsgraph -> fsedges.size() - i - 1: "<<fsgraph -> fsedges.size() - i - 1<<endl;
-            cout<<"fsgraph -> fsedges[fsgraph -> fsedges.size() - i - 1].trg -> vid: "<<fsgraph -> fsedges[fsgraph -> fsedges.size() - i - 1] -> trg -> vid<<endl;
-            Stack.push(fsgraph -> fsedges[size - i - 1]);
+                 cout<<"btl_neck_vals "<<i<<" : "<<btl_neck_vals[i]<<" src vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i] ->src -> vid<<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->src -> tid<<" trg vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> vid
+<<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> tid<<endl;
+            Stack.push(fsgraph -> fsedges[size - btl_neck_vals.size()+ i ]);
         }
     }
         //go forward with the traversal 
@@ -97,12 +97,12 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, FSpair corner,
         bigger_eps.pop(); //
         //check if it is a super edge and put the next super edge in the queue 
         //build a graph for the new polyline? 
+        cout<<"a new eps: "<< min_eps_fedge -> botlneck_val<<endl;
         fsgraph -> eps = min_eps_fedge -> botlneck_val;
         FSnode* next_nd = min_eps_fedge -> trg; //does the .trg need to be a pointer? does the bigger_eps need to be a queue of pointers?
         next_nd -> visited = true; //change the actual flag on memory and not the copy of it?
         next_fspair.first = next_nd -> vid;
         next_fspair.second = next_nd -> tid;
-        cout<<"entered Stack.empty()"<<endl;
     }    
     else { 
         /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
@@ -112,10 +112,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, FSpair corner,
         FSnode* next_nd = back_edge -> trg;
         next_nd -> visited = true; 
         next_fspair.first = next_nd -> vid;
-        cout<<"next_nd -> vid; "<< next_nd -> vid <<endl;
         next_fspair.second = next_nd -> tid; //where the problem is at???
-        cout<<"next_nd -> tid; "<< next_nd -> tid <<endl;
-        cout<<"did not enter Stack.empty()"<<endl;
     }
     return next_fspair;
 }
@@ -148,11 +145,10 @@ double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph){
     bool finished = false;
     
     while (!finished) {
-        cout<<!finished<<endl;
         pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack);
+        //cout<<"current eps: "<<fsgraph -> eps<<endl;
         finished = (pair.second >= m);
-        cout<<"pair.second "<<pair.second<<endl;
-   // break;
+
     }
     return fsgraph -> eps;
 }
@@ -164,4 +160,19 @@ void cleanup(FSgraph* fsgraph) {
     for(int i = 0; i < fsgraph -> fsedges.size(); i++) {
         free(fsgraph -> fsedges[i]);
     }
+}
+
+void write_fsgraph(FSgraph* fsgraph, string file_name) { 
+    ofstream file(file_name);
+    for(int i = 0; i < fsgraph -> fsedges.size(); i++) {
+        //x y x y 
+        int source_vid = fsgraph -> fsedges[i] -> src -> vid;
+        int source_tid = fsgraph -> fsedges[i] -> src -> tid;
+        int target_vid = fsgraph -> fsedges[i] -> trg -> vid;
+        int target_tid = fsgraph -> fsedges[i] -> trg -> tid;
+
+        // file << source_tid<< " " << source_vid << " " << target_tid << " " << target_vid << endl; //what we wanted it to look like originally
+        file << source_vid<< " " << source_tid << " " << target_vid << " " << target_tid << endl; // what (Vi, Tj) should looks like
+    }
+    file.close();
 }

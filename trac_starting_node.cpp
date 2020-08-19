@@ -32,7 +32,7 @@ using namespace std;
 // }
 
 
-double LookUp::dist_from_T0(node traj_nd, node g_nd) {
+double dist_from_T0(node traj_nd, node g_nd) {
     double dist; 
     dist = sqrt(pow((traj_nd.lat - g_nd.lat), 2) + 
         pow((traj_nd.longitude - g_nd.longitude), 2));
@@ -43,10 +43,10 @@ bool compare_dist(FSedge* sp1, FSedge* sp2){
     return sp1 -> botlneck_val < sp2 -> botlneck_val;
 }
 
-vector<FSedge*> LookUp::SearchNodes(Graph* graph, struct node traj_nd, double radius){
+vector<FSedge*> SearchNodes(Graph* graph, struct node traj_nd, double radius){
     vector<FSedge*> se_list;
     /* when building a FSgraph, only need to know the node id, and the initial bottle neck vel */
-    for (int i; i < graph -> nodes.size(); i++){
+    for (int i = 0; i < graph -> nodes.size(); i++){
         double dist = dist_from_T0(traj_nd, graph -> nodes[i]);
         if (dist <= radius){
             FSedge se;

@@ -1,29 +1,22 @@
-//read the binary trajectory files to extract the polyline (sampled trajectory) 
 // #include "graph.h"
 #include "trajectory.h"
-#include "scale_projection.h"
+
 
 void add_point(Trajectory* traj, double longitude, double latitude, int timestamp) {
-    Point* cur = traj -> head;
-    if(cur == NULL) {
-        //first ever point being added 
-        traj -> head = (Point*) malloc(sizeof(Point));
-        traj -> head -> longitude = longitude;
-        traj -> head -> latitude = latitude;
-        traj -> head -> timestamp = timestamp;
-        traj -> tail = traj -> head;
-        return;
+    Point* point = (Point*) malloc(sizeof(Point));
+    point -> longitude = longitude; 
+    point -> latitude = latitude;
+    point -> timestamp = timestamp;
+    // int index = traj -> points.size();
+    traj -> points.push_back(point);
+    int size = traj -> points.size();
+    if(size > 1) {
+        //add an edge between the two most recent points
+        Tedge* edge = (Tedge*) malloc(sizeof(Tedge));
+        edge -> src = traj -> points[size - 2];
+        edge -> trg = traj -> points[size - 1];
+        traj -> edges.push_back(edge);
     }
-
-    while(cur -> next != NULL) {
-        cur = cur -> next;
-    }
-    cur -> next = (Point*) malloc(sizeof(Point));
-    cur -> next -> longitude = longitude;
-    cur -> next -> latitude = latitude;
-    cur -> next -> timestamp = timestamp;
-    traj -> tail = cur -> next;
-    return;
 }
 
 void read_next_k_bytes(ifstream& file, char* buffer, int k) {
@@ -88,7 +81,7 @@ void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, doubl
     }
 }
 
-vector<Trajectory> read_trajectories(string file_path, int k) { //extract k trajectories?  //will figure it out later 
+vector<Trajectory> read_trajectories(string file_path, int k, double min_long, double min_lat) { //extract k trajectories?  //will figure it out later 
     ifstream file;
     file.open(file_path, ios::in | ios::binary);
     file.seekg(0, ios::beg);
@@ -98,7 +91,7 @@ vector<Trajectory> read_trajectories(string file_path, int k) { //extract k traj
     for(int i = 0; i < k; i++) {
         if(!file.eof()) {
             int offset = file.tellg();
-            extract_next_trajectory(file, offset, &traj);
+            extract_next_trajectory(file, offset, &traj, min_long, min_lat);
             trajs.push_back(traj);
             traj = DEF_TRAJ;
         }
@@ -111,23 +104,28 @@ vector<Trajectory> read_trajectories(string file_path, int k) { //extract k traj
 }
 
 void cleanup_trajectory(Trajectory* traj) {
-    
+    for(int i = 0; i < traj -> points.size(); i++) {
+        free(traj -> points[i]);
+    }
+    for(int i = 0; i < traj -> edges.size(); i++) {
+        free(traj -> edges[i]);
+    }
 }
 
-int main() {
-    vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1);
-    Point* cur = trajs[0].head;
-    cout << trajs[0].length << endl;
-    while(cur != NULL) {
-        cout << cur -> longitude << " " << cur -> latitude << endl;
-        cur = cur -> next;
-    }
-    cur = trajs[0].head;
-    Point* next;
-    while(cur != NULL) {
-        next = cur -> next;
-        free(cur);
-        cur = next;
-    }
-    return 0;
-}
+// int main() {
+//     vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1);
+//     Point* cur = trajs[0].head;
+//     cout << trajs[0].length << endl;
+//     while(cur != NULL) {
+//         cout << cur -> longitude << " " << cur -> latitude << endl;
+//         cur = cur -> next;
+//     }
+//     cur = trajs[0].head;
+//     Point* next;
+//     while(cur != NULL) {
+//         next = cur -> next;
+//         free(cur);
+//         cur = next;
+//     }
+//     return 0;
+// }

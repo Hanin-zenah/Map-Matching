@@ -1,9 +1,6 @@
-
 #include <cmath>
-#include "graph.h" // a copy of graph.h with change of nodes struct
 #include "scale_projection.h"
 #include "starting_node_look_up.h"
-#include "disc_frechet_v2.h"
 
 using namespace std;
 
@@ -42,21 +39,24 @@ double LookUp::dist_from_T0(node traj_nd, node g_nd) {
     return dist; 
 }  
 
-bool LookUp::compare_dist(FSedge* sp1, FSedge* sp2){
+bool compare_dist(FSedge* sp1, FSedge* sp2){
     return sp1 -> botlneck_val < sp2 -> botlneck_val;
 }
 
-vector<FSedge*> LookUp::SearchNodes(Graph* graph, node traj_nd, int radius){
+vector<FSedge*> LookUp::SearchNodes(Graph* graph, struct node traj_nd, double radius){
     vector<FSedge*> se_list;
     /* when building a FSgraph, only need to know the node id, and the initial bottle neck vel */
     for (int i; i < graph -> nodes.size(); i++){
         double dist = dist_from_T0(traj_nd, graph -> nodes[i]);
         if (dist <= radius){
             FSedge se;
-            se.trg -> vid = graph -> nodes[i].id;
-            se.trg -> tid = 0;
-            se.trg -> dist = dist;
-            se.trg -> visited = false;
+            FSnode start_nd;
+            //se -> src = NULL;
+            start_nd.vid = graph -> nodes[i].id;
+            start_nd.tid = 0;
+            start_nd.dist = dist;
+            start_nd.visited = false;
+            se.trg = &start_nd;
             se.botlneck_val = dist;
             se_list.push_back(&se);
         }
@@ -65,25 +65,30 @@ vector<FSedge*> LookUp::SearchNodes(Graph* graph, node traj_nd, int radius){
     return se_list;
 };
 
-int main(){
-
-    // vector<node> nds;
-    // struct node nd, traj_nd;
-    // nd.id = 888;
-    // nd.lat = 3;
-    // nd.longitude = 8;
-    // nds.push_back(nd);
-    // traj_nd.id = 777;
-    // traj_nd.lat = 3;
-    // traj_nd.longitude = 9999;
+// int main(int argc, char** argv) {
 // 
-    // LookUp look;
-    // bool answer = look.SearchNodes(traj_nd, nd, 20); // 
-    // 
-    // cout<<answer;
-
+    // if(argc < 2) {
+        // cerr << "Not enough arguments; please provide a file name next to the program name to be read\n\nExample: ./a.out saarland.txt\n";
+        // return 1;
+    // }
+// 
+    // read graph from given file
     // Graph graph = GRAPH_INIT;
     // read_file(argv[1], &graph);
-
-    return 0;
-}
+// 
+    // Graph traj = GRAPH_INIT;
+    // read_file(argv[2], &traj);
+    // traj.nodes[0].lat = 0.05;
+    // traj.nodes[2].lat = 0.27;
+// 
+    // node traj_nd = traj.nodes[0];
+// 
+    // LookUp look;
+    // vector<FSedge*> superlist = look.SearchNodes(&graph, traj_nd, 3);
+    // FSedge* sp_edge = (FSedge*) malloc(sizeof(FSedge));
+    // sp_edge = superlist[0];
+    // cout<<sp_edge -> botlneck_val<<endl; 
+// 
+// 
+    // return 0;
+// }

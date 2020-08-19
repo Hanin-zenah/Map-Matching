@@ -25,8 +25,8 @@ int main(int argc, char** argv) {
     struct node traj_nd = traj.nodes[0];
     LookUp look;
     vector<FSedge*> superlist = look.SearchNodes(&graph, traj_nd, 3);
+
     FSedge* sp_edge = superlist[0];
-    cout << "Here\n";
     cout<<sp_edge -> botlneck_val<<endl; 
 
     // FSgraph fsgraph = FSGRAPH_INIT;

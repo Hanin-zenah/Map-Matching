@@ -82,7 +82,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, FSpair corner,
         else { /* only store the current 3 outgoing edges, if they meet the condition;
                  refresh at each iteration */
                  cout<<"btl_neck_vals "<<i<<" : "<<btl_neck_vals[i]<<" src vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i] ->src -> vid<<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->src -> tid<<" trg vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> vid
-<<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> tid<<endl;
+            <<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> tid<<endl;
             Stack.push(fsgraph -> fsedges[size - btl_neck_vals.size()+ i ]);
         }
     }
@@ -109,6 +109,10 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, FSpair corner,
             the current cell, might be from the previous cells if there are no reachable nodes in this cell */
         FSedge* back_edge = Stack.top();
         Stack.pop();
+        // if (back_edge -> src == null){
+            // Stack.push(superEdges.top());
+            // superEdges.pop();
+        // }
         FSnode* next_nd = back_edge -> trg;
         next_nd -> visited = true; 
         next_fspair.first = next_nd -> vid;
@@ -122,10 +126,7 @@ double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph){
     // int m = traj -> length;
     FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
     FSedge* fedge = (FSedge*) malloc(sizeof(FSedge));
-
     priority_queue<FSedge*, vector<FSedge*>, Comp_eps> bigger_eps;
-    /* double next_super_eps = 999999;
-   bigger_eps.push(next_super_eps);  */
     stack <FSedge*> Stack;
     /* building the starting node (V0,T0) */
                                 /* this needs to be the closest found node on the graph for the map matching*/

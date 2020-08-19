@@ -109,7 +109,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, FSpair corner,
             the current cell, might be from the previous cells if there are no reachable nodes in this cell */
         FSedge* back_edge = Stack.top();
         Stack.pop();
-        // if (back_edge -> src == null){
+        // if (back_edge -> src == NULL){
             // Stack.push(superEdges.top());
             // superEdges.pop();
         // }

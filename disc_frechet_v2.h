@@ -94,13 +94,14 @@ struct Comp_eps {
 double nodes_dist(node g_nd, node t_nd);
 
 /* calculate the minimal leash length for discrete frechet */
-double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph);
+double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph, double radius);
 
 /* given a FSnode, build the 3 outgoing edges and target nodes using this node */
 double build_node(FSgraph* fsgraph, fsnode fsnd, int neighbor_id, int up, int right);
 
 /* given a nodes pair on a FS graph, returns the node pair after the next traversal */
-FSpair traversal(FSgraph* fsgraph, FSpair corner, Graph* graph, Graph* traj, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack);
+FSpair traversal(FSgraph* fsgraph, FSpair corner, Graph* graph, Graph* traj, 
+priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack, vector<FSedge*> superEdges);
 
 void cleanup(FSgraph* fsgraph);
 

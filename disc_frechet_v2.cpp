@@ -1,5 +1,6 @@
 #include "disc_frechet_v2.h"
 #include "graph.h"
+#include "starting_node_look_up.h"
 
 
 double nodes_dist(struct node g_nd, struct node t_nd) {
@@ -54,7 +55,8 @@ double build_node(FSgraph* fsgraph, Graph* graph, Graph* traj, fsnode* fsnd, int
 }
 
 FSpair traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, FSpair corner, 
-                         priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack) {
+                         priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, 
+                         stack <FSedge*>& Stack, vector<FSedge*> superEdges) {
     auto it = fsgraph -> pair_dict.find(corner);
     FSnode* fnd = it -> second;
     vector<int> incidents = get_incident(graph, fnd -> vid);
@@ -109,10 +111,10 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, FSpair corner,
             the current cell, might be from the previous cells if there are no reachable nodes in this cell */
         FSedge* back_edge = Stack.top();
         Stack.pop();
-        // if (back_edge -> src == NULL){
-            // Stack.push(superEdges.top());
-            // superEdges.pop();
-        // }
+        if (!back_edge -> src){
+            Stack.push(superEdges.back());
+            superEdges.pop_back();
+        }
         FSnode* next_nd = back_edge -> trg;
         next_nd -> visited = true; 
         next_fspair.first = next_nd -> vid;
@@ -121,21 +123,25 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Graph* traj, FSpair corner,
     return next_fspair;
 }
        
-double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph){
+double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph, double radius){
     int m = traj -> nodes.size() - 1; //traj -> length
     // int m = traj -> length;
-    FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
-    FSedge* fedge = (FSedge*) malloc(sizeof(FSedge));
+    // FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
+    // FSedge* fedge = (FSedge*) malloc(sizeof(FSedge));
     priority_queue<FSedge*, vector<FSedge*>, Comp_eps> bigger_eps;
     stack <FSedge*> Stack;
-    /* building the starting node (V0,T0) */
-                                /* this needs to be the closest found node on the graph for the map matching*/
-    fsgraph -> eps = nodes_dist(graph -> nodes[0], traj -> nodes[0]); //change this to be the closest node 
+    vector<FSedge*> superEdges = SearchNodes(graph, traj -> nodes[0], radius);
+    if (superEdges.empty()){
+        cerr << "Nothing within the required distance"<<endl;
+        return -1;
+    }
+    
+    FSedge* fedge = superEdges.front();
+    fsgraph -> eps = fedge -> botlneck_val;//nodes_dist(graph -> nodes[0], traj -> nodes[0]); //change this to be the closest node 
                                                     /*traj -> head */
-
-    fnd -> vid = graph -> nodes[0].id;
-    fnd -> tid = 0;
-    // fnd.fspair = pairing(fnd.vid, fnd.tid);
+    FSnode* fnd = fedge -> trg;
+    // fnd -> vid = graph -> nodes[0].id;
+    // fnd -> tid = 0;
     fnd -> visited = true;
     //fnd.edgelist = {0,1,2};// can be overwritten later??
     fsgraph -> fsnodes.push_back(fnd);
@@ -146,7 +152,7 @@ double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph){
     bool finished = false;
     
     while (!finished) {
-        pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack);
+        pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, superEdges);
         //cout<<"current eps: "<<fsgraph -> eps<<endl;
         finished = (pair.second >= m);
 

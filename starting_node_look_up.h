@@ -7,6 +7,7 @@
 #include "graph.h" 
 #include "disc_frechet_v2.h"
 
+
 using namespace std;
 
 class LookUp {
@@ -47,11 +48,11 @@ class LookUp {
     //  y_scale = box_height / e_dist1;
     // }
 
-        /* return the distance between 2 nodes are within the required radius */
-        double dist_from_T0(node traj_nd, node g_nd);
+       
+       
 
-        /* list out the node IDs of the nodes that are within the requied distance */
-        vector<FSedge*>  SearchNodes(Graph* graph, struct node traj_nd, double radius);
+        
+        
 
         // /* assign the grid cell a node belongs to, grid_h and grid_w are user defined */
         // vector<int> assign_grid(node nd, int grid_h, int grid_w, double box_height, double box_width, double x_scale, double y_scale);
@@ -66,6 +67,11 @@ class LookUp {
  /* comparison function to sort the superedges */
  bool compare_dist(FSedge* sp1, FSedge* sp2);
 
+/* return the distance between 2 nodes are within the required radius */
+ double dist_from_T0(node traj_nd, node g_nd);
+
+/* list out the node IDs of the nodes that are within the requied distance */
+vector<FSedge*> SearchNodes(Graph* graph, struct node traj_nd, double radius);
 
 // typedef struct super_edge_eps {
     // this pair will store Vid and Tid as a pair to be used as a key for the hashmap 

@@ -1,6 +1,7 @@
 #include <cmath>
 #include "scale_projection.h"
 #include "starting_node_look_up.h"
+#include <cstdlib>
 
 using namespace std;
 
@@ -40,7 +41,7 @@ double dist_from_T0(node traj_nd, node g_nd) {
 }  
 
 bool compare_dist(FSedge* sp1, FSedge* sp2){
-    return sp1 -> botlneck_val < sp2 -> botlneck_val;
+    return sp1 -> botlneck_val > sp2 -> botlneck_val;
 }
 
 vector<FSedge*> SearchNodes(Graph* graph, struct node traj_nd, double radius){
@@ -49,16 +50,16 @@ vector<FSedge*> SearchNodes(Graph* graph, struct node traj_nd, double radius){
     for (int i = 0; i < graph -> nodes.size(); i++){
         double dist = dist_from_T0(traj_nd, graph -> nodes[i]);
         if (dist <= radius){
-            FSedge se;
-            FSnode start_nd;
-            //se -> src = NULL;
-            start_nd.vid = graph -> nodes[i].id;
-            start_nd.tid = 0;
-            start_nd.dist = dist;
-            start_nd.visited = false;
-            se.trg = &start_nd;
-            se.botlneck_val = dist;
-            se_list.push_back(&se);
+            FSedge* se = (FSedge*)malloc(sizeof(FSedge));
+            FSnode* start_nd = (FSnode*)malloc(sizeof(FSnode));
+            se -> src = NULL;
+            start_nd -> vid = graph -> nodes[i].id;
+            start_nd -> tid = 0;
+            start_nd -> dist = dist;
+            start_nd -> visited = false;
+            se -> trg = start_nd;
+            se -> botlneck_val = dist;
+            se_list.push_back(se);
         }
     }
     sort(se_list.begin(), se_list.end(), compare_dist);

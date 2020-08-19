@@ -23,20 +23,16 @@ int main(int argc, char** argv) {
     // write_graph(&traj, "traj_frechet.dat");
 
     struct node traj_nd = traj.nodes[0];
-    // cout<<traj_nd.longitude;
-    // LookUp look;
-    vector<FSedge*> superlist = SearchNodes(&graph, traj_nd, 3);
-    FSedge* sp_edge = superlist[0];
-    cout<<sp_edge -> botlneck_val<<endl; 
+    // vector<FSedge*> superlist = SearchNodes(&graph, traj_nd, 3);
+    // FSedge* sp_edge = superlist[0];
+    // cout<<sp_edge -> botlneck_val<<endl; 
 // 
     FSgraph fsgraph = FSGRAPH_INIT;
-    cout<<min_eps(&graph, &traj, &fsgraph)<<endl;
+    cout<<min_eps(&graph, &traj, &fsgraph, 0.01)<<endl;
     write_fsgraph(&fsgraph, "fsgraph.dat");
-    cout<<"nodes_dist(2, 4): "<<nodes_dist(graph.nodes[2], traj.nodes[4])<<endl;
-    cout<<"nodes_dist(2, 5): "<<nodes_dist(graph.nodes[2], traj.nodes[5]);
-
-    //cleanup(&fsgraph);
-
+// 
+    cleanup(&fsgraph);
+// 
 
     return 0;
 }

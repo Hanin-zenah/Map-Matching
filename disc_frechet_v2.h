@@ -104,4 +104,6 @@ FSpair traversal(FSgraph* fsgraph, FSpair corner, Graph* graph, Graph* traj, pri
 
 void cleanup(FSgraph* fsgraph);
 
+void write_fsgraph(FSgraph* fsgraph, string file_name);
+
 #endif

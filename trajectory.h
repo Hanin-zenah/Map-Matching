@@ -33,7 +33,7 @@ void add_point(Trajectory* traj, double longitude, double latitude, int timestam
 
 void read_next_k_bytes(ifstream& file, char* buffer, int k);
 
-void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj);
+void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, double min_long, double min_lat);
 
 vector<Trajectory> read_trajectories(string file_path, int k);
 

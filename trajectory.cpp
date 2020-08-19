@@ -103,6 +103,9 @@ vector<Trajectory> read_trajectories(string file_path, int k) { //extract k traj
     return trajs;
 }
 
+void cleanup_trajectory(Trajectory* traj) {
+    
+}
 
 int main() {
     vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1);

@@ -4,8 +4,6 @@
 #include <iostream>
 #include <cmath>
 #include <math.h>
-#include "graph.h" 
-#include "trajectory.h"
 #include <utility>
 #include <string>
 #include <vector> 
@@ -15,12 +13,15 @@
 #include <unordered_map> 
 #include <cstdlib>
 
+#include "graph.h"
+#include "trajectory.h"
+#include "starting_node_look_up.h"
+
 #define FSGRAPH_INIT {0}
 
 using namespace std;
 
 typedef struct fsnode {
-    // unsigned long long int fspair; //are fsnode IDs and edge ID neccesary?
     //FSpair fspair;
     int vid;
     int tid;
@@ -34,14 +35,7 @@ typedef struct fsedge {
     FSnode* src; //super edge will have no source 
     FSnode* trg;
     double botlneck_val;
-    // bool superEdge;
 } FSedge;
-
-// typedef struct superedge {
-//     bool src;
-//     FSnode* trg;
-//     double botlneck_val;
-// } SuperEdge;
 
 
 typedef struct FSPair_key {
@@ -68,7 +62,6 @@ struct KeyHash {
         // 0.5*(n+m)*(n+m+1)+m;
         //or any hash function we come up with later
     }
-
 };
 
 typedef struct fsgraph {
@@ -86,21 +79,19 @@ struct Comp_eps {
     }
 };
 
-/* Cantor pairing function */
-// unsigned long long int pairing(int n, int m);
-
 
 /* distance of Vi, Tj in a corner */
-double nodes_dist(node g_nd, node t_nd);
+double nodes_dist(node g_nd, Point* t_nd);
 
 /* calculate the minimal leash length for discrete frechet */
-double min_eps(Graph* graph, Graph* traj, FSgraph* fsgraph);
+double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius);
 
 /* given a FSnode, build the 3 outgoing edges and target nodes using this node */
 double build_node(FSgraph* fsgraph, fsnode fsnd, int neighbor_id, int up, int right);
 
 /* given a nodes pair on a FS graph, returns the node pair after the next traversal */
-FSpair traversal(FSgraph* fsgraph, FSpair corner, Graph* graph, Graph* traj, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack);
+FSpair traversal(FSgraph* fsgraph, FSpair corner, Graph* graph, Trajectory* traj, 
+priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack, vector<FSedge*> superEdges);
 
 void cleanup(FSgraph* fsgraph);
 

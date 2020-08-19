@@ -4,14 +4,17 @@
 #include <iostream> 
 #include <string>
 #include <vector> 
+#include <cstdlib>
+#include <cmath>
 #include "graph.h" 
 #include "disc_frechet_v2.h"
+#include "scale_projection.h"
 
 using namespace std;
 
 class LookUp {
     private:
-        struct node traj_nd;
+        Point* traj_nd;
 
         double lat_min, lat_max, lon_min, lon_max;
         double g_dist1, g_dist2, g_dist3;
@@ -47,11 +50,11 @@ class LookUp {
     //  y_scale = box_height / e_dist1;
     // }
 
-        /* return the distance between 2 nodes are within the required radius */
-        double dist_from_T0(node traj_nd, node g_nd);
+       
+       
 
-        /* list out the node IDs of the nodes that are within the requied distance */
-        vector<FSedge*>  SearchNodes(Graph* graph, struct node traj_nd, double radius);
+        
+        
 
         // /* assign the grid cell a node belongs to, grid_h and grid_w are user defined */
         // vector<int> assign_grid(node nd, int grid_h, int grid_w, double box_height, double box_width, double x_scale, double y_scale);
@@ -66,33 +69,10 @@ class LookUp {
  /* comparison function to sort the superedges */
  bool compare_dist(FSedge* sp1, FSedge* sp2);
 
+/* return the distance between 2 nodes are within the required radius */
+ double dist_from_T0(Point* traj_nd, node g_nd);
 
-// typedef struct super_edge_eps {
-    // this pair will store Vid and Tid as a pair to be used as a key for the hashmap 
-    // int node_id; //vid
-    // double dist; //tid
-// 
-    // bool operator==(const struct SE_eps& other) const { 
-        // return (first == other.node_id
-            // && second == other.dist);
-    // }
-// } SE_eps;
-// 
-// struct KeyHash {
-    // size_t operator()(const SE_eps& se) const {
-        // using std::size_t;
-        // using std::hash;
-        // using std::string;
-// 
-        // return ((hash<int>()(se.node_id)
-                // ^ (hash<double>()(se.dist) << 1)) >> 1);
-// 
-    // }
-// };
-
-
-
-
-
+/* list out the node IDs of the nodes that are within the requied distance */
+vector<FSedge*> SearchNodes(Graph* graph, Point* traj_nd, double radius);
 
 #endif

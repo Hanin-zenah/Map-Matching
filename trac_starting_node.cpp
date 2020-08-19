@@ -1,7 +1,4 @@
-#include <cmath>
-#include "scale_projection.h"
 #include "starting_node_look_up.h"
-#include <cstdlib>
 
 using namespace std;
 
@@ -33,26 +30,26 @@ using namespace std;
 // }
 
 
-double LookUp::dist_from_T0(node traj_nd, node g_nd) {
+double dist_from_T0(Point* traj_nd, node g_nd) {
     double dist; 
-    dist = sqrt(pow((traj_nd.lat - g_nd.lat), 2) + 
-        pow((traj_nd.longitude - g_nd.longitude), 2));
+    dist = sqrt(pow((traj_nd -> latitude - g_nd.lat), 2) + 
+                    pow((traj_nd -> longitude - g_nd.longitude), 2));
     return dist; 
 }  
 
 bool compare_dist(FSedge* sp1, FSedge* sp2){
-    return sp1 -> botlneck_val < sp2 -> botlneck_val;
+    return sp1 -> botlneck_val > sp2 -> botlneck_val;
 }
 
-vector<FSedge*> LookUp::SearchNodes(Graph* graph, struct node traj_nd, double radius){
+vector<FSedge*> SearchNodes(Graph* graph, Point* traj_nd, double radius) {
     vector<FSedge*> se_list;
     /* when building a FSgraph, only need to know the node id, and the initial bottle neck vel */
-    for (int i = 0; i < graph -> nodes.size(); i++){
+    for(int i = 0; i < graph -> nodes.size(); i++) {
         double dist = dist_from_T0(traj_nd, graph -> nodes[i]);
-        if (dist <= radius){
-            FSedge* se = (FSedge*)malloc(sizeof(FSedge));
-            FSnode* start_nd = (FSnode*)malloc(sizeof(FSnode));
-            //se -> src = NULL;
+        if(dist <= radius) {
+            FSedge* se = (FSedge*) malloc(sizeof(FSedge));
+            FSnode* start_nd = (FSnode*) malloc(sizeof(FSnode));
+            se -> src = NULL;
             start_nd -> vid = graph -> nodes[i].id;
             start_nd -> tid = 0;
             start_nd -> dist = dist;
@@ -64,7 +61,7 @@ vector<FSedge*> LookUp::SearchNodes(Graph* graph, struct node traj_nd, double ra
     }
     sort(se_list.begin(), se_list.end(), compare_dist);
     return se_list;
-};
+}
 
 // int main(int argc, char** argv) {
 // 

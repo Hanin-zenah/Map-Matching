@@ -41,12 +41,19 @@ typedef struct trajectory {
     // Point* tail;
 } Trajectory;
 
+/* adds a trajectory point to the points vector in the Trajectory, add an edge between every two points */
 void add_point(Trajectory* traj, double longitude, double latitude, int timestamp);
 
+/* reads the next k bytes from a given ifstream and stores it in the char* buffer given */
 void read_next_k_bytes(ifstream& file, char* buffer, int k);
 
+/* given a file ifstream; extract the next trajectory from a specified offset */
 void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, double min_long, double min_lat);
 
+/* reads k consecutive trajectories from a given file and stores it in a Trajectory vector */
 vector<Trajectory> read_trajectories(string file_path, int k, double min_long, double min_lat);
+
+/* frees all the malloc'ed memory for the points and edges in a trajectory */
+void cleanup_trajectory(Trajectory* traj);
 
 #endif

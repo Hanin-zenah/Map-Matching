@@ -69,7 +69,7 @@ void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, doubl
         // cout<<"latitude before: "<<latitude<<endl;
         // cout<<"min long: "<<min_lat<<endl;
         // /* overwrite the node's latitude in mercator projection */
-        latitude = ed.lon_mercator_proj(latitude, min_lat);
+        latitude = ed.lat_mercator_proj(latitude, min_lat);
         // cout<<"latitude after: "<<latitude<<endl;
 // 
         read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);

@@ -22,8 +22,8 @@ int main(int argc, char** argv) {
     double lat_max = graph.max_lat;
     double lon_min = graph.min_long;
     double lon_max = graph.max_long;
-    cout<<"global lon_min: "<<lon_min<<" global lat_min:  "<<lat_min<<endl;
-    cout<<"global lon_max: "<<lon_max<<" global lat_max:  "<<lat_max<<endl;
+    // cout<<"global lon_min: "<<lon_min<<" global lat_min:  "<<lat_min<<endl;
+    // cout<<"global lon_max: "<<lon_max<<" global lat_max:  "<<lat_max<<endl;
     Bounds bd;
     double g_dist1 = bd.geodesic_dist(lat_min,lon_min,lat_max,lon_min);
     double g_dist2 = bd.geodesic_dist(lat_min,lon_max,lat_min,lon_min);
@@ -63,9 +63,9 @@ int main(int argc, char** argv) {
     // cout<<" lat: "<<graph.nodes[nodes_within_dist[0] -> trg ->vid].id<<" lon: "<<graph.nodes[nodes_within_dist[0] -> trg ->vid].longitude<<endl;
     // cout<<" lat: "<<graph.nodes[nodes_within_dist[1] -> trg ->vid].id<<" lon: "<<graph.nodes[nodes_within_dist[1] -> trg ->vid].longitude<<endl;
     // cout<<"traj_nd->latitude: " << traj_nd->latitude<<" traj_nd->longitude: "<< traj_nd->longitude<<endl;
-    cout<<min_eps(&graph, &traj, &fsgraph, 73, x_scale, y_scale)<<endl;
-    write_fsgraph(&fsgraph, "fsgraph.dat");
-    cleanup(&fsgraph);
-    cleanup_trajectory(&traj);
+    // cout<<min_eps(&graph, &traj, &fsgraph, 73, x_scale, y_scale)<<endl;
+    // write_fsgraph(&fsgraph, "fsgraph.dat");
+    // cleanup(&fsgraph);
+    // cleanup_trajectory(&traj);
     return 0;
 }

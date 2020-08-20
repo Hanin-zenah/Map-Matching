@@ -57,15 +57,17 @@ int main(int argc, char** argv) {
 // 
     FSgraph fsgraph = FSGRAPH_INIT;
     // make a prompt for the radius
-    vector<FSedge*> nodes_within_dist = SearchNodes(&graph, traj_nd, 73, x_scale, y_scale);
-    cout<<"nodes_within_dist.size(): "<<nodes_within_dist.size()<<endl;
+    vector<FSedge*> nodes_within_dist = SearchNodes(&graph, traj_nd, 100, x_scale, y_scale);
+    // cout<<"nodes_within_dist.size(): "<<nodes_within_dist.size()<<endl;
     // cout<<"nodes_within_dist[0] -> trg.vid: "<<nodes_within_dist[0] -> trg ->vid<<endl;
-    // cout<<" lat: "<<graph.nodes[nodes_within_dist[0] -> trg ->vid].id<<" lon: "<<graph.nodes[nodes_within_dist[0] -> trg ->vid].longitude<<endl;
-    // cout<<" lat: "<<graph.nodes[nodes_within_dist[1] -> trg ->vid].id<<" lon: "<<graph.nodes[nodes_within_dist[1] -> trg ->vid].longitude<<endl;
+    // cout<<"[0]  "<<dist_from_T0(traj_nd, graph.nodes[nodes_within_dist[0] -> trg ->vid], x_scale, y_scale)<<endl;
+    // cout<<"[1]  "<<dist_from_T0(traj_nd, graph.nodes[nodes_within_dist[1] -> trg ->vid], x_scale, y_scale)<<endl;
+    // cout<<" lat: "<<graph.nodes[nodes_within_dist[0] -> trg -> vid].lat<<" lon: "<<graph.nodes[nodes_within_dist[0] -> trg ->vid].longitude<<endl;
+    // cout<<" lat: "<<graph.nodes[nodes_within_dist[1] -> trg ->vid].lat<<" lon: "<<graph.nodes[nodes_within_dist[1] -> trg ->vid].longitude<<endl;
     // cout<<"traj_nd->latitude: " << traj_nd->latitude<<" traj_nd->longitude: "<< traj_nd->longitude<<endl;
-    // cout<<min_eps(&graph, &traj, &fsgraph, 73, x_scale, y_scale)<<endl;
-    // write_fsgraph(&fsgraph, "fsgraph.dat");
-    // cleanup(&fsgraph);
-    // cleanup_trajectory(&traj);
+    cout<<min_eps(&graph, &traj, &fsgraph, 100, x_scale, y_scale)<<endl;
+    write_fsgraph(&fsgraph, "fsgraph.dat");
+    cleanup(&fsgraph);
+    cleanup_trajectory(&traj);
     return 0;
 }

@@ -109,8 +109,9 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
         FSedge* back_edge = Stack.top();
         Stack.pop();
         if (!back_edge -> src){
+            if (!superEdges.empty()){
             Stack.push(superEdges.back());
-            superEdges.pop_back();
+            superEdges.pop_back();}
         }
         FSnode* next_nd = back_edge -> trg;
         next_nd -> visited = true; 
@@ -144,8 +145,9 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     fsgraph -> fsnodes.push_back(fnd);
 
     superEdges.pop_back();
+    if (!superEdges.empty()){
     Stack.push(superEdges.back());
-    superEdges.pop_back();
+    superEdges.pop_back();}
 
 
     FSpair pair; // = {fnd.vid, fnd.tid};

@@ -23,6 +23,7 @@ int main(int argc, char** argv) {
     double lon_min = graph.min_long;
     double lon_max = graph.max_long;
     cout<<"global lon_min: "<<lon_min<<" global lat_min:  "<<lat_min<<endl;
+    cout<<"global lon_max: "<<lon_max<<" global lat_max:  "<<lat_max<<endl;
     Bounds bd;
     double g_dist1 = bd.geodesic_dist(lat_min,lon_min,lat_max,lon_min);
     double g_dist2 = bd.geodesic_dist(lat_min,lon_max,lat_min,lon_min);
@@ -53,17 +54,18 @@ int main(int argc, char** argv) {
     Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];
     write_traj(&traj, "traj_frechet.dat");
-
+// 
     FSgraph fsgraph = FSGRAPH_INIT;
     // make a prompt for the radius
-    // vector<FSedge*> nodes_within_dist = SearchNodes(&graph, traj_nd, 75, x_scale, y_scale);
-    // cout<<"nodes_within_dist.size(): "<<nodes_within_dist.size()<<endl;
+    vector<FSedge*> nodes_within_dist = SearchNodes(&graph, traj_nd, 73, x_scale, y_scale);
+    cout<<"nodes_within_dist.size(): "<<nodes_within_dist.size()<<endl;
     // cout<<"nodes_within_dist[0] -> trg.vid: "<<nodes_within_dist[0] -> trg ->vid<<endl;
-    // cout<<" lat: "<<graph.nodes[nodes_within_dist[0] -> trg ->vid].lat<<" lon: "<<graph.nodes[nodes_within_dist[0] -> trg ->vid].longitude<<endl;
+    // cout<<" lat: "<<graph.nodes[nodes_within_dist[0] -> trg ->vid].id<<" lon: "<<graph.nodes[nodes_within_dist[0] -> trg ->vid].longitude<<endl;
+    // cout<<" lat: "<<graph.nodes[nodes_within_dist[1] -> trg ->vid].id<<" lon: "<<graph.nodes[nodes_within_dist[1] -> trg ->vid].longitude<<endl;
     // cout<<"traj_nd->latitude: " << traj_nd->latitude<<" traj_nd->longitude: "<< traj_nd->longitude<<endl;
     cout<<min_eps(&graph, &traj, &fsgraph, 73, x_scale, y_scale)<<endl;
     write_fsgraph(&fsgraph, "fsgraph.dat");
     cleanup(&fsgraph);
-
+    cleanup_trajectory(&traj);
     return 0;
 }

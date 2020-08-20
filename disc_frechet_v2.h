@@ -12,22 +12,18 @@
 #include <stack>
 #include <unordered_map> 
 #include <cstdlib>
-
 #include "graph.h"
 #include "trajectory.h"
-#include "starting_node_look_up.h"
 
 #define FSGRAPH_INIT {0}
 
 using namespace std;
 
 typedef struct fsnode {
-    //FSpair fspair;
     int vid;
     int tid;
     double dist;
     bool visited;
-    //vector<FSedge*> edgelist; // change to pointer fsedge
 } FSnode;
 
 
@@ -73,7 +69,7 @@ typedef struct fsgraph {
 
 
 /* to sort the min priority queue */
-struct Comp_eps {
+struct Comp_eps { 
     bool operator()(const FSedge* edge1, const FSedge* edge2) const{
         return edge1->botlneck_val > edge2->botlneck_val;
     }
@@ -91,7 +87,7 @@ double build_node(FSgraph* fsgraph, fsnode fsnd, int neighbor_id, int up, int ri
 
 /* given a nodes pair on a FS graph, returns the node pair after the next traversal */
 FSpair traversal(FSgraph* fsgraph, FSpair corner, Graph* graph, Trajectory* traj, 
-priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack, vector<FSedge*> superEdges);
+        priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack, vector<FSedge*> superEdges);
 
 void cleanup(FSgraph* fsgraph);
 

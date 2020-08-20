@@ -1,4 +1,6 @@
 #include "disc_frechet_v2.h"
+#include "starting_node_look_up.h"
+
 
 double nodes_dist(struct node g_nd, Point* t_nd) {
     double dist = sqrt(pow((t_nd -> latitude - g_nd.lat), 2) + pow((t_nd -> longitude - g_nd.longitude), 2));
@@ -51,7 +53,7 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
 }
 
 FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner, 
-                         priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, 
+                    priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, 
                          stack <FSedge*>& Stack, vector<FSedge*> superEdges) {
     auto it = fsgraph -> pair_dict.find(corner);
     FSnode* fnd = it -> second;
@@ -119,7 +121,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
     return next_fspair;
 }
        
-double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius){
+double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius) {
     int m = traj -> length; 
 
     // FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));

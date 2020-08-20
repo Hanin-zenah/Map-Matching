@@ -48,14 +48,28 @@ int main(int argc, char** argv) {
 
     vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
     Trajectory traj = trajs[0];
+    cout << "Traj length: " << traj.length << endl;
+    // for(int i = 0; i < traj.length; i++) {
+    //     //print all the coordinates
+    //     cout << i << ": " << traj.points[i]->longitude << " " << traj.points[i]->latitude << endl;
+    // }
+
+    // for(int i = 0; i < traj.edges.size(); i++) {
+    //     cout << "edge" << i << ": Source: " << traj.edges[i]->src->longitude<< " " << traj.edges[i]->src->latitude << endl;
+    //     cout << "edge" << i << ": Target: " << traj.edges[i]->trg->longitude<< " " << traj.edges[i]->trg->latitude << endl;
+
+    // }
     write_traj(&traj, "traj_frechet.dat");
 
-    FSgraph fsgraph = FSGRAPH_INIT;
-    cout<<min_eps(&graph, &traj, &fsgraph, 0.01)<<endl;
-    write_fsgraph(&fsgraph, "fsgraph.dat");
-// 
-    cleanup(&fsgraph);
-// 
+    vector<FSedge*> edges = SearchNodes(&graph, traj.points[0], 100);
+    cout << edges.size() << endl;
+
+    // FSgraph fsgraph = FSGRAPH_INIT;
+    // cout<<min_eps(&graph, &traj, &fsgraph, 0.01)<<endl;
+    // write_fsgraph(&fsgraph, "fsgraph.dat");
+
+    // cleanup(&fsgraph);
+    cleanup_trajectory(&traj);
 
     return 0;
 }

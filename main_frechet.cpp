@@ -1,6 +1,8 @@
 /* here goes the main function which will call all the necessary function to preprocess the graph */
 #include "graph.h" 
+#include "graph_subsampling.h"
 #include "disc_frechet_v2.h"
+#include "trajectory.h"
 #include "starting_node_look_up.h"
 
 int main(int argc, char** argv) {
@@ -15,18 +17,39 @@ int main(int argc, char** argv) {
     read_file(argv[1], &graph);
     // write_graph(&graph, "graph_frechet.dat");
 
+    //bounding box
+    double lat_min = graph.min_lat;
+    double lat_max = graph.max_lat;
+    double lon_min = graph.min_long;
+    double lon_max = graph.max_long;
+    Bounds bd;
+    double g_dist1 = bd.geodesic_dist(lat_min,lon_min,lat_max,lon_min);
+    double g_dist2 = bd.geodesic_dist(lat_min,lon_max,lat_min,lon_min);
+    double g_dist3 = bd.geodesic_dist(lat_max,lon_max,lat_max,lon_min);
+    Euc_distance ed;
+    double e_dist, e_dist1, e_dist2, e_dist3;
+    //calculate the "pixel" euclidean distance between the bounding points 
+    double lon_min_to_y = ed.lon_mercator_proj(lon_min, lon_min);
+    double lon_max_to_y = ed.lon_mercator_proj(lon_max, lon_min);
+    double lat_min_to_x = ed.lat_mercator_proj(lat_min, lat_min);
+    double lat_max_to_x = ed.lat_mercator_proj(lat_max, lat_min);   
+    e_dist1 = ed.euc_dist(lat_min_to_x,lon_min_to_y,lat_max_to_x,lon_min_to_y, 1, 1);
+    e_dist2 = ed.euc_dist(lat_min_to_x,lon_max_to_y,lat_min_to_x,lon_min_to_y,1 ,1);
+    //calculates the cost of the edges 
+    double x_scale = (g_dist2+g_dist3)*0.5/e_dist2;
+    double y_scale = g_dist1/e_dist1;
+    ed.calc_edge_cost(&graph, x_scale, y_scale);
 
-    Graph traj = GRAPH_INIT;
-    read_file(argv[2], &traj);
-    traj.nodes[0].lat = 0.05;
-    traj.nodes[2].lat = 0.27;
-    // write_graph(&traj, "traj_frechet.dat");
+    //strongly connected componetns
+    // Graph SCC_graph = GRAPH_INIT;
+    // scc_graph(&graph, &SCC_graph);
+    //sub sampling 
+    // subsampling(&SCC_graph, 100);
 
-    struct node traj_nd = traj.nodes[0];
-    // vector<FSedge*> superlist = SearchNodes(&graph, traj_nd, 3);
-    // FSedge* sp_edge = superlist[0];
-    // cout<<sp_edge -> botlneck_val<<endl; 
-// 
+    vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
+    Trajectory traj = trajs[0];
+    write_traj(&traj, "traj_frechet.dat");
+
     FSgraph fsgraph = FSGRAPH_INIT;
     cout<<min_eps(&graph, &traj, &fsgraph, 0.01)<<endl;
     write_fsgraph(&fsgraph, "fsgraph.dat");

@@ -103,6 +103,32 @@ vector<Trajectory> read_trajectories(string file_path, int k, double min_long, d
     return trajs;
 }
 
+typedef struct trajectory {
+    int length; //nPoints
+    uint32_t traceId;
+    uint32_t subId; 
+    vector<Point*> points;
+    vector<Tedge*> edges;
+    // Point* head;
+    // Point* tail;
+} Trajectory;
+
+void write_traj(Trajectory* traj, string file_name){
+    ofstream file(file_name);
+    for(int i = 0; i < fsgraph -> fsedges.size(); i++) {
+    //x y x y 
+        int source_lat = traj -> Tedge[i] -> src -> latitude;
+        int source_lon = traj -> Tedge[i] -> src -> longitude;
+        int target_lat = traj -> Tedge[i] -> trg -> latitude;
+        int target_lon = traj -> Tedge[i] -> trg -> longitude;
+    
+        // file << source_tid<< " " << source_vid << " " << target_tid << " " << target_vid << endl; //what we wanted it to look like originally
+        file << source_lat<< " " << source_lon << " " << target_lat << " " << target_lon << endl; // what (Vi, Tj) should looks like
+    }
+    file.close();
+}
+
+
 void cleanup_trajectory(Trajectory* traj) {
     for(int i = 0; i < traj -> points.size(); i++) {
         free(traj -> points[i]);

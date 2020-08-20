@@ -1,4 +1,5 @@
 #include "starting_node_look_up.h"
+#include "disc_frechet_v2.h"
 
 using namespace std;
 

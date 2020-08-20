@@ -25,7 +25,7 @@ typedef struct point {
     // struct point* prev;
 } Point;
 
-typedef struct edge {
+typedef struct tedge {
     Point* src; 
     Point* trg;
     double cost;
@@ -52,6 +52,8 @@ void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, doubl
 
 /* reads k consecutive trajectories from a given file and stores it in a Trajectory vector */
 vector<Trajectory> read_trajectories(string file_path, int k, double min_long, double min_lat);
+
+void write_traj(Trajectory* traj, string file_name);
 
 /* frees all the malloc'ed memory for the points and edges in a trajectory */
 void cleanup_trajectory(Trajectory* traj);

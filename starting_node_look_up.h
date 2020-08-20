@@ -12,50 +12,23 @@
 
 using namespace std;
 
-class LookUp {
-    private:
-        Point* traj_nd;
-
-        double lat_min, lat_max, lon_min, lon_max;
-        double g_dist1, g_dist2, g_dist3;
-        double e_dist1, e_dist2;
-
-        //int grid_h, grid_w;
-
-        double box_height, box_width;
-
-        double lon_min_to_x, lon_max_to_x, lat_min_to_y, lat_max_to_y; 
-        double x_scale, y_scale;
-
-    public:
-    //  LookUp(Graph* graph) {  //what's the "*"?
-    //  lat_min = graph.min_lat;
-    //  lat_max = graph.max_lat;
-    //  lon_min = graph.min_long;
-    //  lon_max = graph.max_long;
-    //  Bounds bd;
-    //  g_dist1 = bd.geodesic_dist(lat_min,lon_min,lat_max,lon_min);
-    //  g_dist2 = bd.geodesic_dist(lat_min,lon_max,lat_min,lon_min);
-    //  g_dist3 = bd.geodesic_dist(lat_max,lon_max,lat_max,lon_min);
-    //  box_height = g_dist1;
-    //  box_width = (g_dist2 + g_dist3)/2;
-    //  Euc_distance ed;
-    //  lon_min_to_x = ed.lon_mercator_proj(lon_min, lon_min);
-    //  lon_max_to_x = ed.lon_mercator_proj(lon_max, lon_min);
-    //  lat_min_to_y = ed.lat_mercator_proj(lat_min, lat_min);
-    //  lat_max_to_y = ed.lat_mercator_proj(lat_max, lat_min);
-    //  e_dist1 = ed.euc_dist(lat_min_to_y,lon_min_to_x,lat_max_to_y,lon_min_to_x, 1, 1);
-    //  e_dist2 = ed.euc_dist(lat_min_to_y,lon_max_to_x,lat_min_to_y,lon_min_to_x,1 ,1);
-    //  x_scale = box_width / e_dist2;
-    //  y_scale = box_height / e_dist1;
-    // }
-
-       
-       
-
-        
-        
-
+// class LookUp {
+//     private:
+        // Point* traj_nd;
+// 
+        // double lat_min, lat_max, lon_min, lon_max;
+        // double g_dist1, g_dist2, g_dist3;
+        // double e_dist1, e_dist2;
+// 
+        // int grid_h, grid_w;
+// 
+        // double box_height, box_width;
+// 
+        // double lon_min_to_x, lon_max_to_x, lat_min_to_y, lat_max_to_y; 
+        // double x_scale, y_scale;
+// 
+//     public:
+// 
         // /* assign the grid cell a node belongs to, grid_h and grid_w are user defined */
         // vector<int> assign_grid(node nd, int grid_h, int grid_w, double box_height, double box_width, double x_scale, double y_scale);
 // 
@@ -64,7 +37,7 @@ class LookUp {
 // 
         // /* assign the grid for all the nodes in the graph */
         // void graph_grid(Graph* graph, int grid_h, int grid_w, double box_height, double box_width, double x_scale, double y_scale);
-};
+// };
 
  /* comparison function to sort the superedges */
  bool compare_dist(FSedge* sp1, FSedge* sp2);

@@ -62,17 +62,24 @@ void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, doubl
     Euc_distance ed;
 
     for(int i = 0; i < traj -> length; i++) {
-        read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
-        longitude = *(int*)buffer;
-        longitude /= pow(10, LON_LAT_COMMA_SHIFT);
-        /* overwrite the node's longitude in mercator projection */
-        longitude = ed.lon_mercator_proj(longitude, min_long);
 
         read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
         latitude = *(int*)buffer;
         latitude /= pow(10, LON_LAT_COMMA_SHIFT);
-        /* overwrite the node's latitude in mercator projection */
+        // cout<<"latitude before: "<<latitude<<endl;
+        // cout<<"min long: "<<min_lat<<endl;
+        // /* overwrite the node's latitude in mercator projection */
         latitude = ed.lon_mercator_proj(latitude, min_lat);
+        // cout<<"latitude after: "<<latitude<<endl;
+// 
+        read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
+        longitude = *(int*)buffer;
+        longitude /= pow(10, LON_LAT_COMMA_SHIFT);
+        /* overwrite the node's longitude in mercator projection */
+        // cout<<"longitude before: "<<longitude<<endl;
+        // cout<<"min long: "<<min_long<<endl;
+        longitude = ed.lon_mercator_proj(longitude, min_long);
+        // cout<<"longitude after: "<<longitude<<endl;
 
         read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
         timestamp = *(int*)buffer;
@@ -103,25 +110,15 @@ vector<Trajectory> read_trajectories(string file_path, int k, double min_long, d
     return trajs;
 }
 
-typedef struct trajectory {
-    int length; //nPoints
-    uint32_t traceId;
-    uint32_t subId; 
-    vector<Point*> points;
-    vector<Tedge*> edges;
-    // Point* head;
-    // Point* tail;
-} Trajectory;
-
 void write_traj(Trajectory* traj, string file_name){
     ofstream file(file_name);
-    for(int i = 0; i < fsgraph -> fsedges.size(); i++) {
+    for(int i = 0; i < traj -> edges.size(); i++) {
     //x y x y 
-        int source_lat = traj -> Tedge[i] -> src -> latitude;
-        int source_lon = traj -> Tedge[i] -> src -> longitude;
-        int target_lat = traj -> Tedge[i] -> trg -> latitude;
-        int target_lon = traj -> Tedge[i] -> trg -> longitude;
-    
+        double source_lat = traj -> edges[i] -> src -> latitude;
+        double source_lon = traj -> edges[i] -> src -> longitude;
+        double target_lat = traj -> edges[i] -> trg -> latitude;
+        double target_lon = traj -> edges[i] -> trg -> longitude;
+
         // file << source_tid<< " " << source_vid << " " << target_tid << " " << target_vid << endl; //what we wanted it to look like originally
         file << source_lat<< " " << source_lon << " " << target_lat << " " << target_lon << endl; // what (Vi, Tj) should looks like
     }

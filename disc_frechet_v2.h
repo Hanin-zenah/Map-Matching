@@ -15,7 +15,6 @@
 
 #include "graph.h"
 #include "trajectory.h"
-#include "starting_node_look_up.h"
 
 #define FSGRAPH_INIT {0}
 
@@ -81,17 +80,17 @@ struct Comp_eps {
 
 
 /* distance of Vi, Tj in a corner */
-double nodes_dist(node g_nd, Point* t_nd);
+double nodes_dist(node g_nd, Point* t_nd, double x_scale, double y_scale);
 
 /* calculate the minimal leash length for discrete frechet */
-double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius);
+double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, double x_scale, double y_scale);
 
 /* given a FSnode, build the 3 outgoing edges and target nodes using this node */
-double build_node(FSgraph* fsgraph, fsnode fsnd, int neighbor_id, int up, int right);
+double build_node(FSgraph* fsgraph, fsnode fsnd, int neighbor_id, int up, int right, double x_scale, double y_scale);
 
 /* given a nodes pair on a FS graph, returns the node pair after the next traversal */
 FSpair traversal(FSgraph* fsgraph, FSpair corner, Graph* graph, Trajectory* traj, 
-priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack, vector<FSedge*> superEdges);
+priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack, vector<FSedge*> superEdges, double x_scale, double y_scale);
 
 void cleanup(FSgraph* fsgraph);
 

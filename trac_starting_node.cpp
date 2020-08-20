@@ -31,10 +31,10 @@ using namespace std;
 // }
 
 
-double dist_from_T0(Point* traj_nd, node g_nd) {
+double dist_from_T0(Point* traj_nd, node g_nd, double x_scale, double y_scale) {
     double dist; 
-    dist = sqrt(pow((traj_nd -> latitude - g_nd.lat), 2) + 
-                    pow((traj_nd -> longitude - g_nd.longitude), 2));
+    dist = sqrt(pow((traj_nd -> latitude - g_nd.lat)*x_scale, 2) + 
+                    pow((traj_nd -> longitude - g_nd.longitude)*y_scale, 2));
     return dist; 
 }  
 
@@ -42,11 +42,11 @@ bool compare_dist(FSedge* sp1, FSedge* sp2){
     return sp1 -> botlneck_val > sp2 -> botlneck_val;
 }
 
-vector<FSedge*> SearchNodes(Graph* graph, Point* traj_nd, double radius) {
+vector<FSedge*> SearchNodes(Graph* graph, Point* traj_nd, double radius, double x_scale, double y_scale) {
     vector<FSedge*> se_list;
     /* when building a FSgraph, only need to know the node id, and the initial bottle neck vel */
     for(int i = 0; i < graph -> nodes.size(); i++) {
-        double dist = dist_from_T0(traj_nd, graph -> nodes[i]);
+        double dist = dist_from_T0(traj_nd, graph -> nodes[i], x_scale, y_scale);
         if(dist <= radius) {
             FSedge* se = (FSedge*) malloc(sizeof(FSedge));
             FSnode* start_nd = (FSnode*) malloc(sizeof(FSnode));

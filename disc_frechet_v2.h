@@ -92,6 +92,10 @@ double build_node(FSgraph* fsgraph, fsnode fsnd, int neighbor_id, int up, int ri
 FSpair traversal(FSgraph* fsgraph, FSpair corner, Graph* graph, Trajectory* traj, 
 priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack, vector<FSedge*> superEdges, double x_scale, double y_scale);
 
+void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& superEdges);
+
+FSpair increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, stack <FSedge*>& Stack);
+
 void cleanup(FSgraph* fsgraph);
 
 void write_fsgraph(FSgraph* fsgraph, string file_name);

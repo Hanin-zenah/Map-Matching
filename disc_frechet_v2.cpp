@@ -1,13 +1,12 @@
 #include "disc_frechet_v2.h"
-#include "starting_node_look_up.h"
+ #include "starting_node_look_up.h"
 
-
-double nodes_dist(struct node g_nd, Point* t_nd) {
-    double dist = sqrt(pow((t_nd -> latitude - g_nd.lat), 2) + pow((t_nd -> longitude - g_nd.longitude), 2));
+double nodes_dist(struct node g_nd, Point* t_nd, double x_scale, double y_scale) {
+    double dist = sqrt(pow((t_nd -> latitude - g_nd.lat)*x_scale, 2.0) + pow((t_nd -> longitude - g_nd.longitude)*y_scale, 2.0));
     return dist;
 }
 
-double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right) {
+double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right, double x_scale, double y_scale) {
     FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
     FSedge* fedge = (FSedge*) malloc(sizeof(FSedge));
 
@@ -28,7 +27,7 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
         //if pair not in map 
         fnd -> visited = false; /* didn't really end up making this bool value */
                                                             /* traj_node -> next */
-        fnd -> dist = nodes_dist(graph -> nodes[fnd -> vid], traj -> points[fnd -> tid]); //error is here
+        fnd -> dist = nodes_dist(graph -> nodes[fnd -> vid], traj -> points[fnd -> tid], x_scale, y_scale); //error is here
         double distance = fnd -> dist; 
         cout<<"creating pair dist: " << distance <<" from: "<<pair.first<<" "<<pair.second<<endl;
         fsgraph -> fsnodes.push_back(fnd);
@@ -53,20 +52,20 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
 }
 
 FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner, 
-                    priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, 
-                         stack <FSedge*>& Stack, vector<FSedge*> superEdges) {
+                         priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, 
+                         stack <FSedge*>& Stack, vector<FSedge*> superEdges, double x_scale, double y_scale) {
     auto it = fsgraph -> pair_dict.find(corner);
     FSnode* fnd = it -> second;
     vector<int> incidents = get_incident(graph, fnd -> vid);
     vector<double> btl_neck_vals; //change to store edges ??
-    double eps = build_node(fsgraph, graph, traj, fnd, fnd -> vid, 0, 1);
+    double eps = build_node(fsgraph, graph, traj, fnd, fnd -> vid, 0, 1, x_scale, y_scale);
     btl_neck_vals.push_back(eps);
 
     for(int i = 0 ; i < incidents.size(); i++) {
         int neighbour_id  = incidents[i];
-        double eps1 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 1); // build diagonal node //change to return edges 
+        double eps1 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 1, x_scale, y_scale); // build diagonal node //change to return edges 
         btl_neck_vals.push_back(eps1);
-        double eps2 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 0); //build upwards node 
+        double eps2 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 0, x_scale, y_scale); //build upwards node 
         btl_neck_vals.push_back(eps2);
     }
 
@@ -121,14 +120,14 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
     return next_fspair;
 }
        
-double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius) {
-    int m = traj -> length; 
+double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, double x_scale, double y_scale){
+    int m = traj -> length - 1; 
 
     // FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
     // FSedge* fedge = (FSedge*) malloc(sizeof(FSedge));
     priority_queue<FSedge*, vector<FSedge*>, Comp_eps> bigger_eps;
     stack <FSedge*> Stack;
-    vector<FSedge*> superEdges = SearchNodes(graph, traj -> points[0], radius);
+    vector<FSedge*> superEdges = SearchNodes(graph, traj -> points[0], radius, x_scale, y_scale);
     if (superEdges.empty()){
         cerr << "Nothing within the required distance"<<endl;
         return -1;
@@ -150,7 +149,7 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius) 
     bool finished = false;
     
     while (!finished) {
-        pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, superEdges);
+        pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, superEdges, x_scale, y_scale);
         //cout<<"current eps: "<<fsgraph -> eps<<endl;
         finished = (pair.second >= m);
 

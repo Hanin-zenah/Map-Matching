@@ -62,17 +62,24 @@ void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, doubl
     Euc_distance ed;
 
     for(int i = 0; i < traj -> length; i++) {
-        read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
-        longitude = *(int*)buffer;
-        longitude /= pow(10, LON_LAT_COMMA_SHIFT);
-        /* overwrite the node's longitude in mercator projection */
-        longitude = ed.lon_mercator_proj(longitude, min_long);
 
         read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
         latitude = *(int*)buffer;
         latitude /= pow(10, LON_LAT_COMMA_SHIFT);
-        /* overwrite the node's latitude in mercator projection */
+        // cout<<"latitude before: "<<latitude<<endl;
+        // cout<<"min long: "<<min_lat<<endl;
+        // /* overwrite the node's latitude in mercator projection */
         latitude = ed.lat_mercator_proj(latitude, min_lat);
+        // cout<<"latitude after: "<<latitude<<endl;
+// 
+        read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
+        longitude = *(int*)buffer;
+        longitude /= pow(10, LON_LAT_COMMA_SHIFT);
+        /* overwrite the node's longitude in mercator projection */
+        // cout<<"longitude before: "<<longitude<<endl;
+        // cout<<"min long: "<<min_long<<endl;
+        longitude = ed.lon_mercator_proj(longitude, min_long);
+        // cout<<"longitude after: "<<longitude<<endl;
 
         read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
         timestamp = *(int*)buffer;
@@ -102,7 +109,6 @@ vector<Trajectory> read_trajectories(string file_path, int k, double min_long, d
     file.close();
     return trajs;
 }
-
 
 void write_traj(Trajectory* traj, string file_name){
     ofstream file(file_name);

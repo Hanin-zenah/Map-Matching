@@ -15,13 +15,14 @@ int main(int argc, char** argv) {
     //read graph from given file
     Graph graph = GRAPH_INIT;
     read_file(argv[1], &graph);
-    // write_graph(&graph, "graph_frechet.dat");
-
+    
     //bounding box
     double lat_min = graph.min_lat;
     double lat_max = graph.max_lat;
     double lon_min = graph.min_long;
     double lon_max = graph.max_long;
+    cout<<"global lon_min: "<<lon_min<<" global lat_min:  "<<lat_min<<endl;
+    cout<<"global lon_max: "<<lon_max<<" global lat_max:  "<<lat_max<<endl;
     Bounds bd;
     double g_dist1 = bd.geodesic_dist(lat_min,lon_min,lat_max,lon_min);
     double g_dist2 = bd.geodesic_dist(lat_min,lon_max,lat_min,lon_min);
@@ -40,36 +41,33 @@ int main(int argc, char** argv) {
     double y_scale = g_dist1/e_dist1;
     ed.calc_edge_cost(&graph, x_scale, y_scale);
 
-    //strongly connected componetns
+    write_graph(&graph, "graph_frechet.dat");
+
+    // strongly connected componetns
     // Graph SCC_graph = GRAPH_INIT;
     // scc_graph(&graph, &SCC_graph);
     //sub sampling 
     // subsampling(&SCC_graph, 100);
 
-    vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
+    vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
     Trajectory traj = trajs[0];
-    cout << "Traj length: " << traj.length << endl;
-    // for(int i = 0; i < traj.length; i++) {
-    //     //print all the coordinates
-    //     cout << i << ": " << traj.points[i]->longitude << " " << traj.points[i]->latitude << endl;
-    // }
+    Point* traj_nd = traj.points[0];
+    cout << "finished extracting the trajectory\n";
 
-    // for(int i = 0; i < traj.edges.size(); i++) {
-    //     cout << "edge" << i << ": Source: " << traj.edges[i]->src->longitude<< " " << traj.edges[i]->src->latitude << endl;
-    //     cout << "edge" << i << ": Target: " << traj.edges[i]->trg->longitude<< " " << traj.edges[i]->trg->latitude << endl;
-
-    // }
     write_traj(&traj, "traj_frechet.dat");
 
-    vector<FSedge*> edges = SearchNodes(&graph, traj.points[0], 100);
-    cout << edges.size() << endl;
-
-    // FSgraph fsgraph = FSGRAPH_INIT;
-    // cout<<min_eps(&graph, &traj, &fsgraph, 0.01)<<endl;
-    // write_fsgraph(&fsgraph, "fsgraph.dat");
-
-    // cleanup(&fsgraph);
+// 
+    FSgraph fsgraph = FSGRAPH_INIT;
+    // make a prompt for the radius
+    vector<FSedge*> nodes_within_dist = SearchNodes(&graph, traj_nd, 73, x_scale, y_scale);
+    cout<<"nodes_within_dist.size(): "<<nodes_within_dist.size()<<endl;
+    // cout<<"nodes_within_dist[0] -> trg.vid: "<<nodes_within_dist[0] -> trg ->vid<<endl;
+    // cout<<" lat: "<<graph.nodes[nodes_within_dist[0] -> trg ->vid].id<<" lon: "<<graph.nodes[nodes_within_dist[0] -> trg ->vid].longitude<<endl;
+    // cout<<" lat: "<<graph.nodes[nodes_within_dist[1] -> trg ->vid].id<<" lon: "<<graph.nodes[nodes_within_dist[1] -> trg ->vid].longitude<<endl;
+    // cout<<"traj_nd->latitude: " << traj_nd->latitude<<" traj_nd->longitude: "<< traj_nd->longitude<<endl;
+    cout<<min_eps(&graph, &traj, &fsgraph, 73, x_scale, y_scale)<<endl;
+    write_fsgraph(&fsgraph, "fsgraph.dat");
+    cleanup(&fsgraph);
     cleanup_trajectory(&traj);
-
     return 0;
 }

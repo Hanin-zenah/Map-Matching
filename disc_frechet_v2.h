@@ -96,6 +96,8 @@ void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super
 
 FSpair increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, stack <FSedge*>& Stack);
 
+FSpair travel_reachable (FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& superEdges);
+
 void cleanup(FSgraph* fsgraph);
 
 void write_fsgraph(FSgraph* fsgraph, string file_name);

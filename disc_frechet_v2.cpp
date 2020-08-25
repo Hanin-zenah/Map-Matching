@@ -32,10 +32,6 @@ FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_
     // next_nd -> visited = true; //QH: is this chaning the bool on the fsgraph for this node as well??
     
     return next_nd;
-    // FSpair next_fspair;
-    // next_fspair.first = next_nd -> vid;
-    // next_fspair.second = next_nd -> tid;
-    // return next_fspair;
 }
 
 FSnode* travel_reachable ( FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super_edges){
@@ -44,25 +40,18 @@ FSnode* travel_reachable ( FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSed
     // cout<<"stack size: "<<Stack.size()<<endl;
     FSedge* back_edge = Stack.top();
     Stack.pop();
-    // cout<<"stack size after popped: "<<Stack.size()<<endl;
-    // cout<<"stack empty? "<<Stack.empty()<<endl;
-    // cout<<"priority queue empty? "<<bigger_eps.empty()<<endl;
     FSnode* next_nd = back_edge -> trg;
-    if(!next_nd -> visited) {
-        next_nd -> parent = back_edge -> src;
-    }
+    // if(!next_nd -> visited && back_edge -> src != NULL) {
+        // next_nd -> parent = back_edge -> src;
+        // cout<<"next_nd tid vid: "<<next_nd->tid<<" "<<next_nd->vid
+        // <<" next_nd -> parent tid vid: "<<next_nd -> parent ->tid<<" "<<next_nd -> parent ->vid <<endl;
+    // }
     /* if the edge is a super edge */
     if(!back_edge -> src) {
         back_up_se(fsgraph, Stack, super_edges);
     }
     // next_nd -> visited = true;
     return next_nd;
-    // FSpair next_fspair;
-    // next_fspair.first = next_nd -> vid;
-    // next_fspair.second = next_nd -> tid;
-    // cout<<"next_fspair.first:  "<<next_fspair.first<<endl;
-    // cout<<"next_fspair.second:  "<<next_fspair.second<<endl;
-    // return next_fspair;
     }
 
 double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right, double x_scale, double y_scale) {
@@ -86,17 +75,18 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
         fnd -> dist = nodes_dist(graph -> nodes[fnd -> vid], traj -> points[fnd -> tid], x_scale, y_scale); //error is here
         double distance = fnd -> dist; 
         // cout<<"creating pair dist: " << distance <<" from: "<<pair.first<<" "<<pair.second<<endl;
+        fnd -> parent = fsnd; //QH
         fsgraph -> fsnodes.push_back(fnd);
         fsgraph -> pair_dict[pair] = fnd; //fsgraph -> pair_dict.insert({pair, &fnd});
         fedge -> trg = fnd; 
     }
     else { 
          // /* pair already exists on graph */
-        //  cout<<"pair already exists on graph "<<endl;
         auto it = fsgraph -> pair_dict.find(pair);
         // /* if (it -> visited){ } won't build this node nor edge */
         fedge -> trg = it -> second;
         fnd -> dist = fedge -> trg -> dist; 
+        fnd -> parent = fsnd; //QH
         double distance = fnd -> dist; 
         // cout<<"existing pair dist: " << distance <<" from: "<<pair.first<<" "<<pair.second<<endl;
     }
@@ -178,11 +168,11 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
         cerr << "Nothing within the required distance"<<endl;
         return -1;
     }
-    
     FSedge* fedge = super_edges.back();
     fsgraph -> eps = fedge -> botlneck_val;//nodes_dist(graph -> nodes[0], traj -> nodes[0]); //change this to be the closest node /*traj -> head */
     FSnode* fnd = fedge -> trg;
     fnd -> visited = true;
+    fnd -> parent = NULL;
     fsgraph -> fsnodes.push_back(fnd);
     super_edges.pop_back();
     FSpair pair; // = {fnd.vid, fnd.tid};
@@ -207,33 +197,39 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     return fsgraph -> eps;
 }
 
-// stack<FSnode*> get_path(FSgraph* fsgraph) {
-    // stack<FSnode*> path;
-    // /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
-    // FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
-    // while(cur -> parent) {
-        // path.push(cur);
-        // cout << cur -> tid << ", " << cur -> vid << endl;
-        // cur = cur -> parent;
-    // }
-    // return path;
-// }
+stack<FSnode*> get_path(FSgraph* fsgraph) {
+    stack<FSnode*> path;
+    /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
+    FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
+    while(cur -> parent) {
+        path.push(cur);
+        cout << cur -> tid << ", " << cur -> vid << endl;
+        cur = cur -> parent;
+    }
+    cout<< cur -> tid<< ", " << cur -> vid << endl;
+    return path;
+}
 
-// void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name) {
-    // ofstream file(file_name);
-    // stack<FSnode*> path;
-    // /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
-    // FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
-    // while(cur -> parent) {
-        // path.push(cur);
+void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name) {
+    ofstream file(file_name);
+    stack<FSnode*> path;
+    /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
+    FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
+    while(cur -> parent) {
+        path.push(cur);
         // file<< "tid: "<<cur -> tid <<" "<< traj -> points[cur -> tid] -> latitude<<" "<< 
         // traj -> points[cur -> tid]-> longitude<<" vid: "<<  cur -> vid  << " "<< graph -> nodes[cur -> vid].lat 
         // <<" "<<graph -> nodes[cur -> vid].longitude<<endl;
-        // cur = cur -> parent;
-    // }
-    // file.close();
-    // return;
-// }
+        file<< graph -> nodes[cur -> vid].lat <<" "<<graph -> nodes[cur -> vid].longitude
+        <<" "<<graph -> nodes[cur -> parent -> vid].lat <<" "<<graph -> nodes[cur -> parent -> vid].longitude<<endl;
+        cur = cur -> parent;
+    }
+    // file<< "tid: "<<cur -> tid <<" "<< traj -> points[cur -> tid] -> latitude<<" "<< 
+    // traj -> points[cur -> tid]-> longitude<<" vid: "<<  cur -> vid  << " "<< graph -> nodes[cur -> vid].lat 
+    // <<" "<<graph -> nodes[cur -> vid].longitude<<endl;
+    file.close();
+    return;
+}
 
 void cleanup(FSgraph* fsgraph) {
     for(int i = 0; i < fsgraph -> fsnodes.size(); i++) {

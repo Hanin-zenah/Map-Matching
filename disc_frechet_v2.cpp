@@ -96,7 +96,7 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
         auto it = fsgraph -> pair_dict.find(pair);
         // /* if (it -> visited){ } won't build this node nor edge */
         fedge -> trg = it -> second;
-        fnd -> dist = fedge -> trg -> dist; 
+        fnd -> dist = fedge -> trg -> dist;  
         double distance = fnd -> dist; 
         // cout<<"existing pair dist: " << distance <<" from: "<<pair.first<<" "<<pair.second<<endl;
     }

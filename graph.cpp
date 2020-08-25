@@ -78,6 +78,7 @@ void read_file(string file_name, Graph* graph) {
         graph -> nodes[i].lat = ed.lat_mercator_proj(graph -> nodes[i].lat, graph -> min_lat);
         graph -> nodes[i].longitude = ed.lon_mercator_proj(graph -> nodes[i].longitude, graph -> min_long);
     }
+    write_graph(graph, "graph_x_y.dat");
 
     file.close();
 
@@ -86,10 +87,62 @@ void read_file(string file_name, Graph* graph) {
     inedge_offset_array(graph);
     
     //write another file containing the projected coordinates of the graph 
-    write_graph(graph, "graph_x_y.dat");
-
+    
     return;
 }
+
+
+void read_processed_graph(string file_name, Graph* graph) {
+    if(file_name.empty()) {
+        return;
+    }
+    ifstream file; 
+    file.open(file_name);
+    if(!file) {
+        cerr << "Unable to open file";
+        return;
+    }
+
+    string buffer;
+    // /* skip the first five lines */
+    // for(int i = 0; i < IGNORE_LINES; i++) {
+        // getline(file, buffer);
+    // }
+    /* read the total number of nodes and edges, store them in graph struct */
+    file >> graph -> n_nodes >> graph -> n_edges >> graph -> x_scale >> graph -> y_scale;
+
+    /* now read everything
+       read line into buffer, scan line number, osmid, lat, long, .. (keep what matters) */
+    getline(file, buffer);
+    for(int i = 0; i < graph -> n_nodes ; i++) {
+        getline(file, buffer);
+        istringstream vals(buffer);
+        struct node n;
+        vals >> n.id >> n.osmid >> n.lat >> n.longitude;
+        graph -> nodes.push_back(n);
+        check_boundaries(graph -> nodes[i].lat, graph -> nodes[i].longitude, graph);
+    }
+    for(int i = 0; i < graph -> n_edges; i++) {
+        getline(file, buffer);
+        istringstream vals(buffer);
+        struct edge e;
+        vals >> e.srcid >> e.trgtid >> e.cost;
+        e.id = i;
+
+        graph -> edges.push_back(e);
+    }
+
+   file.close();
+
+   //compute offset arrays 
+   outedge_offset_array(graph);
+   inedge_offset_array(graph);
+   
+   //write another file containing the projected coordinates of the graph 
+   
+   return;
+}
+
 
 bool compare_outedge(struct edge edge1, struct edge edge2) {
     if(edge1.srcid == edge2.srcid) {
@@ -346,45 +399,31 @@ void scc_graph(Graph* graph, Graph* SCC_graph) {
     outedge_offset_array(SCC_graph);
 }
 
-void output_graph(Graph* graph, string file_name) {
+void output_graph(Graph* graph, string file_name, double x_scale, double y_scale) {
     vector<struct node> all_nodes = graph -> nodes;
     vector<struct edge> all_edges = graph -> edges;
-    vector<int> out_off_edges = graph -> out_off_edges;
-    vector<int> out_offsets = graph -> out_offsets;
-    vector<int> in_off_edges = graph -> in_off_edges;
-    vector<int> in_offsets = graph -> in_offsets;
+    // vector<int> out_off_edges = graph -> out_off_edges;
+    // vector<int> out_offsets = graph -> out_offsets;
+    // vector<int> in_off_edges = graph -> in_off_edges;
+    // vector<int> in_offsets = graph -> in_offsets;
 
     ofstream txt_file(file_name);
-
     txt_file << all_nodes.size() << endl;
     txt_file << all_edges.size() << endl;
+    txt_file << x_scale << endl;
+    txt_file << y_scale << endl;
+    txt_file << graph -> min_lat << endl;
+    txt_file << graph -> min_long << endl;
+    txt_file << graph -> max_lat << endl;
+    txt_file << graph -> max_long << endl;
+
 
     for(int i = 0; i < all_nodes.size(); i++) {
         txt_file << all_nodes[i].id << " " << all_nodes[i].osmid << " " << all_nodes[i].lat << " " << all_nodes[i].longitude << endl;
     }
 
     for(int i = 0; i < all_edges.size(); i++) {
-        txt_file << all_edges[i].id << " " << all_edges[i].srcid << " " << all_edges[i].trgtid << " " << all_edges[i].cost << endl;
-    }
-
-    txt_file<< "out_edge" << endl;
-    for(int i = 0; i < out_off_edges.size(); i++) {
-        txt_file<< out_off_edges[i] << endl;
-    }
-
-    txt_file<< "out_offset" << endl;
-    for(int i = 0; i < out_offsets.size(); i++) {
-        txt_file<< out_offsets[i] << endl;
-    }
-
-    txt_file<< "in_edge" << endl;
-    for(int i = 0; i < in_off_edges.size(); i++) {
-        txt_file<< in_off_edges[i] << endl;
-    }
-
-    txt_file<< "in_offset" << endl;
-    for(int i = 0; i < in_offsets.size(); i++) {
-        txt_file<< in_offsets[i] << endl;
+        txt_file << all_edges[i].srcid << " " << all_edges[i].trgtid << " " << all_edges[i].cost << endl;
     }
 
     txt_file.close();

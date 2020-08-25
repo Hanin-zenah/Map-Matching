@@ -94,12 +94,14 @@ priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>&
 
 void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& superEdges);
 
-FSpair increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, stack <FSedge*>& Stack);
+FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, stack <FSedge*>& Stack);
 
-FSpair travel_reachable (FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& superEdges);
+FSnode* travel_reachable (FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& superEdges);
 
 void cleanup(FSgraph* fsgraph);
 
 void write_fsgraph(FSgraph* fsgraph, string file_name);
+
+void write_sur_graph(FSgraph* fsgraph, Graph* graph, string file_name);
 
 #endif

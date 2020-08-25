@@ -41,6 +41,9 @@ typedef struct graph {
     double min_long;
     double max_long;
 
+    double x_scale;
+    double y_scale;
+
     vector<struct node> nodes;
     vector<struct edge> edges;
 
@@ -60,6 +63,8 @@ void check_boundaries(double latitude, double longitude, Graph* g);
 
 /* reads a file that contains the graph information and returns a graph with all the necessary attributes set */
 void read_file(string file_name, Graph* graph);
+
+void read_processed_graph(string file_name, Graph* graph);
 
 /* used for std::sort() the edges of the graph in order of their source id */
 bool compare_outedge(struct edge edge1, struct edge edge2);
@@ -108,6 +113,6 @@ int binary_search_node(int node_id, Graph* graph);
 void scc_graph(Graph* graph, Graph* scc_graph);
 
 /* outputs a graph to a text file*/
-void output_graph(Graph* graph, string file_name);
+void output_graph(Graph* graph, string file_name, double x_scale, double y_scale);
 
 #endif

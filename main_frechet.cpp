@@ -54,12 +54,10 @@ int main(int argc, char** argv) {
     cout << "hello\n";
 
     vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
-    cout << "finished extracting the trajectory\n";
     cout << trajs.size() << endl;
     Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];
     cout << "finished extracting the trajectory\n";
-// 
     // write_traj(&traj, "traj_frechet.dat");
     FSgraph fsgraph = FSGRAPH_INIT;
     cout<<min_eps(&after_graph, &traj, &fsgraph, 80, after_graph.x_scale, after_graph.y_scale)<<endl;

@@ -79,11 +79,11 @@ int bi_dir(Graph* graph, int edgeID) {
 
 void subsampling(Graph* graph, double threshold) {
     for(int i = 0; i < graph -> edges.size(); i++) {  
-        // if(graph -> edges[i].cost > threshold) {
+        if(graph -> edges[i].cost > threshold) {
             while(graph -> edges[i].cost > threshold) {
                 split_bi_dir_edge(graph, i, bi_dir(graph, graph -> edges[i].id));        
             } 
-        // }
+        }
     }
     graph -> n_nodes = graph -> nodes.size();
     graph -> n_edges = graph -> edges.size();

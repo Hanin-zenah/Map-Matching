@@ -211,7 +211,7 @@ stack<FSnode*> get_path(FSgraph* fsgraph) {
     stack<FSnode*> path;
     /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
     FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
-    while(cur -> parent) {
+    while(cur -> parent ) {
         path.push(cur);
         cout << cur -> tid << ", " << cur -> vid << endl;
         cur = cur -> parent;

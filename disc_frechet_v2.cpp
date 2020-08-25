@@ -38,7 +38,7 @@ FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_
     // return next_fspair;
 }
 
-FSnode* travel_reachable ( FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& superEdges){
+FSnode* travel_reachable ( FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super_edges){
     /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
         the current cell, might be from the previous cells if there are no reachable nodes in this cell */
     // cout<<"stack size: "<<Stack.size()<<endl;
@@ -150,7 +150,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
         /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
             the current cell, might be from the previous cells if there are no reachable nodes in this cell */
         // next_fspair = travel_reachable(fsgraph, Stack, superEdges);
-        next_nd = travel_reachable(fsgraph, Stack, superEdges);
+        next_nd = travel_reachable(fsgraph, Stack, super_edges);
     }
     } 
     next_nd -> visited = true;
@@ -195,26 +195,45 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     bool finished = false;
     
     int i = 0;
+    ofstream file("frechet_prograss.dat");
     while (!finished) {
-        pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, superEdges, x_scale, y_scale);
-        i++;
+        pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, super_edges, x_scale, y_scale);
+        file<<fsgraph -> eps << " " << i << " "<<pair.first << " " <<pair.second<<endl;
         cout<<"current eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
         finished = (pair.second >= m - 1);
+        i++;
     }
+    file.close();
     return fsgraph -> eps;
 }
 
-stack<FSnode*> get_path(FSgraph* fsgraph) {
-    stack<FSnode*> path;
-    /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
-    FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
-    while(cur -> parent) {
-        path.push(cur);
-        cout << cur -> tid << ", " << cur -> vid << endl;
-        cur = cur -> parent;
-    }
-    return path;
-}
+// stack<FSnode*> get_path(FSgraph* fsgraph) {
+    // stack<FSnode*> path;
+    // /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
+    // FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
+    // while(cur -> parent) {
+        // path.push(cur);
+        // cout << cur -> tid << ", " << cur -> vid << endl;
+        // cur = cur -> parent;
+    // }
+    // return path;
+// }
+
+// void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name) {
+    // ofstream file(file_name);
+    // stack<FSnode*> path;
+    // /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
+    // FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
+    // while(cur -> parent) {
+        // path.push(cur);
+        // file<< "tid: "<<cur -> tid <<" "<< traj -> points[cur -> tid] -> latitude<<" "<< 
+        // traj -> points[cur -> tid]-> longitude<<" vid: "<<  cur -> vid  << " "<< graph -> nodes[cur -> vid].lat 
+        // <<" "<<graph -> nodes[cur -> vid].longitude<<endl;
+        // cur = cur -> parent;
+    // }
+    // file.close();
+    // return;
+// }
 
 void cleanup(FSgraph* fsgraph) {
     for(int i = 0; i < fsgraph -> fsnodes.size(); i++) {
@@ -247,11 +266,11 @@ void write_sur_graph(FSgraph* fsgraph, Graph* graph, string file_name) {
         int source_vid = fsgraph -> fsedges[i] -> src -> vid;
         int target_vid = fsgraph -> fsedges[i] -> trg -> vid;
 
-        int src_lat, src_lon, trg_lat, trg_lon;
+        double src_lat, src_lon, trg_lat, trg_lon;
         src_lat = graph -> nodes[source_vid].lat;
         src_lon = graph -> nodes[source_vid].longitude;
         trg_lat = graph -> nodes[target_vid].lat;
-        trg_lon = graph -> nodes[target_vid ].longitude;
+        trg_lon = graph -> nodes[target_vid].longitude;
 
         // file << source_tid<< " " << source_vid << " " << target_tid << " " << target_vid << endl; //what we wanted it to look like originally
         file << src_lat<< " " << src_lon << " " << trg_lat << " " << trg_lon << endl; // what (Vi, Tj) should looks like

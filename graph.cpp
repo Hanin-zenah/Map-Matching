@@ -412,10 +412,10 @@ void output_graph(Graph* graph, string file_name, double x_scale, double y_scale
     txt_file << all_edges.size() << endl;
     txt_file << x_scale << endl;
     txt_file << y_scale << endl;
-    txt_file << graph -> min_lat << endl;
-    txt_file << graph -> min_long << endl;
-    txt_file << graph -> max_lat << endl;
-    txt_file << graph -> max_long << endl;
+    // txt_file << graph -> min_lat << endl;
+    // txt_file << graph -> min_long << endl;
+    // txt_file << graph -> max_lat << endl;
+    // txt_file << graph -> max_long << endl;
 
 
     for(int i = 0; i < all_nodes.size(); i++) {

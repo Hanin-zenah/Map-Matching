@@ -5,6 +5,7 @@
 #include <cmath>
 #include <math.h>
 #include "graph.h"
+#include "trajectory.h"
 
 using namespace std;
 
@@ -38,6 +39,8 @@ class Euc_distance {
         double euc_dist(double y1, double x1, double y2, double x2, double x_scale, double y_scale);
 
         void calc_edge_cost(Graph* graph, double x_scale, double y_scale);
+
+        // void calc_traj_edge_cost(Trajectory* traj, double x_scale, double y_scale);
 
 };
 

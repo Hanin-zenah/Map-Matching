@@ -55,6 +55,9 @@ int main(int argc, char** argv) {
     Graph after_graph = GRAPH_INIT;
     read_processed_graph(argv[2], &after_graph);
 
+
+
+
     vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
     Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];

@@ -20,12 +20,22 @@ double Euc_distance::lon_mercator_proj(double lon, double lon_min) {
 
 double Euc_distance::lat_mercator_proj(double lat, double lat_min) {
     double lat_r = (lat-lat_min) * M_PI / 180.0;
-    double y = log(tan(0.25 * M_PI + 0.5 * lat_r));
-    return y;
+    double x = log(tan(0.25 * M_PI + 0.5 * lat_r));
+    return x;
 }
 
-double Euc_distance::euc_dist(double y1, double x1, double y2, double x2, double x_scale, double y_scale) {
-    double dist = sqrt(pow((x2-x1)*x_scale,2.0)+pow((y2-y1)*y_scale,2.0));
+double Euc_distance::lon_mercator_proj_scale(double lon, double lon_min, double y_scale) {
+    return (lon-lon_min) * M_PI * y_scale / 180.0;
+}
+
+double Euc_distance::lat_mercator_proj_scale(double lat, double lat_min, double x_scale) {
+    double lat_r = (lat-lat_min) * M_PI * x_scale/ 180.0;
+    double x = log(tan(0.25 * M_PI + 0.5 * lat_r));
+    return x;
+}
+
+double Euc_distance::euc_dist(double x1, double y1, double x2, double y2, double x_scale, double y_scale) {
+    double dist = sqrt(pow((y2-y1)*x_scale,2.0)+pow((x2-x1)*y_scale,2.0));
     return dist;
 }
 

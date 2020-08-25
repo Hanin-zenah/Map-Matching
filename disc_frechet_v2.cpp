@@ -22,7 +22,7 @@ void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super
     return;
 }
 
-FSpair increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, stack <FSedge*>& Stack) {
+FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, stack <FSedge*>& Stack){
     FSedge* min_eps_fedge = bigger_eps.top();
     bigger_eps.pop(); 
     /* check if it is a super edge and put the next super edge in the queue  */
@@ -30,16 +30,15 @@ FSpair increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_e
     fsgraph -> eps = min_eps_fedge -> botlneck_val;
     FSnode* next_nd = min_eps_fedge -> trg; //does the .trg need to be a pointer? does the bigger_eps need to be a queue of pointers?
     // next_nd -> visited = true; //QH: is this chaning the bool on the fsgraph for this node as well??
-    if(!next_nd -> visited) {
-        next_nd -> parent = min_eps_fedge -> src;
-    }
-    FSpair next_fspair;
-    next_fspair.first = next_nd -> vid;
-    next_fspair.second = next_nd -> tid;
-    return next_fspair;
+    
+    return next_nd;
+    // FSpair next_fspair;
+    // next_fspair.first = next_nd -> vid;
+    // next_fspair.second = next_nd -> tid;
+    // return next_fspair;
 }
 
-FSpair travel_reachable(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super_edges) {
+FSnode* travel_reachable ( FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& superEdges){
     /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
         the current cell, might be from the previous cells if there are no reachable nodes in this cell */
     // cout<<"stack size: "<<Stack.size()<<endl;
@@ -57,13 +56,14 @@ FSpair travel_reachable(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*
         back_up_se(fsgraph, Stack, super_edges);
     }
     // next_nd -> visited = true;
-    FSpair next_fspair;
-    next_fspair.first = next_nd -> vid;
+    return next_nd;
+    // FSpair next_fspair;
+    // next_fspair.first = next_nd -> vid;
+    // next_fspair.second = next_nd -> tid;
     // cout<<"next_fspair.first:  "<<next_fspair.first<<endl;
-    next_fspair.second = next_nd -> tid;
     // cout<<"next_fspair.second:  "<<next_fspair.second<<endl;
-    return next_fspair;
-}
+    // return next_fspair;
+    }
 
 double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right, double x_scale, double y_scale) {
     FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
@@ -133,35 +133,30 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
                 // /*store these local eps for potential global min eps increase store the edges with higher eps to be accessed later if needed */
             bigger_eps.push(fsgraph -> fsedges[size - btl_neck_vals.size()+ i]); //is this always going to be the right index of the edge?? yes because btlneck_vals is gonna stroe the last k built edges 
         }
-        else { /* only store the current 3 outgoing edges, if they meet the condition;
-                 refresh at each iteration */
-                //  cout<<"btl_neck_vals "<<i<<" : "<<btl_neck_vals[i]<<" src vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i] ->src -> vid<<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->src -> tid<<" trg vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> vid
+        else {  //  cout<<"btl_neck_vals "<<i<<" : "<<btl_neck_vals[i]<<" src vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i] ->src -> vid<<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->src -> tid<<" trg vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> vid
             // <<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> tid<<endl;
             Stack.push(fsgraph -> fsedges[size - btl_neck_vals.size() + i ]);
         }
     }
-    FSpair next_fspair;
-    FSnode* existed_fnd;
-    existed_fnd -> visited = true;
-    while(existed_fnd -> visited) {
-        if(Stack.empty()) {
-                /* case 1: if there are no more readily traversable edges in the freespace graph, update the eps (leash length) */
-            next_fspair = increase_eps(bigger_eps, fsgraph, Stack);
+    FSnode* next_nd ;
+    next_nd -> visited = true;
+    while(next_nd -> visited){
+    if(Stack.empty()) {
+            /* case 1: if there are no more readily traversable edges in the freespace graph, update the eps (leash length) */
+            // next_fspair = increase_eps(bigger_eps, fsgraph, Stack);
+            next_nd = increase_eps(bigger_eps, fsgraph, Stack);
         }    
-        else { 
-            /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
-                the current cell, might be from the previous cells if there are no reachable nodes in this cell */
-            next_fspair = travel_reachable(fsgraph, Stack, super_edges);
-        }
-        if(fsgraph -> pair_dict.find(next_fspair) != fsgraph -> pair_dict.end()) {
-            auto it = fsgraph -> pair_dict.find(next_fspair);
-            existed_fnd = it -> second;
-        }
-        else {
-            cerr<<"missing a fsnode"<<endl;
-        }
+    else { 
+        /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
+            the current cell, might be from the previous cells if there are no reachable nodes in this cell */
+        // next_fspair = travel_reachable(fsgraph, Stack, superEdges);
+        next_nd = travel_reachable(fsgraph, Stack, superEdges);
     }
-    existed_fnd -> visited = true; // QH:  am i making a copy of a fsnode and making it visited??? I should be changing the actual fsnode in the fsgraph
+    } 
+    next_nd -> visited = true;
+    FSpair next_fspair;
+    next_fspair.first = next_nd -> vid;
+    next_fspair.second = next_nd -> tid;
 
         // next_nd -> visited = true; 
     return next_fspair;
@@ -198,10 +193,12 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
 
     back_up_se(fsgraph, Stack, super_edges);
     bool finished = false;
-
-    while(!finished) {
-        pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, super_edges, x_scale, y_scale);
-        cout<<"current eps: "<<fsgraph -> eps<<endl;
+    
+    int i = 0;
+    while (!finished) {
+        pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, superEdges, x_scale, y_scale);
+        i++;
+        cout<<"current eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
         finished = (pair.second >= m - 1);
     }
     return fsgraph -> eps;
@@ -239,6 +236,25 @@ void write_fsgraph(FSgraph* fsgraph, string file_name) {
 
         // file << source_tid<< " " << source_vid << " " << target_tid << " " << target_vid << endl; //what we wanted it to look like originally
         file << source_vid<< " " << source_tid << " " << target_vid << " " << target_tid << endl; // what (Vi, Tj) should looks like
+    }
+    file.close();
+}
+
+void write_sur_graph(FSgraph* fsgraph, Graph* graph, string file_name) { 
+    ofstream file(file_name);
+    for(int i = 0; i < fsgraph -> fsedges.size(); i++) {
+        //x y x y 
+        int source_vid = fsgraph -> fsedges[i] -> src -> vid;
+        int target_vid = fsgraph -> fsedges[i] -> trg -> vid;
+
+        int src_lat, src_lon, trg_lat, trg_lon;
+        src_lat = graph -> nodes[source_vid].lat;
+        src_lon = graph -> nodes[source_vid].longitude;
+        trg_lat = graph -> nodes[target_vid].lat;
+        trg_lon = graph -> nodes[target_vid ].longitude;
+
+        // file << source_tid<< " " << source_vid << " " << target_tid << " " << target_vid << endl; //what we wanted it to look like originally
+        file << src_lat<< " " << src_lon << " " << trg_lat << " " << trg_lon << endl; // what (Vi, Tj) should looks like
     }
     file.close();
 }

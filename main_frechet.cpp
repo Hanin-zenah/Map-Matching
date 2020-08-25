@@ -55,8 +55,6 @@ int main(int argc, char** argv) {
     cout << "finished extracting the trajectory\n";
 
     write_traj(&traj, "traj_frechet.dat");
-
-// 
     FSgraph fsgraph = FSGRAPH_INIT;
     // make a prompt for the radius
     vector<FSedge*> nodes_within_dist = SearchNodes(&graph, traj_nd, 100, x_scale, y_scale);

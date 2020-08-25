@@ -12,6 +12,19 @@
 
 using namespace std;
 
+
+/* comparison function to sort the superedges */
+bool compare_dist(FSedge* sp1, FSedge* sp2);
+
+/* return the distance between 2 nodes are within the required radius */
+ double dist_from_T0(Point* traj_nd, node g_nd, double x_scale, double y_scale);
+
+/* list out the node IDs of the nodes that are within the specified distance */
+vector<FSedge*> SearchNodes(Graph* graph, Point* traj_nd, double radius, double x_scale, double y_scale);
+
+#endif
+
+
 // class LookUp {
 //     private:
         // Point* traj_nd;
@@ -38,14 +51,3 @@ using namespace std;
         // /* assign the grid for all the nodes in the graph */
         // void graph_grid(Graph* graph, int grid_h, int grid_w, double box_height, double box_width, double x_scale, double y_scale);
 // };
-
-/* comparison function to sort the superedges */
-bool compare_dist(FSedge* sp1, FSedge* sp2);
-
-/* return the distance between 2 nodes are within the required radius */
- double dist_from_T0(Point* traj_nd, node g_nd, double x_scale, double y_scale);
-
-/* list out the node IDs of the nodes that are within the requied distance */
-vector<FSedge*> SearchNodes(Graph* graph, Point* traj_nd, double radius, double x_scale, double y_scale);
-
-#endif

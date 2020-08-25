@@ -118,9 +118,8 @@ void write_traj(Trajectory* traj, string file_name){
         double source_lon = traj -> edges[i] -> src -> longitude;
         double target_lat = traj -> edges[i] -> trg -> latitude;
         double target_lon = traj -> edges[i] -> trg -> longitude;
-
-        // file << source_tid<< " " << source_vid << " " << target_tid << " " << target_vid << endl; //what we wanted it to look like originally
-        file << source_lat<< " " << source_lon << " " << target_lat << " " << target_lon << endl; // what (Vi, Tj) should looks like
+    
+        file << source_lat << " " << source_lon << " " << target_lat << " " << target_lon << endl; // what (Vi, Tj) should looks like
     }
     file.close();
 }

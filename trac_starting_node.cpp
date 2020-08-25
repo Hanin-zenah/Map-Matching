@@ -3,34 +3,6 @@
 
 using namespace std;
 
-//  box_height = g_dist1;
-//  box_width = (g_dist2 + g_dist3) * 0.5;
-
-
-// vector<int> Lookup::assign_grid(node nd, int grid_h, int grid_w, double box_height, double box_width, double x_scale, double y_scale){
-    // vector<int> grid;
-    // int num_grid_h, num_grid_w;
-    // num_grid_h = box_height / grid_h;
-    // num_grid_w = box_width / grid_w;
-    // grid.push_back(floor((nd.lat- lat_min_to_y) * x_scale/ num_grid_w));
-    // grid.push_back(floor((nd.longitude - lon_min_to_x) * y_scale/ num_grid_h)); //the height
-//    
-    // return grid;
-// }
-// 
-// vector<int> LookUp::nodes_in_same_grid(Graph* graph, node traj_nd, int grid_h, int grid_w, double box_height, double box_width, double x_scale, double y_scale){
-    // vector<int> nodes_same_grid;
-    // vector<int> traj_nd_grid = assign_grid(traj_nd, grid_h, grid_w, box_height, box_width, x_scale, y_scale);
-    // for (int i; i < graph -> nodes.size(); i++){
-        // vector<int> nd_grid = assign_grid(graph -> nodes[i], grid_h, grid_w, box_height, box_width, x_scale, y_scale);
-        // if (nd_grid[0] == traj_nd_grid[0] && nd_grid[1]  == traj_nd_grid[1]){
-            // nodes_same_grid.push_back(graph -> nodes[i]);
-        // }
-    // }
-    // return nodes_same_grid;
-// }
-
-
 double dist_from_T0(Point* traj_nd, node g_nd, double x_scale, double y_scale) {
     double dist; 
     dist = sqrt(pow((traj_nd -> latitude - g_nd.lat)*x_scale, 2) + 
@@ -38,13 +10,13 @@ double dist_from_T0(Point* traj_nd, node g_nd, double x_scale, double y_scale) {
     return dist; 
 }  
 
-bool compare_dist(FSedge* sp1, FSedge* sp2){
+bool compare_dist(FSedge* sp1, FSedge* sp2) {
     return sp1 -> botlneck_val > sp2 -> botlneck_val;
 }
 
 vector<FSedge*> SearchNodes(Graph* graph, Point* traj_nd, double radius, double x_scale, double y_scale) {
     vector<FSedge*> se_list;
-    /* when building a FSgraph, only need to know the node id, and the initial bottle neck vel */
+    /* when building a FSgraph, only need to know the node id, and the initial bottle neck val */
     for(int i = 0; i < graph -> nodes.size(); i++) {
         double dist = dist_from_T0(traj_nd, graph -> nodes[i], x_scale, y_scale);
         if(dist <= radius) {
@@ -91,3 +63,35 @@ vector<FSedge*> SearchNodes(Graph* graph, Point* traj_nd, double radius, double 
 // 
     // return 0;
 // }
+
+
+
+
+
+//  box_height = g_dist1;
+//  box_width = (g_dist2 + g_dist3) * 0.5;
+
+
+// vector<int> Lookup::assign_grid(node nd, int grid_h, int grid_w, double box_height, double box_width, double x_scale, double y_scale){
+    // vector<int> grid;
+    // int num_grid_h, num_grid_w;
+    // num_grid_h = box_height / grid_h;
+    // num_grid_w = box_width / grid_w;
+    // grid.push_back(floor((nd.lat- lat_min_to_y) * x_scale/ num_grid_w));
+    // grid.push_back(floor((nd.longitude - lon_min_to_x) * y_scale/ num_grid_h)); //the height
+//    
+    // return grid;
+// }
+// 
+// vector<int> LookUp::nodes_in_same_grid(Graph* graph, node traj_nd, int grid_h, int grid_w, double box_height, double box_width, double x_scale, double y_scale){
+    // vector<int> nodes_same_grid;
+    // vector<int> traj_nd_grid = assign_grid(traj_nd, grid_h, grid_w, box_height, box_width, x_scale, y_scale);
+    // for (int i; i < graph -> nodes.size(); i++){
+        // vector<int> nd_grid = assign_grid(graph -> nodes[i], grid_h, grid_w, box_height, box_width, x_scale, y_scale);
+        // if (nd_grid[0] == traj_nd_grid[0] && nd_grid[1]  == traj_nd_grid[1]){
+            // nodes_same_grid.push_back(graph -> nodes[i]);
+        // }
+    // }
+    // return nodes_same_grid;
+// }
+

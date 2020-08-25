@@ -56,8 +56,9 @@ int main(int argc, char** argv) {
     vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
     Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];
-    write_traj(&traj, "traj_frechet.dat");
+    cout << "finished extracting the trajectory\n";
 
+    write_traj(&traj, "traj_frechet.dat");
     FSgraph fsgraph = FSGRAPH_INIT;
     // QH: make a prompt for the radius???
     // vector<FSedge*> nodes_within_dist = SearchNodes(&SCC_graph, traj_nd, 80, x_scale, y_scale);

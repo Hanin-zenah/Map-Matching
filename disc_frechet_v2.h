@@ -12,7 +12,6 @@
 #include <stack>
 #include <unordered_map> 
 #include <cstdlib>
-
 #include "graph.h"
 #include "trajectory.h"
 
@@ -21,12 +20,11 @@
 using namespace std;
 
 typedef struct fsnode {
-    //FSpair fspair;
     int vid;
     int tid;
     double dist;
     bool visited;
-    //vector<FSedge*> edgelist; // change to pointer fsedge
+    struct fsnode* parent;
 } FSnode;
 
 
@@ -72,7 +70,7 @@ typedef struct fsgraph {
 
 
 /* to sort the min priority queue */
-struct Comp_eps {
+struct Comp_eps { 
     bool operator()(const FSedge* edge1, const FSedge* edge2) const{
         return edge1->botlneck_val > edge2->botlneck_val;
     }
@@ -97,6 +95,8 @@ void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super
 FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, stack <FSedge*>& Stack);
 
 FSnode* travel_reachable (FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& superEdges);
+
+stack<FSnode*> get_path(FSgraph* fsgraph);
 
 void cleanup(FSgraph* fsgraph);
 

@@ -22,10 +22,12 @@ int main(int argc, char** argv) {
     double lat_max = graph.max_lat;
     double lon_min = graph.min_long;
     double lon_max = graph.max_long;
-    // Bounds bd;
-    // double g_dist1 = bd.geodesic_dist(lat_min,lon_min,lat_max,lon_min);
-    // double g_dist2 = bd.geodesic_dist(lat_min,lon_max,lat_min,lon_min);
-    // double g_dist3 = bd.geodesic_dist(lat_max,lon_max,lat_max,lon_min);
+    // cout<<lat_min<<" "<<lat_max<<" "<<lon_min<<" "<<lon_max<<endl;
+    Bounds bd;
+    double g_dist1 = bd.geodesic_dist(lat_min,lon_min,lat_max,lon_min);
+    double g_dist2 = bd.geodesic_dist(lat_min,lon_max,lat_min,lon_min);
+    double g_dist3 = bd.geodesic_dist(lat_max,lon_max,lat_max,lon_min);
+    // cout<<g_dist1<<" "<<g_dist2<<" "<<g_dist3<<endl;
     // Euc_distance ed;
     // double e_dist, e_dist1, e_dist2, e_dist3;
     // /* calculate the "pixel" euclidean distance between the bounding points */
@@ -57,8 +59,8 @@ int main(int argc, char** argv) {
     Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];
     cout << "finished extracting the trajectory\n";
-
-    write_traj(&traj, "traj_frechet.dat");
+// 
+    // write_traj(&traj, "traj_frechet.dat");
     FSgraph fsgraph = FSGRAPH_INIT;
     // QH: make a prompt for the radius???
     // vector<FSedge*> nodes_within_dist = SearchNodes(&SCC_graph, traj_nd, 80, x_scale, y_scale);
@@ -71,8 +73,10 @@ int main(int argc, char** argv) {
     // cout<<"traj_nd->latitude: " << traj_nd->latitude<<" traj_nd->longitude: "<< traj_nd->longitude<<endl;
 //    
     cout<<min_eps(&after_graph, &traj, &fsgraph, 80, after_graph.x_scale, after_graph.y_scale)<<endl;
-    write_fsgraph(&fsgraph, "fsgraph.dat");
-    write_sur_graph(&fsgraph, &after_graph, "sur_graph_frechet.dat");
+    // write_fsgraph(&fsgraph, "fsgraph.dat");
+    // stack<FSnode*> path = get_path(&fsgraph);
+    // 
+    // write_sur_graph(&fsgraph, &after_graph, "sur_graph_frechet.dat");
     cleanup(&fsgraph);
     cleanup_trajectory(&traj);
     return 0;

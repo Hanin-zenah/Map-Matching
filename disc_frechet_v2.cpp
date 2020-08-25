@@ -38,7 +38,7 @@ FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_
     // return next_fspair;
 }
 
-FSnode* travel_reachable ( FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& superEdges){
+FSnode* travel_reachable(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super_edges) {
     /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
         the current cell, might be from the previous cells if there are no reachable nodes in this cell */
     // cout<<"stack size: "<<Stack.size()<<endl;
@@ -63,7 +63,7 @@ FSnode* travel_reachable ( FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSed
     // cout<<"next_fspair.first:  "<<next_fspair.first<<endl;
     // cout<<"next_fspair.second:  "<<next_fspair.second<<endl;
     // return next_fspair;
-    }
+}
 
 double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right, double x_scale, double y_scale) {
     FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
@@ -150,7 +150,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
         /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
             the current cell, might be from the previous cells if there are no reachable nodes in this cell */
         // next_fspair = travel_reachable(fsgraph, Stack, superEdges);
-        next_nd = travel_reachable(fsgraph, Stack, superEdges);
+        next_nd = travel_reachable(fsgraph, Stack, super_edges);
     }
     } 
     next_nd -> visited = true;
@@ -196,7 +196,7 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     
     int i = 0;
     while (!finished) {
-        pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, superEdges, x_scale, y_scale);
+        pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, super_edges, x_scale, y_scale);
         i++;
         cout<<"current eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
         finished = (pair.second >= m - 1);

@@ -270,6 +270,7 @@ void write_sur_graph(FSgraph* fsgraph, Graph* graph, string file_name) {
         trg_lat = graph -> nodes[target_vid].lat;
         trg_lon = graph -> nodes[target_vid].longitude;
 
+
         // file << source_tid<< " " << source_vid << " " << target_tid << " " << target_vid << endl; //what we wanted it to look like originally
         file << src_lat<< " " << src_lon << " " << trg_lat << " " << trg_lon << endl; // what (Vi, Tj) should looks like
     }

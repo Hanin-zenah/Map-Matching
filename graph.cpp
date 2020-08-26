@@ -8,7 +8,7 @@ void write_graph(Graph* graph, string file_name) {
         int source = graph -> edges[i].srcid;
         int target = graph -> edges[i].trgtid;
 
-        file << graph -> nodes[source].longitude << " " << graph -> nodes[source].lat << " " << graph -> nodes[target].longitude << " " << graph -> nodes[target].lat << endl;
+        file << graph -> nodes[source].lat << " " << graph -> nodes[source].longitude << " " << graph -> nodes[target].lat << " " << graph -> nodes[target].longitude << endl;
     }
     file.close();
 }
@@ -131,6 +131,7 @@ void read_processed_graph(string file_name, Graph* graph) {
 
         graph -> edges.push_back(e);
     }
+    write_graph(graph, "process_graph_x_y.dat");
 
    file.close();
 

@@ -56,29 +56,23 @@ int main(int argc, char** argv) {
     // read processed graph from a given file
     Graph after_graph = GRAPH_INIT;
     read_processed_graph(argv[2], &after_graph);
-
-
-
-
+ 
     vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 2, lon_min, lat_min);
     Trajectory traj = trajs[1];
     Point* traj_nd = traj.points[0];
-    // cout << "finished extracting the trajectory\n";
-// 
+    cout << "finished extracting the trajectory\n";
+
     write_traj(&traj, "traj_frechet.dat");
     FSgraph fsgraph = FSGRAPH_INIT;
     // QH: make a prompt for the radius???
-    vector<FSedge*> nodes_within_dist = SearchNodes(&after_graph, traj_nd, 80, after_graph.x_scale, after_graph.y_scale);
-    // cout<<"after_graph.nodes[326980].id: "<<after_graph.nodes[326980].id<<" 326980 lat: "<<after_graph.nodes[326980].lat<<" 326980 long: "<<graph.nodes[326980].longitude<<endl;
-    // cout<<"traj_nd->latitude: " << traj_nd->latitude<<" traj_nd->longitude: "<< traj_nd->longitude<<endl;
-//    
+    // vector<FSedge*> nodes_within_dist = SearchNodes(&after_graph, traj_nd, 80, after_graph.x_scale, after_graph.y_scale);
+
     cout<<min_eps(&after_graph, &traj, &fsgraph, 80, after_graph.x_scale, after_graph.y_scale)<<endl;
     write_fsgraph(&fsgraph, "fsgraph.dat");
     write_sur_graph(&fsgraph, &after_graph, "sur_graph_frechet.dat");
     stack<FSnode*> path = get_path(&fsgraph);
-    cout<<"finishing printing path"<<endl;
+    cout<<"finished printing path"<<endl;
     print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat");
-    
     
     cleanup(&fsgraph);
     cleanup_trajectory(&traj);

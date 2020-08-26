@@ -12,6 +12,7 @@ void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super
         Stack.push(fedge_b);
         super_edges.pop_back();
         FSnode* fnd_b = fedge_b -> trg;
+        fnd_b -> parent = NULL;
         // cout<<"back up superedge"<<endl;
         FSpair back_up_pair; // = {fnd.vid, fnd.tid};
         back_up_pair.first = fnd_b -> vid;
@@ -206,6 +207,7 @@ stack<FSnode*> get_path(FSgraph* fsgraph) {
         cout << cur -> tid << ", " << cur -> vid << endl;
         cur = cur -> parent;
     }
+    cout<<"starting fs node: "<<endl;
     cout<< cur -> tid<< ", " << cur -> vid << endl;
     return path;
 }

@@ -41,6 +41,11 @@ typedef struct graph {
     double min_long;
     double max_long;
 
+    double original_min_lat;
+    double original_min_long;
+    double original_max_lat;
+    double original_max_long;
+
     double x_scale;
     double y_scale;
 

@@ -109,7 +109,8 @@ void read_processed_graph(string file_name, Graph* graph) {
         // getline(file, buffer);
     // }
     /* read the total number of nodes and edges, store them in graph struct */
-    file >> graph -> n_nodes >> graph -> n_edges >> graph -> x_scale >> graph -> y_scale;
+    file >> graph -> n_nodes >> graph -> n_edges >> graph -> x_scale >> graph -> y_scale>>
+     graph -> original_min_lat >> graph -> original_min_long >> graph -> original_max_lat >> graph -> original_max_long;
 
     /* now read everything
        read line into buffer, scan line number, osmid, lat, long, .. (keep what matters) */
@@ -413,10 +414,10 @@ void output_graph(Graph* graph, string file_name, double x_scale, double y_scale
     txt_file << all_edges.size() << endl;
     txt_file << x_scale << endl;
     txt_file << y_scale << endl;
-    // txt_file << graph -> min_lat << endl;
-    // txt_file << graph -> min_long << endl;
-    // txt_file << graph -> max_lat << endl;
-    // txt_file << graph -> max_long << endl;
+    txt_file << graph -> min_lat << endl;
+    txt_file << graph -> min_long << endl;
+    txt_file << graph -> max_lat << endl;
+    txt_file << graph -> max_long << endl;
 
 
     for(int i = 0; i < all_nodes.size(); i++) {

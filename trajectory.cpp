@@ -134,6 +134,15 @@ void cleanup_trajectory(Trajectory* traj) {
     }
 }
 
+Euc_distance ed;
+
+ void calc_traj_edge_cost(Trajectory* traj, double x_scale, double y_scale) {
+    for(int i = 0; i <  traj -> edges.size(); i++){
+        traj -> edges[i] -> cost = ed.euc_dist(traj -> edges[i] -> src -> latitude, traj -> edges[i] -> src -> longitude, traj -> edges[i] -> trg -> latitude, traj -> edges[i] -> trg -> longitude, x_scale, y_scale);
+    }
+    return;
+}
+
 // int main() {
 //     vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1);
 //     Point* cur = trajs[0].head;

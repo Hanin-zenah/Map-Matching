@@ -1,5 +1,5 @@
 #include "disc_frechet_v2.h"
- #include "starting_node_look_up.h"
+#include "starting_node_look_up.h"
 
 double nodes_dist(struct node g_nd, Point* t_nd, double x_scale, double y_scale) {
     double dist = sqrt(pow((t_nd -> latitude - g_nd.lat)*x_scale, 2.0) + pow((t_nd -> longitude - g_nd.longitude)*y_scale, 2.0));
@@ -13,11 +13,10 @@ void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super
         super_edges.pop_back();
         FSnode* fnd_b = fedge_b -> trg;
         fnd_b -> parent = NULL;
-        // cout<<"back up superedge"<<endl;
         FSpair back_up_pair; // = {fnd.vid, fnd.tid};
         back_up_pair.first = fnd_b -> vid;
         back_up_pair.second = fnd_b -> tid;
-        // cout<<"back_up_ pair: "<<back_up_pair.first<<"  " <<back_up_pair.second<<endl;
+        cout<<"back_up_ pair: "<<back_up_pair.first<<"  " <<back_up_pair.second<<endl;
         fsgraph -> pair_dict[back_up_pair] = fnd_b;
     }
     return;
@@ -27,10 +26,9 @@ FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_
     FSedge* min_eps_fedge = bigger_eps.top();
     bigger_eps.pop(); 
     /* check if it is a super edge and put the next super edge in the queue  */
-    // cout<<" Stack is empty, a new eps fron priority Queue: "<< min_eps_fedge -> botlneck_val<<endl;
+    cout<<" Stack is empty, a new eps fron priority Queue: "<< min_eps_fedge -> botlneck_val<<endl;
     fsgraph -> eps = min_eps_fedge -> botlneck_val;
     FSnode* next_nd = min_eps_fedge -> trg; //does the .trg need to be a pointer? does the bigger_eps need to be a queue of pointers?
-    // next_nd -> visited = true; //QH: is this chaning the bool on the fsgraph for this node as well??
     
     return next_nd;
 }
@@ -42,16 +40,11 @@ FSnode* travel_reachable ( FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSed
     FSedge* back_edge = Stack.top();
     Stack.pop();
     FSnode* next_nd = back_edge -> trg;
-    // if(!next_nd -> visited && back_edge -> src != NULL) {
-        // next_nd -> parent = back_edge -> src;
-        // cout<<"next_nd tid vid: "<<next_nd->tid<<" "<<next_nd->vid
-        // <<" next_nd -> parent tid vid: "<<next_nd -> parent ->tid<<" "<<next_nd -> parent ->vid <<endl;
-    // }
+
     /* if the edge is a super edge */
     if(!back_edge -> src) {
         back_up_se(fsgraph, Stack, super_edges);
     }
-    // next_nd -> visited = true;
     return next_nd;
     }
 
@@ -75,7 +68,7 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
         fnd -> visited = false; /* didn't really end up making this bool value */
         fnd -> dist = nodes_dist(graph -> nodes[fnd -> vid], traj -> points[fnd -> tid], x_scale, y_scale); //error is here
         double distance = fnd -> dist; 
-        // cout<<"creating pair dist: " << distance <<" from: "<<pair.first<<" "<<pair.second<<endl;
+        cout<<"creating pair dist: " << distance <<" from: "<<pair.first<<" "<<pair.second<<endl;
         fnd -> parent = fsnd; //QH
         fsgraph -> fsnodes.push_back(fnd);
         fsgraph -> pair_dict[pair] = fnd; //fsgraph -> pair_dict.insert({pair, &fnd});
@@ -89,7 +82,7 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
         fnd -> dist = fedge -> trg -> dist; 
         fnd -> parent = fsnd; //QH
         double distance = fnd -> dist; 
-        // cout<<"existing pair dist: " << distance <<" from: "<<pair.first<<" "<<pair.second<<endl;
+        cout<<"existing pair dist: " << distance <<" from: "<<pair.first<<" "<<pair.second<<endl;
     }
     fedge -> src = fsnd; ///and fix this
     fedge -> botlneck_val = max(fnd -> dist, fsgraph -> eps); // the fnd.dist would be the same regardless the prior existence of this new corner
@@ -108,6 +101,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
     vector<double> btl_neck_vals; 
     double eps = build_node(fsgraph, graph, traj, fnd, fnd -> vid, 0, 1, x_scale, y_scale);
     btl_neck_vals.push_back(eps); // QH: maybe we can sort this and make the diagonal ones always traverse last?
+    cout<<"incidents.size(): "<<incidents.size()<<endl;
     for(int i = 0 ; i < incidents.size(); i++) {
         int neighbour_id  = incidents[i];
         double eps1 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 1, x_scale, y_scale); // build diagonal node //change to return edges 
@@ -118,20 +112,26 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
 
     int size = fsgraph -> fsedges.size();
     for(int i = 0; i < btl_neck_vals.size(); i++) {
+        cout<<" btl_neck_vals.size(): "<< btl_neck_vals.size()<<endl;
         if(btl_neck_vals[i] > fsgraph -> eps) {
-            // cout<<"btl_neck_vals "<<i<<" : "<<btl_neck_vals[i]<<" src vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i] ->src -> vid<<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->src -> tid<<" trg vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> vid
-            // <<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> tid<<endl;
+            cout<<"btl_neck_vals "<<i<<" : "<<btl_neck_vals[i]<<" src vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i] ->src -> vid<<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->src -> tid<<" trg vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> vid
+            <<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> tid<<endl;
                 // /*store these local eps for potential global min eps increase store the edges with higher eps to be accessed later if needed */
             bigger_eps.push(fsgraph -> fsedges[size - btl_neck_vals.size()+ i]); //is this always going to be the right index of the edge?? yes because btlneck_vals is gonna stroe the last k built edges 
         }
-        else {  //  cout<<"btl_neck_vals "<<i<<" : "<<btl_neck_vals[i]<<" src vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i] ->src -> vid<<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->src -> tid<<" trg vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> vid
-            // <<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> tid<<endl;
+        else {  
+             cout<<"btl_neck_vals "<<i<<" : "<<btl_neck_vals[i]<<" src vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i] ->src -> vid<<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->src -> tid<<" trg vid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> vid
+            <<" tid: "<<fsgraph -> fsedges[size - btl_neck_vals.size()+ i ] ->trg -> tid<<endl;
             Stack.push(fsgraph -> fsedges[size - btl_neck_vals.size() + i ]);
         }
+        cout<<"i: "<<i<<endl;
     }
-    FSnode* next_nd ;
-    next_nd -> visited = true;
+    cout<<"no problem so far"<<endl;
+    FSnode* next_nd; // FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
+    next_nd -> visited = true;// maybe where the problem is
+    cout<<"next_nd -> visited: "<<next_nd -> visited<<endl;
     while(next_nd -> visited){
+        cout<<"Stack.empty(): "<<Stack.empty()<<endl;
     if(Stack.empty()) {
             /* case 1: if there are no more readily traversable edges in the freespace graph, update the eps (leash length) */
             // next_fspair = increase_eps(bigger_eps, fsgraph, Stack);
@@ -149,7 +149,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
     next_fspair.first = next_nd -> vid;
     next_fspair.second = next_nd -> tid;
 
-        // next_nd -> visited = true; 
+    cout<<"next_fspair.first: "<<next_fspair.first<<" next_fspair.second: "<<next_fspair.second<<endl;
     return next_fspair;
 }
        
@@ -179,22 +179,19 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     FSpair pair; // = {fnd.vid, fnd.tid};
     pair.first = fnd -> vid;
     pair.second = fnd -> tid;
-    // cout<<"starting pair: "<<pair.first<<"  " <<pair.second<<endl;
+    cout<<"starting pair: "<<pair.first<<"  " <<pair.second<<endl;
     fsgraph -> pair_dict[pair] = fnd;
 
     back_up_se(fsgraph, Stack, super_edges);
     bool finished = false;
     
     int i = 0;
-    ofstream file("frechet_prograss.dat");
     while (!finished) {
         pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, super_edges, x_scale, y_scale);
-        file<<fsgraph -> eps << " " << i << " "<<pair.first << " " <<pair.second<<endl;
         cout<<"current eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
         finished = (pair.second >= m - 1);
         i++;
     }
-    file.close();
     return fsgraph -> eps;
 }
 

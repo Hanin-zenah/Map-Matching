@@ -49,3 +49,4 @@ void Euc_distance::calc_edge_cost(Graph* graph, double x_scale, double y_scale) 
         graph -> edges[i].cost = euc_dist(src.lat, src.longitude, trgt.lat, trgt.longitude, x_scale, y_scale);
     }
 }
+

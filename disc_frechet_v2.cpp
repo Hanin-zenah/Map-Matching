@@ -170,7 +170,7 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
         return -1;
     }
     FSedge* fedge = super_edges.back();
-    fsgraph -> eps = fedge -> botlneck_val;//nodes_dist(graph -> nodes[0], traj -> nodes[0]); //change this to be the closest node /*traj -> head */
+    fsgraph -> eps = fedge -> botlneck_val;
     FSnode* fnd = fedge -> trg;
     fnd -> visited = true;
     fnd -> parent = NULL;
@@ -217,16 +217,10 @@ void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_na
     FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
     while(cur -> parent) {
         path.push(cur);
-        // file<< "tid: "<<cur -> tid <<" "<< traj -> points[cur -> tid] -> latitude<<" "<< 
-        // traj -> points[cur -> tid]-> longitude<<" vid: "<<  cur -> vid  << " "<< graph -> nodes[cur -> vid].lat 
-        // <<" "<<graph -> nodes[cur -> vid].longitude<<endl;
         file<< graph -> nodes[cur -> vid].lat <<" "<<graph -> nodes[cur -> vid].longitude
         <<" "<<graph -> nodes[cur -> parent -> vid].lat <<" "<<graph -> nodes[cur -> parent -> vid].longitude<<endl;
         cur = cur -> parent;
     }
-    // file<< "tid: "<<cur -> tid <<" "<< traj -> points[cur -> tid] -> latitude<<" "<< 
-    // traj -> points[cur -> tid]-> longitude<<" vid: "<<  cur -> vid  << " "<< graph -> nodes[cur -> vid].lat 
-    // <<" "<<graph -> nodes[cur -> vid].longitude<<endl;
     file.close();
     return;
 }

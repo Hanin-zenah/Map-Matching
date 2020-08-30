@@ -207,17 +207,17 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     return fsgraph -> eps;
 }
 
-// stack<FSnode*> get_path(FSgraph* fsgraph) {
-    // stack<FSnode*> path;
-    // /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
-    // FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
-    // while(cur -> parent) {
-        // path.push(cur);
-        // cout << cur -> tid << ", " << cur -> vid << endl;
-        // cur = cur -> parent;
-    // }
-    // return path;
-// }
+stack<FSnode*> get_path(FSgraph* fsgraph) {
+    stack<FSnode*> path;
+    /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
+    FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
+    while(cur -> parent) {
+        path.push(cur);
+        cout << cur -> tid << ", " << cur -> vid << endl;
+        cur = cur -> parent;
+    }
+    return path;
+}
 
 // void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name) {
     // ofstream file(file_name);
@@ -257,7 +257,7 @@ void write_fsgraph(FSgraph* fsgraph, string file_name) {
         file << source_vid<< " " << source_tid << " " << target_vid << " " << target_tid << endl; // what (Vi, Tj) should looks like
     }
     file.close();
-}
+} 
 
 void write_sur_graph(FSgraph* fsgraph, Graph* graph, string file_name) { 
     ofstream file(file_name);

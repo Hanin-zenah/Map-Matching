@@ -56,19 +56,19 @@ int main(int argc, char** argv) {
 
 
 
-    vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
+    vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
     cout << trajs.size() << endl;
     Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];
     cout << "finished extracting the trajectory\n";
-    // write_traj(&traj, "traj_frechet.dat");
-    FSgraph fsgraph = FSGRAPH_INIT;
-    cout<<min_eps(&after_graph, &traj, &fsgraph, 80, after_graph.x_scale, after_graph.y_scale)<<endl;
+    // // write_traj(&traj, "traj_frechet.dat");
+    // FSgraph fsgraph = FSGRAPH_INIT;
+    // cout<<min_eps(&after_graph, &traj, &fsgraph, 80, after_graph.x_scale, after_graph.y_scale)<<endl;
     // write_fsgraph(&fsgraph, "fsgraph.dat");
     // stack<FSnode*> path = get_path(&fsgraph);
     // 
     // write_sur_graph(&fsgraph, &after_graph, "sur_graph_frechet.dat");
-    cleanup(&fsgraph);
-    cleanup_trajectory(&traj);
+    // cleanup(&fsgraph);
+    // cleanup_trajectory(&traj);
     return 0;
 }

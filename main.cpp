@@ -2,7 +2,7 @@
 #include "graph.h" 
 #include "graph_subsampling.h"
 #include "scale_projection.h"
-#include "graph_subsampling.h"
+#include "disc_frechet_v2.h"
 
 int main(int argc, char** argv) {
 
@@ -46,15 +46,13 @@ int main(int argc, char** argv) {
     double y_scale = g_dist1/e_dist1;
     ed.calc_edge_cost(&graph, x_scale, y_scale);
 
-    //generate a graph with only edge costs to plot histogram
-    write_graph(&graph, "graph_for_hist.dat");
 
     //strongly connected componetns
-    // Graph SCC_graph = GRAPH_INIT;
-    // scc_graph(&graph, &SCC_graph);
+    Graph SCC_graph = GRAPH_INIT;
+    scc_graph(&graph, &SCC_graph);
 
     //sub sampling 
-    // subsampling(&graph, 100);
+    // subsampling(&SCC_graph, 100);
 
     return 0;
 }

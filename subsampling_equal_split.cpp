@@ -80,7 +80,7 @@ int bi_dir(Graph* graph, int edgeID) {
 void subsampling(Graph* graph, double threshold){
     for (int i = 0; i < graph -> edges.size(); i++) {  
         if (graph -> edges[i].cost > threshold) {
-            while (graph -> edges[i].cost > threshold) {
+            while (graph -> edges[i].cost > threshold) { //try to change it to a for loop and see if faster
                 split_bi_dir_edge(graph, i, bi_dir(graph, graph -> edges[i].id));        
             } 
         }

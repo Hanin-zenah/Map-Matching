@@ -90,15 +90,19 @@ double build_node(FSgraph* fsgraph, fsnode fsnd, int neighbor_id, int up, int ri
 FSpair traversal(FSgraph* fsgraph, FSpair corner, Graph* graph, Trajectory* traj, 
 priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack, vector<FSedge*> superEdges, double x_scale, double y_scale);
 
-
+/* always have a back up super edge in the priority queue while traversaling */
 void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super_edges);
 
+/* increase the current leash length value when there is no readily traversable edges */
 FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, stack <FSedge*>& Stack);
 
+/* travel to the next reachable edge */
 FSnode* travel_reachable (FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& superEdges);
 
 stack<FSnode*> get_path(FSgraph* fsgraph);
 
+
+/* produce a graph that shows the path */
 void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name);
 
 void cleanup(FSgraph* fsgraph);

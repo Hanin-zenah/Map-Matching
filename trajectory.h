@@ -58,4 +58,7 @@ void write_traj(Trajectory* traj, string file_name);
 /* frees all the malloc'ed memory for the points and edges in a trajectory */
 void cleanup_trajectory(Trajectory* traj);
 
+/* calculate the cost for every edge in the trajectory */
+void calc_traj_edge_cost(Trajectory* traj, double x_scale, double y_scale);
+
 #endif

@@ -127,7 +127,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
         // cout<<"i: "<<i<<endl;
     }
     // cout<<"no problem so far"<<endl;
-    FSnode* next_nd; // FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
+    FSnode* next_nd = (FSnode*) malloc(sizeof(FSnode));
     next_nd -> visited = true;// maybe where the problem is
     // cout<<"next_nd -> visited: "<<next_nd -> visited<<endl;
     while(next_nd -> visited){
@@ -179,7 +179,7 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     FSpair pair; // = {fnd.vid, fnd.tid};
     pair.first = fnd -> vid;
     pair.second = fnd -> tid;
-    cout<<"starting pair: "<<pair.first<<"  " <<pair.second<<endl; //do not delete!!
+    // cout<<"starting pair: "<<pair.first<<"  " <<pair.second<<endl; 
     fsgraph -> pair_dict[pair] = fnd;
 
     back_up_se(fsgraph, Stack, super_edges);

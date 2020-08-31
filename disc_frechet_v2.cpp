@@ -102,7 +102,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
     double eps = build_node(fsgraph, graph, traj, fnd, fnd -> vid, 0, 1, x_scale, y_scale);
     btl_neck_vals.push_back(eps); // QH: maybe we can sort this and make the diagonal ones always traverse last?
     // cout<<"incidents.size(): "<<incidents.size()<<endl;
-    for(int i = 0 ; i < incidents.size(); i++) {
+    for(int i = 0; i < incidents.size(); i++) {
         int neighbour_id  = incidents[i];
         double eps1 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 1, x_scale, y_scale); // build diagonal node //change to return edges 
         btl_neck_vals.push_back(eps1);
@@ -127,22 +127,22 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
         // cout<<"i: "<<i<<endl;
     }
     // cout<<"no problem so far"<<endl;
-    FSnode* next_nd; // FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
+    FSnode* next_nd = (FSnode*) malloc(sizeof(FSnode)); // FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
     next_nd -> visited = true;// maybe where the problem is
     // cout<<"next_nd -> visited: "<<next_nd -> visited<<endl;
-    while(next_nd -> visited){
+    while(next_nd -> visited) {
         // cout<<"Stack.empty(): "<<Stack.empty()<<endl;
-    if(Stack.empty()) {
-            /* case 1: if there are no more readily traversable edges in the freespace graph, update the eps (leash length) */
-            
-            next_nd = increase_eps(bigger_eps, fsgraph, Stack);
+        if(Stack.empty()) {
+                /* case 1: if there are no more readily traversable edges in the freespace graph, update the eps (leash length) */
+                
+                next_nd = increase_eps(bigger_eps, fsgraph, Stack);
         }    
-    else { 
-        /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
-            the current cell, might be from the previous cells if there are no reachable nodes in this cell */
-        
-        next_nd = travel_reachable(fsgraph, Stack, super_edges);
-    }
+        else { 
+            /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
+                the current cell, might be from the previous cells if there are no reachable nodes in this cell */
+            
+            next_nd = travel_reachable(fsgraph, Stack, super_edges);
+        }
     } 
     next_nd -> visited = true;
     FSpair next_fspair;
@@ -179,7 +179,8 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     FSpair pair; // = {fnd.vid, fnd.tid};
     pair.first = fnd -> vid;
     pair.second = fnd -> tid;
-    cout<<"starting pair: "<<pair.first<<"  " <<pair.second<<endl; //do not delete!!
+    // cout<<"starting pair: "<<pair.first<<"  " <<pair.second<<endl; //do not delete!!
+    // cout << " ";
     fsgraph -> pair_dict[pair] = fnd;
 
     back_up_se(fsgraph, Stack, super_edges);

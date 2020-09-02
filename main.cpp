@@ -2,8 +2,27 @@
 #include "graph.h" 
 #include "graph_subsampling.h"
 #include "scale_projection.h"
-#include "disc_frechet_v2.h"
+#include "graph_subsampling.h"
+#include <chrono>
 
+using namespace std::chrono;
+
+double get_average_cost(Graph* graph) {
+    double total = 0;
+    for(int i = 0 ; i < graph -> edges.size(); i++) {
+        total += graph -> edges[i].cost;
+    }
+    return total / graph -> edges.size();
+}
+int get_above_k(Graph* graph) {
+    int total = 0; 
+    for(int i = 0; i < graph -> edges.size(); i++) {
+        if(graph -> edges[i].cost >= 100) {
+            total++;
+        }
+    }
+    return total;
+}
 int main(int argc, char** argv) {
 
     if(argc < 2) {
@@ -51,8 +70,17 @@ int main(int argc, char** argv) {
     Graph SCC_graph = GRAPH_INIT;
     scc_graph(&graph, &SCC_graph);
 
+    // cout << get_average_cost(&SCC_graph) << endl;
+    cout << get_above_k(&graph) << endl;
+
     //sub sampling 
-    // subsampling(&SCC_graph, 100);
+    auto start = high_resolution_clock::now(); 
+    subsampling(&graph, 100);
+    auto stop = high_resolution_clock::now();
+
+    auto duration = duration_cast<microseconds>(stop - start);
+    cout << "Time taken by function: "
+         << duration.count() << " microseconds" << endl; 
 
     return 0;
 }

@@ -37,7 +37,7 @@ class Euc_distance {
 
         double lon_mercator_proj_scale(double lon, double lon_min, double y_scale);
 
-        double lat_mercator_proj_scale (double lat, double lat_min, double x_scale);
+        double lat_mercator_proj_scale(double lat, double lat_min, double x_scale);
 
         double euc_dist(double y1, double x1, double y2, double x2, double x_scale, double y_scale);
 

@@ -38,7 +38,7 @@ struct Comp_dijkstra_pq {
     }
 };
 
-double edge_cost(FSedge* fedge, Graph* graph){
+double edge_cost(FSedge* fedge, Graph* graph) {
     int src_id = fedge -> src -> vid;
     int trg_id = fedge -> trg -> vid;
     struct node src_node = graph -> nodes[src_id];
@@ -51,58 +51,124 @@ double edge_cost(FSedge* fedge, Graph* graph){
     return cost;
 }
 
-void dijkstta(FSgraph* fsgraph) {
+    
+FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, unordered_map<FSnode*, FSnode*, KeyHash>& parent, unordered_map<FSnode*, double, KeyHash>& distance,
+                priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ) {
+
+    pair<FSedge*, double> p;
+    while(!PQ.empty()) {
+        //stop the loop whenever the last corner (target) is reached (ie any corner with tid = last node of trajectory)
+        pair<FSedge*, double> cur_pair = PQ.top();
+        PQ.pop();
+
+        FSnode* src = cur_pair.first -> src;
+        FSnode* trg = cur_pair.first -> trg;
+        if(trg -> tid == fsgraph -> fsnodes.back() -> tid) {  //assuming last built node's tid is the final trajectory tid
+            return trg;
+            break;
+        }
+ 
+        for(FSedge* adj: fsgraph -> adj_list.at(trg)) {
+            if(adj -> botlneck_val < fsgraph -> eps) {
+                double cost = edge_cost(adj, graph);
+                if((distance.at(trg) +  cost) < distance.at(adj -> trg)) {
+                    distance[adj -> trg] = distance.at(trg) + cost;
+                    parent[adj -> trg] = trg;
+
+                    // //if trg is target node ; break
+                    // if(adj -> trg -> tid == fsgraph -> fsnodes.back() -> tid) {
+                    //     return;
+                    // }
+
+                    p = make_pair(adj, distance.at(trg) + cost);
+                    PQ.push(p);
+                }
+            }
+        }
+    }
+    return NULL;
+}
+
+stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph) {
     unordered_map<FSnode*, FSnode*, KeyHash> parent;
     unordered_map<FSnode*, double, KeyHash> distance;
 
     priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq> PQ; //stores nodes for now, later can change to store only edges 
     vector<FSnode*> source_set = get_corresponding_FSnodes(fsgraph, 0);
-    //make super edges with distance 0 
+    //make super edges with distance 0 ? -> same as just adding all the outgoing edges from the super sources with their initial lengths
     // vector<FSedge*> super_edges;
     
     //initialize data for dijkstra
+    for(int i = 0; i < fsgraph -> fsnodes.size(); i++) {
+        FSnode* cur_nd = fsgraph -> fsnodes[i];
+        // cur_nd -> visited = false;
+        parent[cur_nd] = NULL;
+        distance[cur_nd] = INF_D;
+    }
+
     pair<FSedge*, double> p;
     for(FSnode* nd: source_set) {
         distance[nd] = 0;
         //for all the outgoing edges of the starting nodes; add all of them to the priority queue as "active" edges 
         for(FSedge* adj: fsgraph -> adj_list.at(nd)) {
-            double cost; //cost of the actual graph edge
-            p = make_pair(adj, cost);
-            PQ.push(p);
-        }
-
-        //make priority queue with pair(node, distance) with all the initial starting sources 
-        // p = make_pair(nd, 0);
-        // PQ.push(p);   
-    }
-
-    for(int i = 0; i < fsgraph -> fsnodes.size(); i++) {
-        FSnode* cur_nd = fsgraph -> fsnodes[i];
-        cur_nd -> visited = false;
-        parent[cur_nd] = NULL;
-        if(distance.at(cur_nd) != 0) {
-            distance[cur_nd] = INF_D;
+            /***********/
+            //only add edge for traversal of its bottle neck value is less than the graph's bottleneck --> ask lola about this 
+            if(adj -> botlneck_val < fsgraph -> eps) {
+                double cost = edge_cost(adj, graph); //cost of the actual graph edge
+                distance[adj -> trg] = cost;
+                p = make_pair(adj, cost);
+                PQ.push(p);
+            }
         }
     }
-
-    while(!PQ.empty()) {
-        //keep traversing untill target node (vid, m) has been reached (m is the id of the last node on the trajectory)
-        pair<FSedge*, double> cur_pair = PQ.top();
-        PQ.pop();
-        vector<FSnode*> neighbours; //return only the node with reachable edge?
-        for(FSnode* adj: neighbours) {
-            //if distance is lower 
-        }
-        cur_pair.first -> visited = true;
-
+    FSnode* cur = dijkstra(fsgraph, graph, parent, distance, PQ);
+    if(!cur) {
+        cerr << "Dijkstra Failed; returned NULL";
     }
     
+    //extract path 
+    stack<FSnode*> path;
+    while(cur) {
+        path.push(cur);
+        cur = parent.at(cur);
+    }
 
-
+    return path;
+    
 }
-
-
-
 
 /* note to self: 
     we are storing the edges in the priority queue so we dont have to deal with decrease_key operation of the nodes evey single time we update the distance */
+
+/*
+two options: 
+    1- pop edge and then update distance for target 
+    2- pop edge and update distance for the outgoing edges of the target 
+
+*/
+
+/*
+when do i relacx an edge? or mark a node as visited? 
+what is th epossibility that an edge will be added twice to the priority queue 
+
+*/
+
+/* 
+speedup: 
+use bidirectional dijkstra
+*/
+
+
+       // if(cur_pair.second < distance.at(trg)) {
+        //     distance[trg] = cur_pair.second;
+        //     parent[trg] = src;
+        //     if(trg -> tid == fsgraph -> fsnodes.back() -> tid) { //assuming last built node's tid is the final trajectory tid
+        //         //end loop we found the final node -> return path 
+        //         break;
+        //         return;
+
+        //     }
+        //     cur_pair.first -> relaxed = true; 
+
+        // }
+            

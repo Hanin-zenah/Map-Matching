@@ -35,7 +35,8 @@ void split_bi_dir_edge(Graph* graph, int edgeID1, int edgeID2) {
 
     // pair<bool, int> result1 = findInVector<int>(graph -> in_off_edges, edgeID1);
     auto it = find(graph -> in_off_edges.begin(), graph -> in_off_edges.end(), edgeID1);
-    int index = distance(graph -> in_off_edges.begin(), it);
+    int index = distance(graph -> in_off_edges.begin(), it); 
+    //cant we just get the source and do the same for the out edge array??
 
 
     graph -> in_off_edges[index] = e.id;

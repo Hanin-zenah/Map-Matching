@@ -46,7 +46,7 @@ typedef struct FSPair_key {
     }
 } FSpair;
 
-struct KeyHash {
+struct KeyPairHash {
     size_t operator()(const FSpair& k) const {
         using std::size_t;
         using std::hash;
@@ -61,9 +61,21 @@ struct KeyHash {
     }
 };
 
+struct keyNodeHash {
+    size_t operator()(const FSnode* n) const {
+        using std::size_t;
+        using std::hash;
+        using std::string;
+
+        return ((hash<int>()(n -> vid)
+                ^ (hash<int>()(n -> tid) << 1)) >> 1);
+    }
+};
+
 typedef struct fsgraph {
     double eps; //the min traversal distance, initial = distance(v1, t1) // global leashlength value for the freespace graph
-    unordered_map<FSpair, FSnode*, KeyHash> pair_dict; 
+    unordered_map<FSpair, FSnode*, KeyPairHash> pair_dict; 
+    unordered_map<FSnode*, vector<FSedge*>, keyNodeHash> adj_list;
     vector<FSnode*> fsnodes;// can be changed to pointers?? only used them to count the number of nodes/edges in the FSgraph so far
     vector<FSedge*> fsedges;
 } FSgraph;
@@ -71,7 +83,7 @@ typedef struct fsgraph {
 
 /* to sort the min priority queue */
 struct Comp_eps { 
-    bool operator()(const FSedge* edge1, const FSedge* edge2) const{
+    bool operator()(const FSedge* edge1, const FSedge* edge2) const {
         return edge1->botlneck_val > edge2->botlneck_val;
     }
 };
@@ -100,7 +112,6 @@ FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_
 FSnode* travel_reachable (FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& superEdges);
 
 stack<FSnode*> get_path(FSgraph* fsgraph);
-
 
 /* produce a graph that shows the path */
 void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name);

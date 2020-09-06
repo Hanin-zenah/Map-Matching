@@ -43,12 +43,8 @@ vector<FSnode*> get_corresponding_FSnodes(FSgraph* fsgraph, int tid) {
     }
     return candidates;
 }
-//length of a path is not the botlneck val of a freespace edge; instead it is the actual graph's edge weight depending if the edge taken is diagonal (step forward on both the trajectory and graph) or horizontal (step forward o the graph alone)
-void set_dijkstra(FSgraph* fsgraph, FSpair target, vector<FSnode*> starting_set,
-                     vector<FSnode*> parent, vector<double> distance) {
-    
 
-}
+
 
 struct KeyHash {
     size_t operator()(const FSnode* node) const {
@@ -58,10 +54,6 @@ struct KeyHash {
 
         return ((hash<int>()(node -> tid)
                 ^ (hash<int>()(node -> vid) << 1)) >> 1);
-
-        //or we can use 
-        // 0.5*(n+m)*(n+m+1)+m;
-        //or any hash function we come up with later
     }
 };
 
@@ -71,7 +63,41 @@ struct Comp_dijkstra_pq {
     }
 };
 
-void find_shortest_path(FSgraph* fsgraph) {
+double get_edge_cost(FSnode* node, FSnode* neighbour) {
+    if(node -> vid == neighbour -> vid) {
+        return 0;
+    }
+    else {
+        //return the actual graphs edge cost
+        return 1;
+    }
+}
+
+
+//length of a path is not the botlneck val of a freespace edge; 
+// instead it is the actual graph's edge weight depending if the edge taken is diagonal (step forward on both the trajectory and graph) or horizontal (step forward o the graph alone)
+void set_dijkstra(FSgraph* fsgraph, FSnode* target, vector<FSnode*>& starting_set, 
+                    priority_queue<pair<FSnode*, double>, vector<pair<FSnode*, double>>, Comp_dijkstra_pq>& PQ, 
+                        unordered_map<FSnode*, FSnode*>& parent, unordered_map<FSnode*, double>& distance) {
+    
+    pair<FSnode*, double> cur_pair = PQ.top();
+    PQ.pop();
+    //while we haven't reached target node
+    while(cur_pair.first != target) {
+        //check all of cur node's neighbours 
+        vector<FSnode*> neighbours; //get_fs_neighbours() //constant time (at most three neighbours)
+        for(FSnode* adj: neighbours) {
+            // if(!adj -> visited) {}
+            double edge_cost = get_edge_cost(cur_pair.first, adj);
+            if(distance.at(cur_pair.first) + edge_cost < distance.at(adj)) {
+                distance[adj] = distance.at(cur_pair.first) + edge_cost;
+                parent[adj] = cur_pair.first;
+            } 
+        }
+    }
+}
+
+void find_shortest_path(FSgraph* fsgraph, double x_scale, double y_scale) {
     unordered_map<FSnode*, FSnode*> parent;
     unordered_map<FSnode*, double> distance;
     // vector<FSnode*> parent(fsgraph -> fsnodes.size(), NULL); hashmap instead?
@@ -86,6 +112,7 @@ void find_shortest_path(FSgraph* fsgraph) {
     pair<FSnode*, double> p;
     for(int i = 0; i < fsgraph -> fsnodes.size(); i++) {
         FSnode* cur_nd = fsgraph -> fsnodes[i];
+        cur_nd -> visited = false;
         parent[cur_nd] = NULL;
         if(distance.at(cur_nd) != 0) {
             distance[cur_nd] = INF_D;
@@ -94,8 +121,31 @@ void find_shortest_path(FSgraph* fsgraph) {
         p = make_pair(cur_nd, distance.at(cur_nd));
         PQ.push(p);   
     }
-    vector<FSnode*> next_cands = get_corresponding_FSnodes(fsgraph, 1);
+    //get the target list
+    int next_index = 1;
+    vector<FSnode*> next_cands = get_corresponding_FSnodes(fsgraph, next_index);
+    // while(next_index <=  )
+    
+    for(FSnode* target: next_cands) {
+        set_dijkstra(fsgraph, target, cur_candidates, PQ, parent, distance);
+    }
+    
+    cur_candidates = next_cands; 
+    next_cands = get_corresponding_FSnodes(fsgraph, 2); //and so on
 
 
 }
 
+
+//will i need to remake the priority queue everytime i finish finding one path? //becasue of remove min (pop) 
+//every time were at a new path remake a pq where the initial distances are the distance of the current nodes except the nodes from the patch before
+//
+//
+//
+//pop update then push again into priority queue -> return when target is found
+
+
+
+
+//have the priority queue store only the edges hence running time (mlogm) 
+//run dijkstras on the whole freespace surface

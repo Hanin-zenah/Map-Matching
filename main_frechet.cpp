@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
     double y_scale = after_graph.y_scale;
     cout<<"in the after graph: "<<lat_min<<" "<<lon_min<<" "<<x_scale<<" "<<y_scale<<endl;
  
-    vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
+    vector<Trajectory> trajs = read_trajectories("tracjectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
     Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];
     
@@ -92,18 +92,19 @@ int main(int argc, char** argv) {
     // vector<FSedge*> nodes_within_dist = SearchNodes(&after_graph, traj_nd, 40, x_scale, y_scale);//&SCC_graph
     // cout<<"number nearest nodes: "<<nodes_within_dist.size()<<endl;
 
-    cout<<min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale)<<endl;
-    // write_fsgraph(&fsgraph, "fsgraph.dat");
+    FSpair pair = min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale);
+    cout<<fsgraph.adj_list.size()<<endl;
+    write_fsgraph(&fsgraph, "fsgraph.dat");
     // write_sur_graph(&fsgraph, &after_graph, "sur_graph_frechet.dat");
-    cout<<"finished printing survided graph"<<endl;
-    cout<<path_cost(&fsgraph, &after_graph)<<endl;
-// 
-    cout<<"finished printing path"<<endl;
+    // cout<<"finished printing survided graph"<<endl;
+    cout<<path_cost(&fsgraph, &after_graph, pair)<<endl;
+
+    // cout<<"finished printing path"<<endl;
     // print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat");
     // cout<<"finished writing out path"<<endl;
     
     //run dijkstra on the freespace 
-    stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph);
+    // stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph);
     
 
     //print? 

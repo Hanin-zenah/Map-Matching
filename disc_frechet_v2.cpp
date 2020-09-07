@@ -18,6 +18,8 @@ void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super
         back_up_pair.second = fnd_b -> tid;
         // cout<<"back_up_ pair: "<<back_up_pair.first<<"  " <<back_up_pair.second<<endl;
         fsgraph -> pair_dict[back_up_pair] = fnd_b;
+        vector<FSedge*> vec;
+        fsgraph -> adj_list[fnd_b] = vec;
     }
     return;
 }
@@ -73,6 +75,8 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
         fsgraph -> fsnodes.push_back(fnd);
         fsgraph -> pair_dict[pair] = fnd; //fsgraph -> pair_dict.insert({pair, &fnd});
         fedge -> trg = fnd; 
+        vector<FSedge*> vec;
+        fsgraph -> adj_list[fnd] = vec;
     }
     else { 
          // /* pair already exists on graph */
@@ -109,8 +113,6 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
                          stack <FSedge*>& Stack, vector<FSedge*>& super_edges, double x_scale, double y_scale) {
     auto it = fsgraph -> pair_dict.find(corner);
     FSnode* fnd = it -> second;
-    vector<FSedge*> vec;
-    fsgraph -> adj_list[fnd] = vec;
     vector<int> incidents = get_incident(graph, fnd -> vid);
     vector<double> btl_neck_vals; 
     double eps = build_node(fsgraph, graph, traj, fnd, fnd -> vid, 0, 1, x_scale, y_scale);
@@ -168,7 +170,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
     return next_fspair;
 }
        
-double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, double x_scale, double y_scale) {
+FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, double x_scale, double y_scale) {
     int m = traj -> length;
 
     // FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
@@ -196,8 +198,8 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     pair.second = fnd -> tid;
     // cout<<"starting pair: "<<pair.first<<"  " <<pair.second<<endl; 
     fsgraph -> pair_dict[pair] = fnd;
-    // vector<FSedge*> vec;
-    // fsgraph -> adj_list[fnd] = vec;
+    vector<FSedge*> vec;
+    fsgraph -> adj_list[fnd] = vec;
 
     back_up_se(fsgraph, Stack, super_edges);
     bool finished = false;
@@ -205,17 +207,19 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     int i = 0;
     while (!finished) {
         pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, super_edges, x_scale, y_scale);
-        // cout<<"current eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
+        cout<<"adj list empty?"<<fsgraph->adj_list.size()<<endl;
+        cout<<"current eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
         i++;
         finished = (pair.second >= m - 1);
         
     }
-    return fsgraph -> eps;
+    return pair;
 }
 
-double path_cost(FSgraph* fsgraph, Graph* graph) {
+double path_cost(FSgraph* fsgraph, Graph* grap, FSpair pair) {
     /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
-    FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
+    FSnode* cur = fsgraph -> pair_dict.at(pair);
+    // FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
     double path_cost = 0;
     while(cur -> parent) {
         FSnode* cur_parent = cur -> parent;
@@ -226,7 +230,7 @@ double path_cost(FSgraph* fsgraph, Graph* graph) {
         Euc_distance ed;
         double cost = ed.euc_dist(src_node.lat, src_node.longitude, trg_node.lat, trg_node.longitude, graph -> x_scale, graph -> y_scale);
         path_cost += cost;
-        cur = cur -> parent;
+        cur = cur_parent;
     }
     // cout<<"starting fs node: "<<endl;
     // cout<< cur -> tid<< ", " << cur -> vid << endl;
@@ -234,11 +238,12 @@ double path_cost(FSgraph* fsgraph, Graph* graph) {
 }
 
 
-void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name) {
+void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name, FSpair pair) {
     ofstream file(file_name);
     stack<FSnode*> path;
     /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
-    FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
+    // FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
+    FSnode* cur = fsgraph -> pair_dict.at(pair);
     while(cur -> parent) {
         path.push(cur);
         file<< graph -> nodes[cur -> vid].lat <<" "<<graph -> nodes[cur -> vid].longitude

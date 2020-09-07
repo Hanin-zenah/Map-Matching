@@ -1,6 +1,5 @@
 #include "freespace_shortest_path.h"
 
-
 vector<FSnode*> get_corresponding_FSnodes(FSgraph* fsgraph, int tid) {
     //taking step one: looping through all the nodes in the free space and fetching those 
     vector<FSnode*> candidates;
@@ -11,7 +10,6 @@ vector<FSnode*> get_corresponding_FSnodes(FSgraph* fsgraph, int tid) {
     }
     return candidates;
 }
-
 
 double edge_cost(FSedge* fedge, Graph* graph) {
     int src_id = fedge -> src -> vid;
@@ -24,7 +22,6 @@ double edge_cost(FSedge* fedge, Graph* graph) {
     double cost = ed.euc_dist(src_node.lat, src_node.longitude, trg_node.lat, trg_node.longitude, graph -> x_scale, graph -> y_scale);
     return cost;
 }
-
     
 FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, unordered_map<FSnode*, FSnode*, KeyHash>& parent, unordered_map<FSnode*, double, KeyHash>& distance,
                 priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ) {
@@ -64,6 +61,7 @@ FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, unordered_map<FSnode*, FSnode*,
 }
 
 stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph) {
+    cout<<"adj graph: "<<fsgraph -> adj_list.size()<<endl;
     unordered_map<FSnode*, FSnode*, KeyHash> parent;
     unordered_map<FSnode*, double, KeyHash> distance;
 
@@ -83,8 +81,11 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph) {
     pair<FSedge*, double> p;
     for(FSnode* nd: source_set) {
         distance[nd] = 0;
+        cout<<source_set.size()<<endl;
+        cout<<"current fsnode: "<<nd->vid<<" "<<nd->tid<<endl;
         //for all the outgoing edges of the starting nodes; add all of them to the priority queue as "active" edges 
         for(FSedge* adj: fsgraph -> adj_list.at(nd)) {
+            cout<<"adj -> botlneck_val: "<<adj -> botlneck_val<<endl;
             /***********/
             //only add edge for traversal of its bottle neck value is less than the graph's bottleneck --> ask lola about this 
             if(adj -> botlneck_val < fsgraph -> eps) {

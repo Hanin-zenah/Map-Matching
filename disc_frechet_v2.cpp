@@ -184,7 +184,7 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     vector<FSedge*> super_edges = SearchNodes(graph, traj -> points[0], radius, x_scale, y_scale);
     if(super_edges.empty()) {
         cerr << "Nothing within the required distance"<<endl;
-        return -1;
+        // return -1;
     }
     FSedge* fedge = super_edges.back();
     fsgraph -> eps = fedge -> botlneck_val;
@@ -216,7 +216,7 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     return pair;
 }
 
-double path_cost(FSgraph* fsgraph, Graph* grap, FSpair pair) {
+double path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair) {
     /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
     FSnode* cur = fsgraph -> pair_dict.at(pair);
     // FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];

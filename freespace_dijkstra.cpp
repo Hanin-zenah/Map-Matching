@@ -21,8 +21,7 @@ double edge_cost(FSedge* fedge, Graph* graph) {
     Euc_distance ed;
     double x_scale = graph -> x_scale;
     double y_scale = graph -> y_scale;
-    double x1 = src_node.lat;
-    double cost = ed.euc_dist(src_node.lat, src_node.longitude, trg_node.lat, trg_node.longitude, x_scale, y_scale);
+    double cost = ed.euc_dist(src_node.lat, src_node.longitude, trg_node.lat, trg_node.longitude, graph -> x_scale, graph -> y_scale);
     return cost;
 }
 
@@ -97,6 +96,8 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph) {
         }
     }
     FSnode* cur = dijkstra(fsgraph, graph, parent, distance, PQ);
+     cur ->dist = distance.at(cur);
+     cout<<"shorter path fist"<<cur ->dist<<endl;
     if(!cur) {
         cerr << "Dijkstra Failed; returned NULL";
     }

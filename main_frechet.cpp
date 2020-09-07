@@ -7,6 +7,7 @@
 #include "starting_node_look_up.h"
 #include "freespace_shortest_path.h"
 
+
 int main(int argc, char** argv) {
     if(argc < 2) {
         cerr << "Not enough arguments; please provide a file name next to the program name to be read\n\nExample: ./a.out saarland.txt\n";
@@ -75,13 +76,12 @@ int main(int argc, char** argv) {
     double y_scale = after_graph.y_scale;
     cout<<"in the after graph: "<<lat_min<<" "<<lon_min<<" "<<x_scale<<" "<<y_scale<<endl;
  
-    vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 4, lon_min, lat_min);
-    Trajectory traj = trajs[3];
+    vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
+    Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];
     
     cout << "finished extracting the trajectory\n";
     calc_traj_edge_cost(&traj, x_scale, y_scale);
-    cout<<traj_nd->latitude<<traj_nd->longitude<<endl;
 
     subsample_traj(&traj, 15);
     write_traj(&traj, "traj_frechet_with_sub.dat");
@@ -92,17 +92,19 @@ int main(int argc, char** argv) {
     // vector<FSedge*> nodes_within_dist = SearchNodes(&after_graph, traj_nd, 40, x_scale, y_scale);//&SCC_graph
     // cout<<"number nearest nodes: "<<nodes_within_dist.size()<<endl;
 
-    // cout<<min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale)<<endl;
-    min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale);
-    write_fsgraph(&fsgraph, "fsgraph.dat");
-    write_sur_graph(&fsgraph, &after_graph, "sur_graph_frechet.dat");
-    /* stack<FSnode*> path = get_path(&fsgraph); */
-    /* cout<<"finished printing path"<<endl; */
-    print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat");
-    cout<<"finished writing out path"<<endl;
+    cout<<min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale)<<endl;
+    // write_fsgraph(&fsgraph, "fsgraph.dat");
+    // write_sur_graph(&fsgraph, &after_graph, "sur_graph_frechet.dat");
+    cout<<"finished printing survided graph"<<endl;
+    cout<<path_cost(&fsgraph, &after_graph)<<endl;
+// 
+    cout<<"finished printing path"<<endl;
+    // print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat");
+    // cout<<"finished writing out path"<<endl;
     
     //run dijkstra on the freespace 
     stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph);
+    
 
     //print? 
 

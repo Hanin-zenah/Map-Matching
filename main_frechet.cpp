@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
     vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
     Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];
-// 
+    
     cout << "finished extracting the trajectory\n";
     calc_traj_edge_cost(&traj, x_scale, y_scale);
     cout<<traj_nd->latitude<<traj_nd->longitude<<endl;
@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
     FSgraph fsgraph = FSGRAPH_INIT; 
     // vector<FSedge*> nodes_within_dist = SearchNodes(&after_graph, traj_nd, 80, x_scale, y_scale);//&SCC_graph
     // cout<<"number nearest nodes: "<<nodes_within_dist.size()<<endl;
-// 
+
     // cout<<min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale)<<endl;
     min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale);
     write_fsgraph(&fsgraph, "fsgraph.dat");
@@ -54,6 +54,8 @@ int main(int argc, char** argv) {
     cout<<"finished printing path"<<endl;
     print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat");
     cout<<"finished writing out path"<<endl;
+    
+    //run dijkstra on the freespace 
     
     cleanup(&fsgraph);
     cleanup_trajectory(&traj);

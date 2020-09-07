@@ -1,13 +1,4 @@
-#include "disc_frechet_v2.h"
-#include "scale_projection.h"
-#include <limits>
-#include <iostream>
-#include <unordered_map>
-
-#define INF_D (numeric_limits<double>::max())
-
-
-using namespace std;
+#include "freespace_shortest_path.h"
 
 
 vector<FSnode*> get_corresponding_FSnodes(FSgraph* fsgraph, int tid) {
@@ -21,22 +12,6 @@ vector<FSnode*> get_corresponding_FSnodes(FSgraph* fsgraph, int tid) {
     return candidates;
 }
 
-struct KeyHash {
-    size_t operator()(const FSnode* node) const {
-        using std::size_t;
-        using std::hash;
-        using std::string;
-
-        return ((hash<int>()(node -> tid)
-                ^ (hash<int>()(node -> vid) << 1)) >> 1);
-    }
-};
-
-struct Comp_dijkstra_pq {
-    bool operator()(const pair<FSedge*, double>& pair1, const pair<FSedge*, double>& pair2) const {
-        return pair1.second > pair2.second; //descending order
-    }
-};
 
 double edge_cost(FSedge* fedge, Graph* graph) {
     int src_id = fedge -> src -> vid;
@@ -134,7 +109,6 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph) {
     }
 
     return path;
-    
 }
 
 /* note to self: 

@@ -5,6 +5,7 @@
 #include "trajectory.h"
 #include "trajectory_split.h"
 #include "starting_node_look_up.h"
+#include "freespace_shortest_path.h"
 
 int main(int argc, char** argv) {
     if(argc < 2) {
@@ -77,7 +78,7 @@ int main(int argc, char** argv) {
     vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 4, lon_min, lat_min);
     Trajectory traj = trajs[3];
     Point* traj_nd = traj.points[0];
-
+    
     cout << "finished extracting the trajectory\n";
     calc_traj_edge_cost(&traj, x_scale, y_scale);
     cout<<traj_nd->latitude<<traj_nd->longitude<<endl;
@@ -91,7 +92,8 @@ int main(int argc, char** argv) {
     // vector<FSedge*> nodes_within_dist = SearchNodes(&after_graph, traj_nd, 40, x_scale, y_scale);//&SCC_graph
     // cout<<"number nearest nodes: "<<nodes_within_dist.size()<<endl;
 
-    cout<<min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale)<<endl;
+    // cout<<min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale)<<endl;
+    min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale);
     write_fsgraph(&fsgraph, "fsgraph.dat");
     write_sur_graph(&fsgraph, &after_graph, "sur_graph_frechet.dat");
     /* stack<FSnode*> path = get_path(&fsgraph); */
@@ -99,6 +101,11 @@ int main(int argc, char** argv) {
     print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat");
     cout<<"finished writing out path"<<endl;
     
+    //run dijkstra on the freespace 
+    stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph);
+
+    //print? 
+
     cleanup(&fsgraph);
     cleanup_trajectory(&traj);
     return 0;

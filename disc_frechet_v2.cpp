@@ -53,11 +53,11 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
     FSedge* fedge = (FSedge*) malloc(sizeof(FSedge));
 
     if(up == 0) {
-         fnd -> vid = fsnd -> vid;
+        fnd -> vid = fsnd -> vid;
     } else {
         fnd -> vid = neighbor_id;
     }
-    fnd -> tid = fsnd -> tid + right; // right = 1 means Point next.
+    fnd -> tid = fsnd -> tid + right; 
     // /* test if the corner/node pair already exists, if not, build a new node, but need to build a new edge regardless */
     FSpair pair; // = {fnd.vid, fnd.tid};
     pair.first = fnd -> vid;
@@ -65,7 +65,7 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
 
     if(fsgraph -> pair_dict.find(pair) == fsgraph -> pair_dict.end()) {
         //if pair not in map 
-        fnd -> visited = false; /* didn't really end up making this bool value */
+        fnd -> visited = false; 
         fnd -> dist = nodes_dist(graph -> nodes[fnd -> vid], traj -> points[fnd -> tid], x_scale, y_scale); //error is here
         double distance = fnd -> dist; 
         // cout<<"creating pair dist: " << distance <<" from: "<<pair.first<<" "<<pair.second<<endl;
@@ -85,6 +85,10 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
         // cout<<"existing pair dist: " << distance <<" from: "<<pair.first<<" "<<pair.second<<endl;
     }
     fedge -> src = fsnd; ///and fix this
+
+    //add to adjacency list here ... 
+    fsgraph -> adj_list.at(fsnd).push_back(fedge);
+
     fedge -> botlneck_val = max(fnd -> dist, fsgraph -> eps); // the fnd.dist would be the same regardless the prior existence of this new corner
     fsgraph -> fsedges.push_back(fedge);
     int size = fsgraph -> fsedges.size();

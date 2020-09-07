@@ -97,14 +97,14 @@ int main(int argc, char** argv) {
     write_fsgraph(&fsgraph, "fsgraph.dat");
     // write_sur_graph(&fsgraph, &after_graph, "sur_graph_frechet.dat");
     // cout<<"finished printing survided graph"<<endl;
-    cout<<path_cost(&fsgraph, &after_graph, pair)<<endl;
+    // cout<<path_cost(&fsgraph, &after_graph, pair)<<endl;
 
     // cout<<"finished printing path"<<endl;
     // print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat");
     // cout<<"finished writing out path"<<endl;
     
     //run dijkstra on the freespace 
-    // stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph);
+    stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph);
     
 
     //print? 

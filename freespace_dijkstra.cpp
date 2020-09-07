@@ -24,17 +24,18 @@ double edge_cost(FSedge* fedge, Graph* graph) {
 }
     
 FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, unordered_map<FSnode*, FSnode*, KeyHash>& parent, unordered_map<FSnode*, double, KeyHash>& distance,
-                priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ) {
+                priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ, FSpair final_pair) {
 
     pair<FSedge*, double> p;
     while(!PQ.empty()) {
         //stop the loop whenever the last corner (target) is reached (ie any corner with tid = last node of trajectory)
         pair<FSedge*, double> cur_pair = PQ.top();
+        cout<<"cur_pair.second: "<<cur_pair.second<<endl;
         PQ.pop();
 
         FSnode* src = cur_pair.first -> src;
         FSnode* trg = cur_pair.first -> trg;
-        if(trg -> tid == fsgraph -> fsnodes.back() -> tid) {  //assuming last built node's tid is the final trajectory tid
+        if(trg -> tid == final_pair.second && trg -> vid == final_pair.first) {  //assuming last built node's tid is the final trajectory tid
             return trg;
             break;
         }
@@ -96,6 +97,8 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph) {
             }
         }
     }
+    cout<<"entering dijkstra \n";
+    cout<<PQ.size()<<endl;
     FSnode* cur = dijkstra(fsgraph, graph, parent, distance, PQ);
      cur ->dist = distance.at(cur);
      cout<<"shorter path fist"<<cur ->dist<<endl;

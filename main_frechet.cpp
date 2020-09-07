@@ -5,6 +5,7 @@
 #include "trajectory.h"
 #include "trajectory_split.h"
 #include "starting_node_look_up.h"
+#include "freespace_shortest_path.h"
 
 int main(int argc, char** argv) {
     if(argc < 2) {
@@ -56,7 +57,10 @@ int main(int argc, char** argv) {
     cout<<"finished writing out path"<<endl;
     
     //run dijkstra on the freespace 
-    
+    stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph);
+
+    //print? 
+
     cleanup(&fsgraph);
     cleanup_trajectory(&traj);
     return 0;

@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include "graph.h"
 #include "trajectory.h"
+#include "scale_projection.h"
 
 #define FSGRAPH_INIT {0}
 
@@ -111,7 +112,7 @@ FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_
 /* travel to the next reachable edge */
 FSnode* travel_reachable (FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& superEdges);
 
-stack<FSnode*> get_path(FSgraph* fsgraph);
+double path_cost(FSgraph* fsgraph, Graph* graph);
 
 /* produce a graph that shows the path */
 void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name);

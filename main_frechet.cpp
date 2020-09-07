@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
     // cout<<"finished writing out path"<<endl;
     
     //run dijkstra on the freespace 
-    stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph);
+    stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph, pair);
     
 
     //print? 

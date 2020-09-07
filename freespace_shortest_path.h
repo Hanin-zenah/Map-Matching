@@ -35,9 +35,9 @@ double edge_cost(FSedge* fedge, Graph* graph);
 
 /* runs dijkstra on the freespace */
 FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, unordered_map<FSnode*, FSnode*, KeyHash>& parent, unordered_map<FSnode*, double, KeyHash>& distance,
-                priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ);
+                priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ, FSpair final_pair);
 
 
 /* returns the shortest matching path of the freespace */
-stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph);
+stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, FSpair final_pair);
 

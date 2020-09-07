@@ -236,16 +236,16 @@ double path_cost(FSgraph* fsgraph, Graph* graph) {
 
 void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name) {
     ofstream file(file_name);
-    stack<FSnode*> path;
+    // stack<FSnode*> path;
     /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
     FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
     while(cur -> parent) {
-        path.push(cur);
+        // path.push(cur);
         file<< graph -> nodes[cur -> vid].lat <<" "<<graph -> nodes[cur -> vid].longitude
         <<" "<<graph -> nodes[cur -> parent -> vid].lat <<" "<<graph -> nodes[cur -> parent -> vid].longitude<<endl;
         cur = cur -> parent;
     }
-    path.push(cur);
+    // path.push(cur);
     file<< graph -> nodes[cur -> vid].lat <<" "<<graph -> nodes[cur -> vid].longitude
     <<" "<<graph -> nodes[cur -> parent -> vid].lat <<" "<<graph -> nodes[cur -> parent -> vid].longitude<<endl;
     file.close();

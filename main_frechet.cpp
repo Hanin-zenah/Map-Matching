@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
     double y_scale = after_graph.y_scale;
     cout<<"in the after graph: "<<lat_min<<" "<<lon_min<<" "<<x_scale<<" "<<y_scale<<endl;
  
-    vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
+    vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
     Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];
     
@@ -102,8 +102,21 @@ int main(int argc, char** argv) {
     // print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat");
     // cout<<"finished writing out path"<<endl;
     
+    cout << fsgraph.fsnodes.size() << endl;
+    /*****
+     * check why adj list is not working
+     *****/
+    // for(int i = 0; i < fsgraph.fsnodes.size(); i++) {
+    //     FSnode* nd = fsgraph.fsnodes[i];
+    //     cout << nd -> vid << " " << nd -> tid
+    //     cout << "adj_ls size: " << fsgraph.adj_list.at(nd).size() << endl;
+
+    //     // int i = fsgraph.adj_list.find()
+    // }
+
+
     //run dijkstra on the freespace 
-    stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph);
+    // stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph);
     
 
     //print? 

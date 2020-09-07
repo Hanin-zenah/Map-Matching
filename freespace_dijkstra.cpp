@@ -84,20 +84,27 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph) {
     for(FSnode* nd: source_set) {
         distance[nd] = 0;
         //for all the outgoing edges of the starting nodes; add all of them to the priority queue as "active" edges 
-        for(FSedge* adj: fsgraph -> adj_list.at(nd)) {
-            /***********/
-            //only add edge for traversal of its bottle neck value is less than the graph's bottleneck --> ask lola about this 
-            if(adj -> botlneck_val < fsgraph -> eps) {
-                double cost = edge_cost(adj, graph); //cost of the actual graph edge
-                distance[adj -> trg] = cost;
-                p = make_pair(adj, cost);
-                PQ.push(p);
+        if(fsgraph -> adj_list.find(nd) == fsgraph -> adj_list.end()) {
+            cout << "ERROR ";
+        }
+        else {
+            for(FSedge* adj: fsgraph -> adj_list.at(nd)) {
+                /***********/
+                //only add edge for traversal of its bottle neck value is less than the graph's bottleneck --> ask lola about this 
+                if(adj -> botlneck_val < fsgraph -> eps) {
+                    double cost = edge_cost(adj, graph); //cost of the actual graph edge
+                    distance[adj -> trg] = cost;
+                    p = make_pair(adj, cost);
+                    PQ.push(p);
+                }
             }
         }
     }
+
+    //ready to run dijkstra
     FSnode* cur = dijkstra(fsgraph, graph, parent, distance, PQ);
-     cur ->dist = distance.at(cur);
-     cout<<"shorter path fist"<<cur ->dist<<endl;
+    cur ->dist = distance.at(cur);
+    cout<<"shorter path length "<<cur ->dist<<endl;
     if(!cur) {
         cerr << "Dijkstra Failed; returned NULL";
     }

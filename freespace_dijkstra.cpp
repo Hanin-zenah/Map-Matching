@@ -1,6 +1,5 @@
 #include "freespace_shortest_path.h"
 
-
 vector<FSnode*> get_corresponding_FSnodes(FSgraph* fsgraph, int tid) {
     //taking step one: looping through all the nodes in the free space and fetching those 
     vector<FSnode*> candidates;
@@ -11,7 +10,6 @@ vector<FSnode*> get_corresponding_FSnodes(FSgraph* fsgraph, int tid) {
     }
     return candidates;
 }
-
 
 double edge_cost(FSedge* fedge, Graph* graph) {
     int src_id = fedge -> src -> vid;
@@ -25,45 +23,69 @@ double edge_cost(FSedge* fedge, Graph* graph) {
     return cost;
 }
 
+bool found_fsnode(FSgraph* fsgraph, FSnode* node) {
+    for(FSnode* cur: fsgraph -> fsnodes) {
+        if(node == cur) {
+            return true;
+        }
+    }
+    return false;
+}
     
-FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, unordered_map<FSnode*, FSnode*, KeyHash>& parent, unordered_map<FSnode*, double, KeyHash>& distance,
+FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m, unordered_map<FSnode*, FSnode*, KeyHash>& parent, unordered_map<FSnode*, double, KeyHash>& distance,
                 priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ) {
 
     pair<FSedge*, double> p;
     while(!PQ.empty()) {
+        // cout << "pq not empty\n";
         //stop the loop whenever the last corner (target) is reached (ie any corner with tid = last node of trajectory)
         pair<FSedge*, double> cur_pair = PQ.top();
         PQ.pop();
-
+        // cout << "popped edge\n";
         FSnode* src = cur_pair.first -> src;
-        FSnode* trg = cur_pair.first -> trg;
-        if(trg -> tid == fsgraph -> fsnodes.back() -> tid) {  //assuming last built node's tid is the final trajectory tid
-            return trg;
-            break;
+        FSnode* org_trg = cur_pair.first -> trg;
+        if(org_trg -> tid == m - 1) {  //if it equals the id of the last trajectory node 
+            cout << "REACHED TARGET!!\n";
+            return org_trg;
+            // break;
         }
- 
-        for(FSedge* adj: fsgraph -> adj_list.at(trg)) {
+        // cout << fsgraph -> adj_list.at(org_trg).size() << endl;
+        for(FSedge* adj: fsgraph -> adj_list.at(org_trg)) {
             if(adj -> botlneck_val < fsgraph -> eps) {
-                double cost = edge_cost(adj, graph);
-                if((distance.at(trg) +  cost) < distance.at(adj -> trg)) {
-                    distance[adj -> trg] = distance.at(trg) + cost;
-                    parent[adj -> trg] = trg;
+                double cost = edge_cost(adj, graph);      
+                cout << org_trg -> tid << ", " << org_trg -> vid << " ||| " << adj -> trg -> tid << ", " << adj -> trg -> vid << endl;   
+                FSpair trg_pair; 
+                trg_pair.first = adj -> trg -> vid;
+                trg_pair.second = adj -> trg -> tid;
+
+                // if(fsgraph -> pair_dict.find(trg_pair) == fsgraph -> pair_dict.end()) {
+                //     cout << "FSNODE DOESN'T EXIST IN DICT\n";
+                // }         
+                if(!found_fsnode(fsgraph, adj -> trg)) {
+                    cout << "FSNODE NOT IN VECTOR ERRORRR" << endl;
+                }                                     
+                cout << "distance at org_trg = " << distance.at(org_trg) << ", distance at next trg = " << distance.at(adj -> trg)<< endl;
+                if((distance.at(org_trg) +  cost) < distance.at(adj -> trg)) {
+                    distance[adj -> trg] = distance.at(org_trg) + cost;
+                    parent[adj -> trg] = org_trg;
 
                     // //if trg is target node ; break
                     // if(adj -> trg -> tid == fsgraph -> fsnodes.back() -> tid) {
                     //     return;
                     // }
 
-                    p = make_pair(adj, distance.at(trg) + cost);
+                    p = make_pair(adj, distance.at(adj -> trg));
                     PQ.push(p);
                 }
+                cout << "done\n";
             }
         }
     }
     return NULL;
 }
 
-stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph) {
+stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m) {
+    // cout<<"adj graph: "<<fsgraph -> adj_list.size()<<endl;
     unordered_map<FSnode*, FSnode*, KeyHash> parent;
     unordered_map<FSnode*, double, KeyHash> distance;
 
@@ -78,43 +100,46 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph) {
         // cur_nd -> visited = false;
         parent[cur_nd] = NULL;
         distance[cur_nd] = INF_D;
+        // cout << distance.at(cur_nd) << endl;
     }
 
     pair<FSedge*, double> p;
     for(FSnode* nd: source_set) {
         distance[nd] = 0;
+        // cout<<"current fsnode: "<<nd->vid<<" "<<nd->tid<<endl;
         //for all the outgoing edges of the starting nodes; add all of them to the priority queue as "active" edges 
-        if(fsgraph -> adj_list.find(nd) == fsgraph -> adj_list.end()) {
-            cout << "ERROR ";
-        }
-        else {
-            for(FSedge* adj: fsgraph -> adj_list.at(nd)) {
-                /***********/
-                //only add edge for traversal of its bottle neck value is less than the graph's bottleneck --> ask lola about this 
-                if(adj -> botlneck_val < fsgraph -> eps) {
-                    double cost = edge_cost(adj, graph); //cost of the actual graph edge
-                    distance[adj -> trg] = cost;
-                    p = make_pair(adj, cost);
-                    PQ.push(p);
-                }
+        for(FSedge* adj: fsgraph -> adj_list.at(nd)) {
+            /***********/
+            //only add edge for traversal of its bottle neck value is less than the graph's bottleneck --> ask lola about this 
+            if(adj -> botlneck_val < fsgraph -> eps) {
+                double cost = edge_cost(adj, graph); //cost of the actual graph edge
+                distance[adj -> trg] = cost;
+                parent[adj -> trg] = adj -> src;
+                p = make_pair(adj, cost);
+                PQ.push(p);
+                // cout << "pushed edge\n";
             }
         }
     }
-
+    cout << "finished initializing maps\n";
     //ready to run dijkstra
-    FSnode* cur = dijkstra(fsgraph, graph, parent, distance, PQ);
+    FSnode* cur = dijkstra(fsgraph, graph, m, parent, distance, PQ);
+    stack<FSnode*> path;
+
+    if(cur == NULL) {
+        cerr << "Dijkstra Failed; returned NULL";
+        return path;
+    }
     cur ->dist = distance.at(cur);
     cout<<"shorter path length "<<cur ->dist<<endl;
-    if(!cur) {
-        cerr << "Dijkstra Failed; returned NULL";
-    }
     
-    //extract path 
-    stack<FSnode*> path;
+    
+    // //extract path 
     while(cur) {
         path.push(cur);
         cur = parent.at(cur);
     }
+    path.push(cur);
 
     return path;
 }
@@ -154,3 +179,10 @@ use bidirectional dijkstra
 
         // }
             
+
+//are all the nodes being build <even the super sources> being added to fsgraph -> fsnodes? 
+//are all the nodes in the adj list in the fsnodes vector of the fsgraph?
+
+
+
+//add a settled boolean flag (settle a node whenever u assign a parent to it ?)

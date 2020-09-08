@@ -1,11 +1,7 @@
 #include "disc_frechet_v2.h"
-#include "scale_projection.h"
 #include <limits>
-#include <iostream>
-#include <unordered_map>
 
 #define INF_D (numeric_limits<double>::max())
-
 
 using namespace std;
 
@@ -34,10 +30,10 @@ vector<FSnode*> get_corresponding_FSnodes(FSgraph* fsgraph, int tid);
 double edge_cost(FSedge* fedge, Graph* graph);
 
 /* runs dijkstra on the freespace */
-FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, unordered_map<FSnode*, FSnode*, KeyHash>& parent, unordered_map<FSnode*, double, KeyHash>& distance,
+FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m, unordered_map<FSnode*, FSnode*, KeyHash>& parent, unordered_map<FSnode*, double, KeyHash>& distance,
                 priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ);
 
 
 /* returns the shortest matching path of the freespace */
-stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph);
+stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m);
 

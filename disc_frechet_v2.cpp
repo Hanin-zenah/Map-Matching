@@ -6,6 +6,15 @@ double nodes_dist(struct node g_nd, Point* t_nd, double x_scale, double y_scale)
     return dist;
 }
 
+bool found_fsnode_vec(FSgraph* fsgraph, FSnode* node) {
+    for(FSnode* cur: fsgraph -> fsnodes) {
+        if(node == cur) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super_edges) {
     if(!super_edges.empty()) {
         FSedge* fedge_b = super_edges.back();
@@ -18,6 +27,12 @@ void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super
         back_up_pair.second = fnd_b -> tid;
         // cout<<"back_up_ pair: "<<back_up_pair.first<<"  " <<back_up_pair.second<<endl;
         fsgraph -> pair_dict[back_up_pair] = fnd_b;
+        if(!found_fsnode_vec(fsgraph, fnd_b)) {
+            fsgraph -> fsnodes.push_back(fnd_b);
+        }
+        // fsgraph -> fsnodes.push_back(fnd_b);
+        vector<FSedge*> vec;
+        fsgraph -> adj_list[fnd_b] = vec;
     }
     return;
 }
@@ -49,40 +64,54 @@ FSnode* travel_reachable(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge
     }
 
 double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right, double x_scale, double y_scale) {
-    FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
+    // FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
     FSedge* fedge = (FSedge*) malloc(sizeof(FSedge));
 
-    if(up == 0) {
-        fnd -> vid = fsnd -> vid;
-    } else {
-        fnd -> vid = neighbor_id;
-    }
-    fnd -> tid = fsnd -> tid + right; 
-    // /* test if the corner/node pair already exists, if not, build a new node, but need to build a new edge regardless */
     FSpair pair; // = {fnd.vid, fnd.tid};
-    pair.first = fnd -> vid;
-    pair.second = fnd -> tid;
+    // pair.first = fnd -> vid;
+    // pair.second = fnd -> tid;
+
+    if(up == 0) {
+        pair.first = fsnd -> vid;
+        // fnd -> vid = fsnd -> vid;
+    } else {
+        pair.first = neighbor_id;
+        // fnd -> vid = neighbor_id;
+    }
+
+    pair.second = fsnd -> tid + right;
+
+    // fnd -> tid = fsnd -> tid + right; 
+    // /* test if the corner/node pair already exists, if not, build a new node, but need to build a new edge regardless */
+ 
 
     if(fsgraph -> pair_dict.find(pair) == fsgraph -> pair_dict.end()) {
         //if pair not in map 
+        FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
+        fnd -> vid = pair.first; 
+        fnd -> tid = pair.second;
         fnd -> visited = false; 
         fnd -> dist = nodes_dist(graph -> nodes[fnd -> vid], traj -> points[fnd -> tid], graph -> x_scale, graph -> y_scale); //error is here
-        double distance = fnd -> dist; 
-        // cout<<"creating pair dist: " << distance <<" from: "<<pair.first<<" "<<pair.second<<endl;
+        
         fnd -> parent = fsnd; //QH
+
         fsgraph -> fsnodes.push_back(fnd);
         fsgraph -> pair_dict[pair] = fnd; //fsgraph -> pair_dict.insert({pair, &fnd});
+
         fedge -> trg = fnd; 
+        vector<FSedge*> vec;
+        fsgraph -> adj_list[fnd] = vec;
     }
     else { 
          // /* pair already exists on graph */
         auto it = fsgraph -> pair_dict.find(pair);
         // /* if (it -> visited){ } won't build this node nor edge */
         fedge -> trg = it -> second;
-        fnd -> dist = fedge -> trg -> dist; 
-        fnd -> parent = fsnd; //QH
-        double distance = fnd -> dist; 
-        // cout<<"existing pair dist: " << distance <<" from: "<<pair.first<<" "<<pair.second<<endl;
+        fedge -> trg -> parent = fsnd;
+
+        // fnd -> dist = fedge -> trg -> dist; 
+
+        // fnd -> parent = fsnd; //QH
     }
 
     fedge -> src = fsnd; ///and fix this
@@ -93,11 +122,11 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
     }
     else {
         // cout << "FOUND ADJACENCY LIST\n";
-    fsgraph -> adj_list.at(fsnd).push_back(fedge);
+        fsgraph -> adj_list.at(fsnd).push_back(fedge);
 
     }
 
-    fedge -> botlneck_val = max(fnd -> dist, fsgraph -> eps); // the fnd.dist would be the same regardless the prior existence of this new corner
+    fedge -> botlneck_val = max(fedge -> trg -> dist, fsgraph -> eps); // the fnd.dist would be the same regardless the prior existence of this new corner
     fsgraph -> fsedges.push_back(fedge);
     int size = fsgraph -> fsedges.size();
 
@@ -109,8 +138,6 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
                          stack <FSedge*>& Stack, vector<FSedge*>& super_edges, double x_scale, double y_scale) {
     auto it = fsgraph -> pair_dict.find(corner);
     FSnode* fnd = it -> second;
-    vector<FSedge*> vec;
-    fsgraph -> adj_list[fnd] = vec;
     vector<int> incidents = get_incident(graph, fnd -> vid);
     vector<double> btl_neck_vals; 
     double eps = build_node(fsgraph, graph, traj, fnd, fnd -> vid, 0, 1, x_scale, y_scale);
@@ -168,7 +195,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
     return next_fspair;
 }
        
-double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, double x_scale, double y_scale) {
+FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, double x_scale, double y_scale) {
     int m = traj -> length;
 
     // FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
@@ -182,7 +209,7 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     vector<FSedge*> super_edges = SearchNodes(graph, traj -> points[0], radius, x_scale, y_scale);
     if(super_edges.empty()) {
         cerr << "Nothing within the required distance"<<endl;
-        return -1;
+        // return -1;
     }
     FSedge* fedge = super_edges.back();
     fsgraph -> eps = fedge -> botlneck_val;
@@ -196,8 +223,8 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     pair.second = fnd -> tid;
     // cout<<"starting pair: "<<pair.first<<"  " <<pair.second<<endl; 
     fsgraph -> pair_dict[pair] = fnd;
-    // vector<FSedge*> vec;
-    // fsgraph -> adj_list[fnd] = vec;
+    vector<FSedge*> vec;
+    fsgraph -> adj_list[fnd] = vec;
 
     back_up_se(fsgraph, Stack, super_edges);
     bool finished = false;
@@ -205,17 +232,19 @@ double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     int i = 0;
     while (!finished) {
         pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, super_edges, x_scale, y_scale);
+        // cout<<"adj list empty?"<<fsgraph->adj_list.size()<<endl;
         // cout<<"current eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
         i++;
         finished = (pair.second >= m - 1);
         
     }
-    return fsgraph -> eps;
+    return pair;
 }
 
-double path_cost(FSgraph* fsgraph, Graph* graph) {
+double path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair) {
     /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
-    FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
+    FSnode* cur = fsgraph -> pair_dict.at(pair);
+    // FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
     double path_cost = 0;
     while(cur -> parent) {
         FSnode* cur_parent = cur -> parent;
@@ -226,7 +255,7 @@ double path_cost(FSgraph* fsgraph, Graph* graph) {
         Euc_distance ed;
         double cost = ed.euc_dist(src_node.lat, src_node.longitude, trg_node.lat, trg_node.longitude, graph -> x_scale, graph -> y_scale);
         path_cost += cost;
-        cur = cur -> parent;
+        cur = cur_parent;
     }
     // cout<<"starting fs node: "<<endl;
     // cout<< cur -> tid<< ", " << cur -> vid << endl;
@@ -234,11 +263,12 @@ double path_cost(FSgraph* fsgraph, Graph* graph) {
 }
 
 
-void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name) {
+void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name, FSpair pair) {
     ofstream file(file_name);
     // stack<FSnode*> path;
     /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
-    FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
+    // FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
+    FSnode* cur = fsgraph -> pair_dict.at(pair);
     while(cur -> parent) {
         // path.push(cur);
         file<< graph -> nodes[cur -> vid].lat <<" "<<graph -> nodes[cur -> vid].longitude

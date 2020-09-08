@@ -8,6 +8,21 @@
 #include "freespace_shortest_path.h"
 
 
+//print out the nodes that have the same tid and vid with different memory address
+void print_dupilcates(FSgraph* fsgraph) {
+    for(int i = 0; i < fsgraph -> fsnodes.size(); i++) {
+        for(int j = 0; j < fsgraph -> fsnodes.size(); j++) {
+            if(i != j) {
+                if(fsgraph -> fsnodes[i] -> vid == fsgraph -> fsnodes[j] -> vid && 
+                                fsgraph -> fsnodes[i] -> tid == fsgraph -> fsnodes[j] -> tid) {
+                    cout << "DUP: " << fsgraph -> fsnodes[i] -> vid << " " << fsgraph -> fsnodes[i] -> tid << endl; 
+                    cout <<"indices: " << i << " " << j << endl;
+                }
+            }   
+        }
+    }
+}
+
 int main(int argc, char** argv) {
     if(argc < 2) {
         cerr << "Not enough arguments; please provide a file name next to the program name to be read\n\nExample: ./a.out saarland.txt\n";
@@ -68,55 +83,55 @@ int main(int argc, char** argv) {
     read_processed_graph(argv[1], &after_graph);
     write_graph(&after_graph, "saarland_all_with_sub.dat");
 // 
-    cout<<"in saarland_all_with_sub.dat"<<endl;
+    // cout<<"in saarland_all_with_sub.dat"<<endl;
 // 
     double lat_min = after_graph.original_min_lat;
     double lon_min = after_graph.original_min_long;
     double x_scale = after_graph.x_scale;
     double y_scale = after_graph.y_scale;
-    cout<<"in the after graph: "<<lat_min<<" "<<lon_min<<" "<<x_scale<<" "<<y_scale<<endl;
+    // cout<<"in the after graph: "<<lat_min<<" "<<lon_min<<" "<<x_scale<<" "<<y_scale<<endl;
  
     vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
     Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];
     
-    cout << "finished extracting the trajectory\n";
+    // cout << "finished extracting the trajectory\n";
     calc_traj_edge_cost(&traj, x_scale, y_scale);
 
     subsample_traj(&traj, 15);
+    // cout << "length of trajectory :"<< traj.length << endl;
+
     write_traj(&traj, "traj_frechet_with_sub.dat");
-    cout << "finished subsampling the trajectory\n";
+    // cout << "finished subsampling the trajectory\n";
 
     // QH: make a prompt for the radius???
     FSgraph fsgraph = FSGRAPH_INIT; 
     // vector<FSedge*> nodes_within_dist = SearchNodes(&after_graph, traj_nd, 40, x_scale, y_scale);//&SCC_graph
     // cout<<"number nearest nodes: "<<nodes_within_dist.size()<<endl;
 
-    cout<<min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale)<<endl;
+    FSpair pair = min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale);
     // write_fsgraph(&fsgraph, "fsgraph.dat");
     // write_sur_graph(&fsgraph, &after_graph, "sur_graph_frechet.dat");
-    cout<<"finished printing survided graph"<<endl;
-    cout<<path_cost(&fsgraph, &after_graph)<<endl;
-// 
-    cout<<"finished printing path"<<endl;
-    // print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat");
+    // cout<<"finished printing survided graph"<<endl;
+    // cout<<path_cost(&fsgraph, &after_graph, pair)<<endl;
+
+    // cout<<"finished printing path"<<endl;
+    // print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat", pair);
     // cout<<"finished writing out path"<<endl;
     
-    cout << fsgraph.fsnodes.size() << endl;
     /*****
      * check why adj list is not working
      *****/
     // for(int i = 0; i < fsgraph.fsnodes.size(); i++) {
     //     FSnode* nd = fsgraph.fsnodes[i];
-    //     cout << nd -> vid << " " << nd -> tid
+    //     // cout << nd -> vid << " " << nd -> tid ;
     //     cout << "adj_ls size: " << fsgraph.adj_list.at(nd).size() << endl;
 
     //     // int i = fsgraph.adj_list.find()
     // }
 
-
     //run dijkstra on the freespace 
-    // stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph);
+    stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph, traj.length);
     
 
     //print? 

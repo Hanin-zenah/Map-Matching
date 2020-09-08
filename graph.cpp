@@ -214,6 +214,8 @@ void inedge_offset_array(Graph* graph) {
     for(int j = 0; j < to_add; j++) {
         offset.push_back(i);
     }
+    graph -> in_off_edges.clear();
+    graph -> in_offsets.clear();
 
     graph -> in_offsets = offset;
     for(int i = 0; i < in_edges.size(); i++) {

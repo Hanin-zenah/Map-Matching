@@ -94,7 +94,7 @@ struct Comp_eps {
 double nodes_dist(node g_nd, Point* t_nd, double x_scale, double y_scale);
 
 /* calculate the minimal leash length for discrete frechet */
-double min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, double x_scale, double y_scale);
+FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, double x_scale, double y_scale);
 
 /* given a FSnode, build the 3 outgoing edges and target nodes using this node */
 double build_node(FSgraph* fsgraph, fsnode fsnd, int neighbor_id, int up, int right, double x_scale, double y_scale);
@@ -112,10 +112,10 @@ FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_
 /* travel to the next reachable edge */
 FSnode* travel_reachable (FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& superEdges);
 
-double path_cost(FSgraph* fsgraph, Graph* graph);
+double path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair);
 
 /* produce a graph that shows the path */
-void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name);
+void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name, FSpair pair);
 
 void cleanup(FSgraph* fsgraph);
 

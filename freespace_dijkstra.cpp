@@ -32,22 +32,35 @@ bool found_fsnode(FSgraph* fsgraph, FSnode* node) {
     return false;
 }
     
+<<<<<<< HEAD
 FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m, unordered_map<FSnode*, FSnode*, KeyHash>& parent, unordered_map<FSnode*, double, KeyHash>& distance,
                 priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ) {
+=======
+FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, unordered_map<FSnode*, FSnode*, KeyHash>& parent, unordered_map<FSnode*, double, KeyHash>& distance,
+                priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ, FSpair final_pair) {
+>>>>>>> 16013c927788a9d34b26b6eb5a4c8bb6e7a89c59
 
     pair<FSedge*, double> p;
     while(!PQ.empty()) {
         // cout << "pq not empty\n";
         //stop the loop whenever the last corner (target) is reached (ie any corner with tid = last node of trajectory)
         pair<FSedge*, double> cur_pair = PQ.top();
+        cout<<"target pair:"<<cur_pair.first -> trg->vid<<" "<<cur_pair.first -> trg->tid<<"cur_pair.second: "<<cur_pair.second<<endl;
         PQ.pop();
         // cout << "popped edge\n";
         FSnode* src = cur_pair.first -> src;
+<<<<<<< HEAD
         FSnode* org_trg = cur_pair.first -> trg;
         if(org_trg -> tid == m - 1) {  //if it equals the id of the last trajectory node 
             cout << "REACHED TARGET!!\n";
             return org_trg;
             // break;
+=======
+        FSnode* trg = cur_pair.first -> trg;
+        if(trg -> tid == final_pair.second && trg -> vid == final_pair.first) {  //assuming last built node's tid is the final trajectory tid
+            return trg;
+            break;
+>>>>>>> 16013c927788a9d34b26b6eb5a4c8bb6e7a89c59
         }
         // cout << fsgraph -> adj_list.at(org_trg).size() << endl;
         for(FSedge* adj: fsgraph -> adj_list.at(org_trg)) {

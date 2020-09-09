@@ -138,7 +138,7 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m) {
         path.push(cur);
         cur = parent.at(cur);
     }
-    path.push(cur);
+    // path.push(cur);
 
     return path;
 }

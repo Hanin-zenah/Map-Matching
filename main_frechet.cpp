@@ -117,11 +117,22 @@ int main(int argc, char** argv) {
     cout<<path_cost(&fsgraph, &after_graph, pair)<<endl;
 
     // cout<<"finished printing path"<<endl;
-    // print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat", pair);
+    print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat", pair);
     // cout<<"finished writing out path"<<endl;
+
+
+
+
+    auto t1 = chrono::high_resolution_clock::now();
+    auto t2 = chrono::high_resolution_clock::now();
 
     //run dijkstra on the freespace 
     stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph, traj.length);
+
+    auto duration = chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+
+    cout << "Duration in milliseconds: " << duration << endl;
+ 
 
     
 

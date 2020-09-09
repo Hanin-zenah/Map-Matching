@@ -120,7 +120,6 @@ int main(int argc, char** argv) {
     print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat", pair);
     // cout<<"finished writing out path"<<endl;
 
-
     //run dijkstra on the freespace 
     stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph, traj.length);
 

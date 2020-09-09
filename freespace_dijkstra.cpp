@@ -130,15 +130,13 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m) {
     }
     cur ->dist = distance.at(cur);
 
-    cout<<"shorter path length "<<cur ->dist<<endl;
-    
+    // cout<<"shorter path length "<<cur ->dist<<endl;
     
     //extract path 
     while(cur) {
         path.push(cur);
         cur = parent.at(cur);
     }
-    // path.push(cur);
 
     return path;
 }

@@ -30,19 +30,23 @@ FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, unordered_map<FSnode*, FSnode*,
     while(!PQ.empty()) {
         //stop the loop whenever the last corner (target) is reached (ie any corner with tid = last node of trajectory)
         pair<FSedge*, double> cur_pair = PQ.top();
-        cout<<"target pair:"<<cur_pair.first -> trg->vid<<" "<<cur_pair.first -> trg->tid<<"cur_pair.second: "<<cur_pair.second<<endl;
+        cout<<"target pair: "<<cur_pair.first -> trg->vid<<" "<<cur_pair.first -> trg->tid<<" cur_pair.second: "<<cur_pair.second<<endl;
         PQ.pop();
 
         FSnode* src = cur_pair.first -> src;
         FSnode* trg = cur_pair.first -> trg;
+        cout<<"distance.at(trg): "<<distance.at(trg)<<endl;
         if(trg -> tid == final_pair.second && trg -> vid == final_pair.first) {  //assuming last built node's tid is the final trajectory tid
             return trg;
-            break;
+            break; 
         }
- 
+
+        cout<<"fsgraph -> adj_list.size(): "<<fsgraph -> adj_list.size()<<endl;
         for(FSedge* adj: fsgraph -> adj_list.at(trg)) {
             if(adj -> botlneck_val < fsgraph -> eps) {
                 double cost = edge_cost(adj, graph);
+                cout<<"graph edge cost: "<<cost<<endl;
+                cout<<"distance.at(adj -> trg): "<<distance.at(adj -> trg)<<endl;
                 if((distance.at(trg) +  cost) < distance.at(adj -> trg)) {
                     distance[adj -> trg] = distance.at(trg) + cost;
                     parent[adj -> trg] = trg;
@@ -54,6 +58,7 @@ FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, unordered_map<FSnode*, FSnode*,
 
                     p = make_pair(adj, distance.at(trg) + cost);
                     PQ.push(p);
+                    cout<<"updated PQ size after push: "<<PQ.size()<<endl;
                 }
             }
         }
@@ -80,18 +85,21 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, FSpair final_p
     }
 
     pair<FSedge*, double> p;
+    cout<<source_set.size()<<endl;
+    cout<<"inital PQ size: "<<PQ.size()<<endl;
     for(FSnode* nd: source_set) {
         distance[nd] = 0;
-        cout<<source_set.size()<<endl;
         cout<<"current fsnode: "<<nd->vid<<" "<<nd->tid<<endl;
         //for all the outgoing edges of the starting nodes; add all of them to the priority queue as "active" edges 
         for(FSedge* adj: fsgraph -> adj_list.at(nd)) {
-            cout<<"adj -> botlneck_val: "<<adj -> botlneck_val<<endl;
             /***********/
-            //only add edge for traversal of its bottle neck value is less than the graph's bottleneck --> ask lola about this 
+            //only add edge for traversal of its bottle neck value is less than the graph's bottleneck --> ask lola about this --> lola confirmed
             if(adj -> botlneck_val < fsgraph -> eps) {
+                cout<<"src corner: "<<adj->src->vid<<" "<<adj->src->tid<<endl;
+                cout<<"outgoing corner: "<<adj->trg->vid<<" "<<adj->trg->tid<<" adj -> botlneck_val: "<<adj -> botlneck_val<<endl;
                 double cost = edge_cost(adj, graph); //cost of the actual graph edge
-                distance[adj -> trg] = cost;
+                cout<<"cost in graph: src "<<adj->src->vid<<" trg "<<adj->trg->vid<<" cost "<<cost<<endl;
+                distance[adj -> trg] = cost; 
                 p = make_pair(adj, cost);
                 PQ.push(p);
             }
@@ -112,6 +120,7 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, FSpair final_p
         path.push(cur);
         cur = parent.at(cur);
     }
+    path.push(cur); // LH: need this for the starting node
 
     return path;
 }

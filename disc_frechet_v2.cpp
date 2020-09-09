@@ -107,7 +107,8 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
         auto it = fsgraph -> pair_dict.find(pair);
         // /* if (it -> visited){ } won't build this node nor edge */
         fedge -> trg = it -> second;
-        fedge -> trg -> parent = fsnd;
+        // it -> second -> parent = fsnd;
+        // fedge -> trg -> parent = fsnd;
 
         // fnd -> dist = fedge -> trg -> dist; 
 
@@ -117,14 +118,14 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
     fedge -> src = fsnd; ///and fix this
 
     //add to adjacency list here ... 
-    if(fsgraph -> adj_list.find(fsnd) == fsgraph -> adj_list.end()) {
-        cout << "ADJACENCY LIST NOT FOUND\n";
-    }
-    else {
+    // if(fsgraph -> adj_list.find(fsnd) == fsgraph -> adj_list.end()) {
+    //     cout << "ADJACENCY LIST NOT FOUND\n";
+    // }
+    // else {
         // cout << "FOUND ADJACENCY LIST\n";
         fsgraph -> adj_list.at(fsnd).push_back(fedge);
 
-    }
+    // }
 
     fedge -> botlneck_val = max(fedge -> trg -> dist, fsgraph -> eps); // the fnd.dist would be the same regardless the prior existence of this new corner
     fsgraph -> fsedges.push_back(fedge);
@@ -242,20 +243,23 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
 }
 
 double path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair) {
-    /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
+    
     FSnode* cur = fsgraph -> pair_dict.at(pair);
-    // FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
+
+
     double path_cost = 0;
     while(cur -> parent) {
+        cout << cur -> vid << " " << cur -> tid << endl;
+
         FSnode* cur_parent = cur -> parent;
-        int src_id =  cur_parent -> vid;
+        int src_id = cur_parent -> vid;
         int trg_id = cur -> vid;
         struct node src_node = graph -> nodes[src_id];
         struct node trg_node = graph -> nodes[trg_id];
         Euc_distance ed;
         double cost = ed.euc_dist(src_node.lat, src_node.longitude, trg_node.lat, trg_node.longitude, graph -> x_scale, graph -> y_scale);
         path_cost += cost;
-        cur = cur_parent;
+        cur = cur -> parent;
     }
     // cout<<"starting fs node: "<<endl;
     // cout<< cur -> tid<< ", " << cur -> vid << endl;

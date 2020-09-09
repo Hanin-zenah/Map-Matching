@@ -112,23 +112,12 @@ int main(int argc, char** argv) {
     FSpair pair = min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale);
     // write_fsgraph(&fsgraph, "fsgraph.dat");
     // write_sur_graph(&fsgraph, &after_graph, "sur_graph_frechet.dat");
-    // cout<<"finished printing survided graph"<<endl;
-    // cout<<path_cost(&fsgraph, &after_graph, pair)<<endl;
+    cout<<"finished printing survided graph"<<endl;
+    cout<<path_cost(&fsgraph, &after_graph, pair)<<endl;
 
     // cout<<"finished printing path"<<endl;
     // print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat", pair);
     // cout<<"finished writing out path"<<endl;
-    
-    /*****
-     * check why adj list is not working
-     *****/
-    // for(int i = 0; i < fsgraph.fsnodes.size(); i++) {
-    //     FSnode* nd = fsgraph.fsnodes[i];
-    //     // cout << nd -> vid << " " << nd -> tid ;
-    //     cout << "adj_ls size: " << fsgraph.adj_list.at(nd).size() << endl;
-
-    //     // int i = fsgraph.adj_list.find()
-    // }
 
     //run dijkstra on the freespace 
     stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph, traj.length);

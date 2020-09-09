@@ -6,6 +6,7 @@
 #include "trajectory_split.h"
 #include "starting_node_look_up.h"
 #include "freespace_shortest_path.h"
+#include <chrono>
 
 
 //print out the nodes that have the same tid and vid with different memory address
@@ -121,6 +122,7 @@ int main(int argc, char** argv) {
 
     //run dijkstra on the freespace 
     stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph, traj.length);
+
     
 
     //print? 

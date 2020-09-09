@@ -249,8 +249,6 @@ double path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair) {
 
     double path_cost = 0;
     while(cur -> parent) {
-        cout << cur -> vid << " " << cur -> tid << endl;
-
         FSnode* cur_parent = cur -> parent;
         int src_id = cur_parent -> vid;
         int trg_id = cur -> vid;

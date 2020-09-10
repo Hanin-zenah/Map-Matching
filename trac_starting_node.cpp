@@ -32,9 +32,9 @@ vector<FSedge*> SearchNodes(Graph* graph, Point* traj_nd, double radius, double 
             se -> trg = start_nd;
             se -> botlneck_val = dist;
             se_list.push_back(se);
-            if(se_list.size() == 2) {
-                break;
-            }
+            // if(se_list.size() == 2) {
+                // break;
+            // }
         }
     }
     sort(se_list.begin(), se_list.end(), compare_dist);

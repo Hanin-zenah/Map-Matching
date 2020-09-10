@@ -246,7 +246,6 @@ double path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair) {
     
     FSnode* cur = fsgraph -> pair_dict.at(pair);
 
-
     double path_cost = 0;
     while(cur -> parent) {
         FSnode* cur_parent = cur -> parent;
@@ -273,13 +272,10 @@ void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_na
     FSnode* cur = fsgraph -> pair_dict.at(pair);
     while(cur -> parent) {
         // path.push(cur);
-        file<< graph -> nodes[cur -> vid].lat <<" "<<graph -> nodes[cur -> vid].longitude
-        <<" "<<graph -> nodes[cur -> parent -> vid].lat <<" "<<graph -> nodes[cur -> parent -> vid].longitude<<endl;
+        file<< graph -> nodes[cur -> vid].longitude <<" "<<graph -> nodes[cur -> vid].lat
+        <<" "<<graph -> nodes[cur -> parent -> vid].longitude <<" "<<graph -> nodes[cur -> parent -> vid].lat<<endl;
         cur = cur -> parent;
     }
-    // path.push(cur);
-    file<< graph -> nodes[cur -> vid].lat <<" "<<graph -> nodes[cur -> vid].longitude
-    <<" "<<graph -> nodes[cur -> parent -> vid].lat <<" "<<graph -> nodes[cur -> parent -> vid].longitude<<endl;
     file.close();
     return;
 }
@@ -323,7 +319,7 @@ void write_sur_graph(FSgraph* fsgraph, Graph* graph, string file_name) {
 
 
         // file << source_tid<< " " << source_vid << " " << target_tid << " " << target_vid << endl; //what we wanted it to look like originally
-        file << src_lat<< " " << src_lon << " " << trg_lat << " " << trg_lon << endl; // what (Vi, Tj) should looks like
+        file << src_lon<< " " << src_lat << " " << trg_lon << " " << trg_lat << endl; // what (Vi, Tj) should looks like
     }
     file.close();
 }

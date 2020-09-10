@@ -134,7 +134,6 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m) {
 
     cout<<"shorter path length "<<cur ->dist<<endl;
     
-    
     //extract path 
     ofstream file("dijkstra_path.dat");
     while(cur) {
@@ -153,7 +152,7 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m) {
 // void print_dijk_path(stack<FSnode*> SP, Graph* graph, string file_name) {
     // ofstream file(file_name);
     // while(SP.size()>0) {
-        path.push(cur);
+        // path.push(cur);
         // cout<<SP.size();
         // FSnode* cur = SP.top();
         // SP.pop();

@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    /* read graph from given file */
+    // /* read graph from given file */
     // Graph graph = GRAPH_INIT;
     // read_file(argv[1], &graph);
     
@@ -64,14 +64,14 @@ int main(int argc, char** argv) {
     // cout<< "y_scale: "<<y_scale<<endl;
     // ed.calc_edge_cost(&graph, x_scale, y_scale);
 
-
+// 
     /* strongly connected componetns */
     // Graph SCC_graph = GRAPH_INIT;
     // scc_graph(&graph, &SCC_graph);
     // /* sub sampling */
     //  cout<<"done scc graph"<<endl;
-// 
-    // graph_edge_cost(&SCC_graph, "scc_graph_for_hist.dat");
+
+    // graph_edge_cost(&SCC_graph, "scc_graph_for_hist_y_x.dat");
     // subsampling(&SCC_graph, 40);
     // output_graph(&SCC_graph, "no_lookup_all_subsampled_scc_40.txt", x_scale, y_scale);
     //  cout<<"done subsampling graph"<<endl;
@@ -87,24 +87,24 @@ int main(int argc, char** argv) {
     Graph after_graph = GRAPH_INIT;
     read_processed_graph(argv[1], &after_graph);
     write_graph(&after_graph, "saarland_all_with_sub.dat");
-// 
-    // cout<<"in saarland_all_with_sub.dat"<<endl;
-// 
+
+    cout<<"in saarland_all_with_sub.dat"<<endl;
+
     double lat_min = after_graph.original_min_lat;
     double lon_min = after_graph.original_min_long;
     double x_scale = after_graph.x_scale;
     double y_scale = after_graph.y_scale;
-    // cout<<"in the after graph: "<<lat_min<<" "<<lon_min<<" "<<x_scale<<" "<<y_scale<<endl;
+    cout<<"in the after graph: "<<lat_min<<" "<<lon_min<<" "<<x_scale<<" "<<y_scale<<endl;
  
-    vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 2, lon_min, lat_min);
-    Trajectory traj = trajs[1];
+    vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
+    Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];
     
-    // cout << "finished extracting the trajectory\n";
+    cout << "finished extracting the trajectory\n";
     calc_traj_edge_cost(&traj, x_scale, y_scale);
 
     subsample_traj(&traj, 15);
-    // cout << "length of trajectory :"<< traj.length << endl;
+    cout << "length of trajectory :"<< traj.length << endl;
 
     write_traj(&traj, "traj_frechet_with_sub.dat");
     cout << "finished subsampling the trajectory\n";
@@ -112,23 +112,24 @@ int main(int argc, char** argv) {
 
     FSgraph fsgraph = FSGRAPH_INIT; 
     vector<FSedge*> nodes_within_dist = SearchNodes(&after_graph, traj_nd, 40, x_scale, y_scale);//&SCC_graph
-    // cout<<"number nearest nodes: "<<nodes_within_dist.size()<<endl;
+    cout<<"number nearest nodes: "<<nodes_within_dist.size()<<endl;
 
-    FSpair last_pair = min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale);
+    FSpair last_pair = min_eps(&after_graph, &traj, &fsgraph, 1000, x_scale, y_scale);
+    cout<<"final fsgraph.eps: "<<fsgraph.eps<<endl;
     write_fsgraph(&fsgraph, "fsgraph.dat");
     write_sur_graph(&fsgraph, &after_graph, "sur_graph_frechet.dat");
     cout<<"finished printing survided graph"<<endl;
     cout<<path_cost(&fsgraph, &after_graph, last_pair)<<endl;
-
+// 
     cout<<"finished printing path"<<endl;
     print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat", last_pair);
     cout<<"finished writing out path"<<endl;
-
-    //run dijkstra on the freespace 
-    stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph, traj.length);
+// 
+    // /* run dijkstra on the freespace */
+    // stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph, traj.length);
 
     // print_dijk_path(SP, &after_graph, "dijkstra_path.dat");
-
+// 
     
 
     // cout<<"number of Tid= 0: "<<t_zeros.size()<<endl;
@@ -143,7 +144,7 @@ int main(int argc, char** argv) {
 // 
     // print? 
 // 
-    cleanup(&fsgraph);
-    cleanup_trajectory(&traj);
+    // cleanup(&fsgraph);
+    // cleanup_trajectory(&traj);
     return 0;
 }

@@ -37,3 +37,5 @@ FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m, unordered_map<FSnode*, F
 /* returns the shortest matching path of the freespace */
 stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m);
 
+void print_dijk_path(stack<FSnode*> SP, Graph* graph, string file_name);
+

@@ -243,9 +243,7 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
 }
 
 double path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair) {
-    
     FSnode* cur = fsgraph -> pair_dict.at(pair);
-
     double path_cost = 0;
     while(cur -> parent) {
         FSnode* cur_parent = cur -> parent;
@@ -258,17 +256,12 @@ double path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair) {
         path_cost += cost;
         cur = cur -> parent;
     }
-    // cout<<"starting fs node: "<<endl;
-    // cout<< cur -> tid<< ", " << cur -> vid << endl;
     return path_cost;
 }
 
 
 void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name, FSpair pair) {
     ofstream file(file_name);
-    // stack<FSnode*> path;
-    /* start with the last node in the fsnodes vector (last built node = the upper right corner of the freespace graph) */
-    // FSnode* cur = fsgraph -> fsnodes[fsgraph ->fsnodes.size() - 1];
     FSnode* cur = fsgraph -> pair_dict.at(pair);
     while(cur -> parent) {
         // path.push(cur);

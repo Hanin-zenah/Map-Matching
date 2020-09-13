@@ -92,8 +92,8 @@ int main(int argc, char** argv) {
     double y_scale = after_graph.y_scale;
     // cout<<"in the after graph: "<<lat_min<<" "<<lon_min<<" "<<x_scale<<" "<<y_scale<<endl;
  
-    vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1, lon_min, lat_min);
-    Trajectory traj = trajs[0];
+    vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 3, lon_min, lat_min); //trajectory no.3 has 5713 points
+    Trajectory traj = trajs[2];
     Point* traj_nd = traj.points[0];
     
     // cout << "finished extracting the trajectory\n";
@@ -102,7 +102,7 @@ int main(int argc, char** argv) {
     subsample_traj(&traj, 15);
     // cout << "length of trajectory :"<< traj.length << endl;
 
-    write_traj(&traj, "traj_frechet_with_sub.dat");
+    // write_traj(&traj, "traj_frechet_with_sub.dat");
     // cout << "finished subsampling the trajectory\n";
 
     // QH: make a prompt for the radius???
@@ -110,20 +110,31 @@ int main(int argc, char** argv) {
     // vector<FSedge*> nodes_within_dist = SearchNodes(&after_graph, traj_nd, 40, x_scale, y_scale);//&SCC_graph
     // cout<<"number nearest nodes: "<<nodes_within_dist.size()<<endl;
 
+    //change the initial radius  
     FSpair pair = min_eps(&after_graph, &traj, &fsgraph, 40, x_scale, y_scale);
     // write_fsgraph(&fsgraph, "fsgraph.dat");
     // write_sur_graph(&fsgraph, &after_graph, "sur_graph_frechet.dat");
-    cout<<"finished printing survided graph"<<endl;
-    cout<<path_cost(&fsgraph, &after_graph, pair)<<endl;
+    // cout<<"finished printing survided graph"<<endl;
+    // cout<<path_cost(&fsgraph, &after_graph, pair)<<endl;
 
     // cout<<"finished printing path"<<endl;
-    print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat", pair);
+    // print_path(&fsgraph, &traj, &after_graph, "frechet_path.dat", pair);
     // cout<<"finished writing out path"<<endl;
 
-    //run dijkstra on the freespace 
-    stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph, traj.length);
 
-    //print? 
+
+
+    // auto t1 = chrono::high_resolution_clock::now();
+
+    // //run dijkstra on the freespace 
+    stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph, traj.length);
+    // auto t2 = chrono::high_resolution_clock::now();
+
+
+    // auto duration = chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+
+    // cout << "Duration in millisecs: " << duration << endl;
+    
 
     cleanup(&fsgraph);
     cleanup_trajectory(&traj);

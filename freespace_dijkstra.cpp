@@ -130,7 +130,7 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m) {
     }
     cur ->dist = distance.at(cur);
 
-    // cout<<"shorter path length "<<cur ->dist<<endl;
+    cout<<"shorter path length "<<cur ->dist<<endl;
     
     //extract path 
     while(cur) {
@@ -140,6 +140,12 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m) {
 
     return path;
 }
+
+// void print_sp(stack<FSnode*>& path, Graph* graph) {
+//     FSnode* cur = path.top();
+//     path.pop();
+//     FSnode* next = 
+// }
 
 /* note to self: 
     we are storing the edges in the priority queue so we dont have to deal with decrease_key operation of the nodes evey single time we update the distance */

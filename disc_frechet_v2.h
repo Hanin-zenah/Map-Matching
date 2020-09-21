@@ -24,8 +24,12 @@ typedef struct fsnode {
     int vid;
     int tid;
     double dist;
+    double sp_dist;
     bool visited;
+    bool settled;
     struct fsnode* parent;
+    struct fsnode* sp_parent;
+    
 } FSnode;
 
 
@@ -79,6 +83,7 @@ typedef struct fsgraph {
     unordered_map<FSnode*, vector<FSedge*>, keyNodeHash> adj_list;
     vector<FSnode*> fsnodes;// can be changed to pointers?? only used them to count the number of nodes/edges in the FSgraph so far
     vector<FSedge*> fsedges;
+    vector<FSnode*> source_set;
 } FSgraph;
 
 

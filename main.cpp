@@ -70,17 +70,21 @@ int main(int argc, char** argv) {
     Graph SCC_graph = GRAPH_INIT;
     scc_graph(&graph, &SCC_graph);
 
+    cout << "number of nodes: " << SCC_graph.n_nodes << endl;
+    cout << "number of edges: " << SCC_graph.n_edges << endl;
+
+
     // cout << get_average_cost(&SCC_graph) << endl;
-    cout << get_above_k(&graph) << endl;
+    // cout << get_above_k(&graph) << endl;
 
     //sub sampling 
-    auto start = high_resolution_clock::now(); 
-    subsampling(&graph, 100);
-    auto stop = high_resolution_clock::now();
+    // auto start = high_resolution_clock::now(); 
+    // subsampling(&graph, 100);
+    // auto stop = high_resolution_clock::now();
 
-    auto duration = duration_cast<microseconds>(stop - start);
-    cout << "Time taken by function: "
-         << duration.count() << " microseconds" << endl; 
+    // auto duration = duration_cast<microseconds>(stop - start);
+    // cout << "Time taken by function: "
+    //      << duration.count() << " microseconds" << endl; 
 
     return 0;
 }

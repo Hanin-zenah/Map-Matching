@@ -1,34 +1,5 @@
 #include "freespace_shortest_path.h"
 
-
-/* note: check why shortest path is not connected
-    - dijkstra? 
-    - writing it to the file? 
-    - adjacency list presentation? 
-    - building the free space? 
-*/
-
-/*
-edit algo: 
-no need for parent, distance map ==> just add it to the node field 
-add parent as soon as a node is marked visited 
-make source set when building the free space graph 
-
-possibely: change dijkstra to add super edges with distance 0 for initialization 
-*/
-
-/* change this to return the starting nodes with tid 0 AND distance <= radius within the first trajectory point? */
-vector<FSnode*> get_corresponding_FSnodes(FSgraph* fsgraph, int tid) {
-    //looping through all the nodes in the free space and fetching those 
-    vector<FSnode*> candidates;
-    for(int i = 0; i < fsgraph -> fsnodes.size(); i++) {
-        if(fsgraph -> fsnodes[i]->tid == tid) {
-            candidates.push_back(fsgraph->fsnodes[i]);
-        }
-    }
-    return candidates;
-}
-
 double edge_cost(FSedge* fedge, Graph* graph) {
     int src_id = fedge -> src -> vid;
     int trg_id = fedge -> trg -> vid;
@@ -39,15 +10,6 @@ double edge_cost(FSedge* fedge, Graph* graph) {
     double y_scale = graph -> y_scale;
     double cost = ed.euc_dist(src_node.lat, src_node.longitude, trg_node.lat, trg_node.longitude, graph -> x_scale, graph -> y_scale);
     return cost;
-}
-
-bool found_fsnode(FSgraph* fsgraph, FSnode* node) {
-    for(FSnode* cur: fsgraph -> fsnodes) {
-        if(node == cur) {
-            return true;
-        }
-    }
-    return false;
 }
     
 FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m,
@@ -63,6 +25,7 @@ FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m,
             continue;
         }
         org_trg -> settled = true;
+        org_trg -> sp_parent = src;
 
         //stop the loop whenever the last corner (target) is reached (ie any corner with tid = last node of trajectory)
         if(org_trg -> tid == m - 1) {
@@ -77,18 +40,8 @@ FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m,
                     trg_pair.first = adj -> trg -> vid;
                     trg_pair.second = adj -> trg -> tid;
                     if((org_trg -> sp_dist + cost) < adj -> trg -> sp_dist) {
-
                         adj -> trg -> sp_dist = org_trg -> sp_dist + cost;
-                        // parent[adj -> trg] = org_trg;
-                        adj -> trg -> sp_parent = org_trg;
-
-                        // //if trg is target node ; break
-                        // if(adj -> trg -> tid == m - 1) {
-                        //     return adj -> trg;
-                        // }
-
-                        //only pushing if distance is smaller //no need to push edge if distance is larger 
-                        // p = make_pair(adj, distance.at(adj -> trg));
+                        // adj -> trg -> sp_parent = org_trg;
                         p = make_pair(adj, adj -> trg -> sp_dist);
                         PQ.push(p);
                     }
@@ -101,36 +54,20 @@ FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m,
 }
 
 stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m) {
-    // unordered_map<FSnode*, FSnode*, KeyHash> parent;
-    // unordered_map<FSnode*, double, KeyHash> distance;
-
     priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq> PQ; //stores nodes for now, later can change to store only edges 
-    // vector<FSnode*> source_set = get_corresponding_FSnodes(fsgraph, 0);
-
-    //initialize data for dijkstra
-    // for(FSnode* cur_nd: fsgraph -> fsnodes) {
-    //     cur_nd -> visited = false;
-    //     parent[cur_nd] = NULL;
-    //     distance[cur_nd] = INF_D;
-    // }
-
     for(FSnode* source: fsgraph -> source_set) {
-        // distance[source] = 0;
         source -> sp_dist = 0;
     }
     pair<FSedge*, double> p;
+    // ---------------------------
+    // improve:::: add super edges in the PQ with cost 0 ==> run dijkstra regularly instead of doing the same first step here 
+    // ---------------------------
     for(FSnode* nd: fsgraph -> source_set) {
         //for all the outgoing edges of the starting nodes; add all of them to the priority queue as "active" edges 
         for(FSedge* adj: fsgraph -> adj_list.at(nd)) {
             //only add edge for traversal of its bottle neck value is less than (or equal to) the graph's bottleneck
             if(adj -> botlneck_val <= fsgraph -> eps) {
                 double cost = edge_cost(adj, graph); //cost of the actual graph edge
-                // if(distance.at(adj -> trg) > cost) {
-                //     distance[adj -> trg] = cost;
-                //     parent[adj -> trg] = adj -> src;
-                //     p = make_pair(adj, cost);
-                //     PQ.push(p);
-                // }
                 if(adj -> trg -> sp_dist > cost) {
                     adj -> trg -> sp_dist = cost;
                     adj -> trg -> sp_parent = adj -> src;
@@ -150,17 +87,14 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m) {
         cerr << "Dijkstra Failed; returned NULL\n";
         return path;
     }
-    // cur ->dist = distance.at(cur);
-
     cout<<"shorter path length "<< cur -> sp_dist <<endl;
     
     //extract path 
     ofstream file("dijkstra_path.dat");
     while(cur -> sp_parent) {
         path.push(cur);
-        file<< graph -> nodes[cur -> vid].lat <<" "<<graph -> nodes[cur -> vid].longitude
-        <<" "<<graph -> nodes[cur -> sp_parent -> vid].lat <<" "<<graph -> nodes[cur -> sp_parent -> vid].longitude<<endl;
-        // cur = parent.at(cur); 
+        file << graph -> nodes[cur -> vid].lat << " " << graph -> nodes[cur -> vid].longitude
+        << " " << graph -> nodes[cur -> sp_parent -> vid].lat <<" "<< graph -> nodes[cur -> sp_parent -> vid].longitude<<endl;
         cur = cur -> sp_parent;  
     }
 
@@ -178,7 +112,7 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m) {
         // FSnode* cur = SP.top();
         // SP.pop();
         // file<< graph -> nodes[cur -> vid].lat <<" "<<graph -> nodes[cur -> vid].longitude
-        // <<" "<<graph -> nodes[cur -> parent -> vid].lat <<" "<<graph -> nodes[cur -> parent -> vid].longitude<<endl;
+        // <<" "<<graph -> nodes[cur -> sp_parent -> vid].lat <<" "<<graph -> nodes[cur -> sp_parent -> vid].longitude<<endl;
     // }
     // file.close();
     // return;
@@ -186,7 +120,6 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m) {
 
 /* note to self: 
     we are storing the edges in the priority queue so we dont have to deal with decrease_key operation of the nodes evey single time we update the distance */
-
 /* 
 speedup: 
 use bidirectional dijkstra

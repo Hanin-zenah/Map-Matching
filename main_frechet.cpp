@@ -115,7 +115,7 @@ int main(int argc, char** argv) {
     double y_scale = after_graph.y_scale;
     // cout<<"in the after graph: "<<lat_min<<" "<<lon_min<<" "<<x_scale<<" "<<y_scale<<endl;
  
-    vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 2, lon_min, lat_min); //trajectory no.3 has 5713 points
+    vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 10, lon_min, lat_min); //trajectory no.3 has 5713 points
     // for(int i = 0; i < 10; i++) {
     //     Trajectory traj = trajs[i];
     //     Point* traj_nd = traj.points[0];

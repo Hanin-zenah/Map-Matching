@@ -78,7 +78,7 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m) {
             nd -> settled = true;
         }
     }
-
+    // cout << "initialized data for dijkstra\n";
     //ready to run dijkstra
     FSnode* cur = dijkstra(fsgraph, graph, m, PQ);
     stack<FSnode*> path;

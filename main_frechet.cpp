@@ -107,7 +107,7 @@ int main(int argc, char** argv) {
     read_processed_graph(argv[1], &after_graph);
     write_graph(&after_graph, "saarland_all_with_sub.dat");
 
-    // cout<<"in saarland_all_with_sub.dat"<<endl;
+    // cout<<"number of nodes and edges in graph after scc: "<<after_graph.n_nodes<<" "<<after_graph.n_edges<<endl;
 
     double lat_min = after_graph.original_min_lat;
     double lon_min = after_graph.original_min_long;

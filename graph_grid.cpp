@@ -9,9 +9,9 @@
 
 void initialize_cells(Graph* graph, Grid* grid, double size){
     
-    grid -> rows = ceil(graph -> max_long/size);
-    grid -> columns = ceil(graph -> max_lat/size);
-    for (int i = 0; i < grid -> rows * grid -> columns; i++){
+    grid -> num_rows = ceil(graph -> max_long/size);
+    grid -> num_columns = ceil(graph -> max_lat/size);
+    for (int i = 0; i < grid -> num_rows * grid -> num_columns; i++){
         Cell* c = (Cell*) malloc(sizeof(Cell));
         c -> cell_id = i;
         c -> nodes_count = 0;
@@ -28,7 +28,7 @@ void make_grids(Graph* graph, Grid* grid, double size){
     for (int i = 0; i < graph -> nodes.size(); i++){
         int col = floor(graph -> nodes[i].lat/size); // floor this, cuz cell id starts with zero!
         int row = floor(graph -> nodes[i].longitude/size);
-        int index = grid -> columns * row + col;
+        int index = grid -> num_columns * row + col;
         // cout<<"i: "<< i <<" graph -> nodes[i].id: "<< graph -> nodes[i].id <<" graph -> nodes[i].lat: "<< graph -> nodes[i].lat<<endl;
         // cout<<"row: "<<row<<" col: "<<col<<" index: "<<index<<endl;
         grid -> cells[index] -> nodes_count++;
@@ -50,7 +50,7 @@ void make_grids(Graph* graph, Grid* grid, double size){
     for (int i = 0; i < graph -> nodes.size(); i++){
     int col = floor(graph -> nodes[i].lat/size);
     int row = floor(graph -> nodes[i].longitude/size);
-    int index = grid -> columns * row + col;
+    int index = grid -> num_columns * row + col;
     int pos = grid -> cell_offsets[index];
 
     // int pos2 = grid -> cell_offsets[index + 1];

@@ -1,12 +1,12 @@
 #include "disc_frechet_v2.h"
 #include "starting_node_look_up.h"
 
-double nodes_dist(struct node g_nd, Point* t_nd, double x_scale, double y_scale) {
-    double dist = sqrt(pow((t_nd -> latitude - g_nd.lat)*x_scale, 2.0) + pow((t_nd -> longitude - g_nd.longitude)*y_scale, 2.0));
+double nodes_dist(struct node g_nd, Point* t_nd) {
+    double dist = sqrt(pow((t_nd -> latitude - g_nd.lat), 2.0) + pow((t_nd -> longitude - g_nd.longitude), 2.0));
     return dist;
 }
 
-bool found_fsnode_vec(FSgraph* fsgraph, FSnode* node) { // this was just for testing::: do we still need it? 
+bool found_fsnode_vec(FSgraph* fsgraph, FSnode* node) {
     for(FSnode* cur: fsgraph -> fsnodes) {
         if(node == cur) {
             return true;
@@ -22,20 +22,15 @@ void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super
         super_edges.pop_back();
         FSnode* fnd_b = fedge_b -> trg;
         fnd_b -> parent = NULL;
-        fnd_b -> sp_parent = NULL; 
-        fnd_b -> settled = false; 
-        fnd_b -> sp_dist = INFINITY;
         FSpair back_up_pair; // = {fnd.vid, fnd.tid};
         back_up_pair.first = fnd_b -> vid;
         back_up_pair.second = fnd_b -> tid;
         // cout<<"back_up_ pair: "<<back_up_pair.first<<"  " <<back_up_pair.second<<endl;
         fsgraph -> pair_dict[back_up_pair] = fnd_b;
-        // if(!found_fsnode_vec(fsgraph, fnd_b)) { 
-        //     cout << "HELLOOO\n";
-        //     fsgraph -> fsnodes.push_back(fnd_b);
-        // }
-        fsgraph -> fsnodes.push_back(fnd_b);
-        fsgraph -> source_set.push_back(fnd_b);
+        if(!found_fsnode_vec(fsgraph, fnd_b)) {
+            fsgraph -> fsnodes.push_back(fnd_b);
+        }
+        // fsgraph -> fsnodes.push_back(fnd_b);
         vector<FSedge*> vec;
         fsgraph -> adj_list[fnd_b] = vec;
     }
@@ -66,13 +61,16 @@ FSnode* travel_reachable(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge
         back_up_se(fsgraph, Stack, super_edges);
     }
     return next_nd;
-}
+    }
 
-double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right, double x_scale, double y_scale) {
+double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right) {
     // FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
     FSedge* fedge = (FSedge*) malloc(sizeof(FSedge));
 
-    FSpair pair;
+    FSpair pair; // = {fnd.vid, fnd.tid};
+    // pair.first = fnd -> vid;
+    // pair.second = fnd -> tid;
+
     if(up == 0) {
         pair.first = fsnd -> vid;
         // fnd -> vid = fsnd -> vid;
@@ -93,10 +91,8 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
         fnd -> vid = pair.first; 
         fnd -> tid = pair.second;
         fnd -> visited = false; 
-        fnd -> settled = false; 
-        fnd -> sp_dist = INFINITY;
-        fnd -> sp_parent = NULL;
-        fnd -> dist = nodes_dist(graph -> nodes[fnd -> vid], traj -> points[fnd -> tid], graph -> x_scale, graph -> y_scale); //error is here
+        fnd -> reachable = false; 
+        fnd -> dist = nodes_dist(graph -> nodes[fnd -> vid], traj -> points[fnd -> tid]); //error is here
         
         fnd -> parent = fsnd; //QH
 
@@ -106,9 +102,6 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
         fedge -> trg = fnd; 
         vector<FSedge*> vec;
         fsgraph -> adj_list[fnd] = vec;
-        if(fnd -> tid == 0) {
-            fsgraph -> source_set.push_back(fnd);
-        }
     }
     else { 
          // /* pair already exists on graph */
@@ -144,20 +137,20 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
 
 FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner, 
                          priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, 
-                         stack <FSedge*>& Stack, vector<FSedge*>& super_edges, double x_scale, double y_scale) {
+                         stack <FSedge*>& Stack, vector<FSedge*>& super_edges) {
     auto it = fsgraph -> pair_dict.find(corner);
     FSnode* fnd = it -> second;
     vector<int> incidents = get_incident(graph, fnd -> vid);
     vector<double> btl_neck_vals; 
-    double eps = build_node(fsgraph, graph, traj, fnd, fnd -> vid, 0, 1, x_scale, y_scale);
+    double eps = build_node(fsgraph, graph, traj, fnd, fnd -> vid, 0, 1);
     //fsgraph
     btl_neck_vals.push_back(eps); // QH: maybe we can sort this and make the diagonal ones always traverse last?
     // cout<<"incidents.size(): "<<incidents.size()<<endl;
     for(int i = 0; i < incidents.size(); i++) {
         int neighbour_id  = incidents[i];
-        double eps1 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 1, x_scale, y_scale); // build diagonal node //change to return edges 
+        double eps1 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 1); // build diagonal node //change to return edges 
         btl_neck_vals.push_back(eps1);
-        double eps2 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 0, x_scale, y_scale); //build upwards node 
+        double eps2 = build_node(fsgraph, graph, traj, fnd, neighbour_id, 1, 0); //build upwards node 
         btl_neck_vals.push_back(eps2);
     }
 
@@ -204,15 +197,18 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
     return next_fspair;
 }
        
-FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, double x_scale, double y_scale) {
+FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius) {
     int m = traj -> length;
+
+    // FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
+    // FSedge* fedge = (FSedge*) malloc(sizeof(FSedge));
     priority_queue<FSedge*, vector<FSedge*>, Comp_eps> bigger_eps;
     stack <FSedge*> Stack;
     /*
      * find the initial closest nodes to the first point in the trajectory
      * sorted by descending distance 
      */
-    vector<FSedge*> super_edges = SearchNodes(graph, traj -> points[0], radius, x_scale, y_scale);
+    vector<FSedge*> super_edges = SearchNodes(graph, traj -> points[0], radius);
     if(super_edges.empty()) {
         cerr << "Nothing within the required distance"<<endl;
         // return -1;
@@ -221,12 +217,8 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     fsgraph -> eps = fedge -> botlneck_val;
     FSnode* fnd = fedge -> trg;
     fnd -> visited = true;
-    fnd -> settled = false;
     fnd -> parent = NULL;
-    fnd -> sp_parent = NULL;
-    fnd -> sp_dist = INFINITY;
     fsgraph -> fsnodes.push_back(fnd);
-    fsgraph -> source_set.push_back(fnd);
     super_edges.pop_back();
     FSpair pair; // = {fnd.vid, fnd.tid};
     pair.first = fnd -> vid;
@@ -235,13 +227,15 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, 
     fsgraph -> pair_dict[pair] = fnd;
     vector<FSedge*> vec;
     fsgraph -> adj_list[fnd] = vec;
+
     back_up_se(fsgraph, Stack, super_edges);
     bool finished = false;
+    
     int i = 0;
     while (!finished) {
-        pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, super_edges, x_scale, y_scale);
+        pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, super_edges);
         // cout<<"adj list empty?"<<fsgraph->adj_list.size()<<endl;
-        // cout<<"current eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
+        cout<<"current eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
         i++;
         finished = (pair.second >= m - 1);
         
@@ -259,7 +253,7 @@ double path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair) {
         struct node src_node = graph -> nodes[src_id];
         struct node trg_node = graph -> nodes[trg_id];
         Euc_distance ed;
-        double cost = ed.euc_dist(src_node.lat, src_node.longitude, trg_node.lat, trg_node.longitude, graph -> x_scale, graph -> y_scale);
+        double cost = ed.euc_dist(src_node.lat, src_node.longitude, trg_node.lat, trg_node.longitude);
         path_cost += cost;
         cur = cur -> parent;
     }

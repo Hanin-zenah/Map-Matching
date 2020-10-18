@@ -28,8 +28,8 @@ typedef struct cell_node {
 } Cell_node;
 
 typedef struct grid {
-    int rows;
-    int columns;
+    int num_rows;
+    int num_columns;
     int size;
 
     int target_cell_idx;

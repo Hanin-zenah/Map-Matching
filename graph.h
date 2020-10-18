@@ -46,8 +46,8 @@ typedef struct graph {
     double original_max_lat;
     double original_max_long;
 
-    double x_scale;
-    double y_scale;
+    double lat_scale;
+    double lon_scale;
 
     vector<struct node> nodes;
     vector<struct edge> edges;
@@ -118,6 +118,6 @@ int binary_search_node(int node_id, Graph* graph);
 void scc_graph(Graph* graph, Graph* scc_graph);
 
 /* outputs a graph to a text file*/
-void output_graph(Graph* graph, string file_name, double x_scale, double y_scale);
+void output_graph(Graph* graph, string file_name, double lat_scale, double lon_scale, double lat_min, double lat_max, double lon_min, double lon_max);
 
 #endif

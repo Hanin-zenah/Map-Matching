@@ -69,16 +69,7 @@ void read_file(string file_name, Graph* graph) {
     }
 
     //write a .dat file containing the graph's longitude and latitude coordinates
-    write_graph(graph, "graph_lat_lon.dat");
-
-    Euc_distance ed;
-
-    //overwrite the node's coordinates in mercator projection
-    for(int i = 0; i < graph -> n_nodes; i++) {
-        graph -> nodes[i].lat = ed.lat_mercator_proj(graph -> nodes[i].lat, graph -> min_lat);
-        graph -> nodes[i].longitude = ed.lon_mercator_proj(graph -> nodes[i].longitude, graph -> min_long);
-    }
-    write_graph(graph, "graph_x_y.dat");
+    write_graph(graph, "graph_lat_lon.dat");   
 
     file.close();
 
@@ -90,6 +81,18 @@ void read_file(string file_name, Graph* graph) {
     
     return;
 }
+
+// void convert_coordinates(Graph* graph, double x_scale, double y_scale){
+    // Euc_distance ed;
+    // overwrite the node's coordinates in mercator projection
+    // for(int i = 0; i < graph -> n_nodes; i++) {
+        // graph -> nodes[i].lat = ed.lat_mercator_proj(graph -> nodes[i].lat, graph -> min_lat);
+        // graph -> nodes[i].longitude = ed.lon_mercator_proj(graph -> nodes[i].longitude, graph -> min_long);
+    // }
+    // write_graph(graph, "graph_x_y.dat");
+// 
+    // return;
+    // }
 
 
 void read_processed_graph(string file_name, Graph* graph) {
@@ -109,8 +112,8 @@ void read_processed_graph(string file_name, Graph* graph) {
         // getline(file, buffer);
     // }
     /* read the total number of nodes and edges, store them in graph struct */
-    file >> graph -> n_nodes >> graph -> n_edges >> graph -> x_scale >> graph -> y_scale>>
-     graph -> original_min_lat >> graph -> original_min_long >> graph -> original_max_lat >> graph -> original_max_long;
+    file >> graph -> n_nodes >> graph -> n_edges >> graph -> lat_scale >> graph -> lon_scale>>
+     graph -> original_min_lat >> graph -> original_max_lat >> graph -> original_min_long >> graph -> original_max_long;
 
     /* now read everything
        read line into buffer, scan line number, osmid, lat, long, .. (keep what matters) */
@@ -403,23 +406,20 @@ void scc_graph(Graph* graph, Graph* SCC_graph) {
     outedge_offset_array(SCC_graph);
 }
 
-void output_graph(Graph* graph, string file_name, double x_scale, double y_scale) {
+void output_graph(Graph* graph, string file_name, double lat_scale, double lon_scale, 
+double lat_min, double lat_max, double lon_min, double lon_max) {
     vector<struct node> all_nodes = graph -> nodes;
     vector<struct edge> all_edges = graph -> edges;
-    // vector<int> out_off_edges = graph -> out_off_edges;
-    // vector<int> out_offsets = graph -> out_offsets;
-    // vector<int> in_off_edges = graph -> in_off_edges;
-    // vector<int> in_offsets = graph -> in_offsets;
 
     ofstream txt_file(file_name);
     txt_file << all_nodes.size() << endl;
     txt_file << all_edges.size() << endl;
-    txt_file << x_scale << endl;
-    txt_file << y_scale << endl;
-    txt_file << graph -> min_lat << endl;
-    txt_file << graph -> min_long << endl;
-    txt_file << graph -> max_lat << endl;
-    txt_file << graph -> max_long << endl;
+    txt_file << lat_scale << endl;
+    txt_file << lon_scale << endl;
+    txt_file << lat_min << endl;
+    txt_file << lat_max << endl;
+    txt_file << lon_min << endl;
+    txt_file << lon_max << endl;
 
 
     for(int i = 0; i < all_nodes.size(); i++) {

@@ -30,7 +30,9 @@ vector<int> get_node_ids(Grid* grid, int col, int row, int range);
 
 vector<FSedge*> GridSearch(Graph* graph, Grid* grid, Point* traj_nd);
 
-vector<int> index_list(Grid* grid);
+int next_closest_node(vector<int> PQ);
+
+vector*<int> nodes_in_range(double radius);
 
 vector<int> pos_list(Grid* grid);
 

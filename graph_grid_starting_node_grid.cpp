@@ -42,7 +42,15 @@ bool compare_dist(FSedge* sp1, FSedge* sp2) {
 // }
 
 
+
+
+
+
+
+
+
 bool available_nodes(Grid* grid, int col, int row, int range){
+    vector<int> ids;
     int left = max(0, col - range);
     int right = min(grid -> num_columns - 1, col + range);
     int upper = max(0, row - range);
@@ -53,24 +61,93 @@ bool available_nodes(Grid* grid, int col, int row, int range){
     int num_rows = grid -> num_rows;
     // cout<<"in available_nodes()  "<<left<<" "<<right<<" "<<upper<<" "<<lower<<endl;
   
-    bool has_nodes = false;
-    for (int i = 0; i < min(2 * range + 1, num_rows - upper) ; i++){
-        starting_idx = num_columns * (upper + i) + left;
-        ending_idx = num_columns * (upper + i) + right;
-        // cout<<"in available_nodes()   starting_idx, ending_idx: "<<starting_idx<<" "<<ending_idx<<endl;
-            // for (int j = starting_idx; j <= ending_idx, j++){      // check if I want just "<" or "<="
-        int pos1 = grid -> cell_offsets[starting_idx];
-        int pos2 = grid -> cell_offsets[ending_idx + 1];
-        // cout<<"at "<<i<<" "<<"pos2 and pos 1 "<<pos2<<" "<<pos1<<endl;
-            if (pos2 > pos1){
-                has_nodes = true;
-                break;
+    vector<int> cell_indices;
+    /* horizontal top */
+    starting_idx = num_columns * upper + left;
+    ending_idx = num_columns * upper + right;
+    // for (int i = starting_idx; i <= ending_idx +1; i++){
+        // cell_indices.pushback(i);
+    // }
+    int pos1 = grid -> cell_offsets[starting_idx];
+    int pos2 = grid -> cell_offsets[ending_idx + 1]; 
+    if (pos2 > pos1){
+        for (int k = pos1; k < pos2; k++){
+                int nd_id = grid -> nodes_ids[k];
+
+                ids.push_back(nd_id);
             }
-    }
-return has_nodes;
+            }
+
+    /* horizontal bottom */
+    starting_idx = num_columns * lower + left;
+    ending_idx = num_columns * lower + right;
+    int pos1 = grid -> cell_offsets[starting_idx];
+    int pos2 = grid -> cell_offsets[ending_idx + 1]; 
+    if (pos2 > pos1){
+    for (int k = pos1; k < pos2; k++){
+            int nd_id = grid -> nodes_ids[k];
+            ids.push_back(nd_id);
+        }
+        }
+
+    /* vertical left */
+    for (int i = 1; i <= lower - upper - 1; i++){
+    starting_idx = (num_columns * upper + i)  + left;
+    cell_indices.pushback(starting_idx);
+        for (int j = 0; j < cell_indices.size(); j++){
+            int pos1 = grid -> cell_offsets[j];
+            int pos2 = grid -> cell_offsets[j+ 1]; 
+            if (pos2 > pos1){
+                for (int k = pos1; k < pos2; k++){
+                    int nd_id = grid -> nodes_ids[k];
+                    ids.push_back(nd_id);
+                }}}}
+    
+    /* vertical right */
+    for (int i = 1; i <= lower - upper - 1; i++){
+    ending_idx = (num_columns * upper + i)  + right;
+    cell_indices.pushback(ending_idx);
+    for (int j = 0; j < cell_indices.size(); j++){
+        int pos1 = grid -> cell_offsets[j];
+        int pos2 = grid -> cell_offsets[j+ 1]; 
+        if (pos2 > pos1){
+            for (int k = pos1; k < pos2; k++){
+                int nd_id = grid -> nodes_ids[k];
+                ids.push_back(nd_id);
+            }}}}
+    return ids;
 }
 
-vector<int> get_node_ids(Grid* grid, int col, int row, int range){
+
+// bool available_nodes(Grid* grid, int col, int row, int range){
+    // int left = max(0, col - range);
+    // int right = min(grid -> num_columns - 1, col + range);
+    // int upper = max(0, row - range);
+    // int lower = min(grid -> num_rows - 1, row + range);
+    // int index = grid -> num_columns * row + col;
+    // int starting_idx, ending_idx;
+    // int num_columns = grid -> num_columns;
+    // int num_rows = grid -> num_rows;
+// 
+//   
+    // bool has_nodes = false;
+    // for (int i = 0; i < min(2 * range + 1, num_rows - upper) ; i++){
+        // starting_idx = num_columns * (upper + i) + left;
+        // ending_idx = num_columns * (upper + i) + right;
+        // 
+        // 
+        // int pos1 = grid -> cell_offsets[starting_idx];
+        // int pos2 = grid -> cell_offsets[ending_idx + 1];
+    //   
+            // if (pos2 > pos1){
+                // has_nodes = true;
+                // break;
+            // }
+    // }
+// return has_nodes;
+// }
+
+vector<int> add_range_to_Q(Grid* grid, int col, int row, int range){
     vector<int> ids;
     int left = max(0, col - range);
     int right = min(grid -> num_columns - 1, col + range);
@@ -97,7 +174,7 @@ vector<int> get_node_ids(Grid* grid, int col, int row, int range){
                 // bool included = grid -> cells[grid -> cell_offsets[k]] -> included;
                 // if (!included){
                     int nd_id = grid -> nodes_ids[k];
-                    cout<<"pushing back node id: "<<nd_id<<endl;
+                    // cout<<"pushing back node id: "<<nd_id<<endl;
                     ids.push_back(nd_id);
                     // grid -> cells[grid -> cell_offsets[k]] -> included = true;
                 // }
@@ -181,4 +258,4 @@ vector<FSedge*> ExtendGrid(Graph* graph, Grid* grid, Point* traj_nd, int col, in
     grid -> dist_to_peak = se_list[0] ->trg -> dist;
     return se_list;
 }
-
+ 

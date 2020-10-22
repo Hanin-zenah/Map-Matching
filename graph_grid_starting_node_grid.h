@@ -15,24 +15,24 @@
 using namespace std;
 
 
-/* comparison function to sort the superedges */
-bool compare_dist(FSedge* sp1, FSedge* sp2);
+/* comparison function to compare free space nodes' distance to T0 */
+bool compare_node_dist(FSnode* nd1, FSnode* nd2);
 
 /* return the distance between 2 nodes are within the required radius */
 double dist_from_T0(Point* traj_nd, node g_nd);
 
 bool available_nodes(Grid* grid, int col, int row, int range);
 
-vector<int> get_node_ids(Grid* grid, int col, int row, int range);
+vector<int> add_range_to_Q(Grid* grid, int col, int row, int range)
 
 /* list out the node IDs of the nodes that are within the specified distance using grid look up */
 // vector<FSedge*> GridSearch(Graph* graph, Grid* grid, Point* traj_nd);
 
-vector<FSedge*> GridSearch(Graph* graph, Grid* grid, Point* traj_nd);
+vector<FSnode*> GridSearch(Graph* graph, Grid* grid, Point* traj_nd);
 
 int next_closest_node(vector<int> PQ);
 
-vector*<int> nodes_in_range(double radius);
+vector<int> nodes_in_range(double radius);
 
 vector<int> pos_list(Grid* grid);
 

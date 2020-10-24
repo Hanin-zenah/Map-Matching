@@ -15,32 +15,31 @@ using namespace std;
 
 
 typedef struct cell {
-    int cell_id;
+
     int nodes_count;
-    bool included;
+
 } Cell;
 
-typedef struct cell_node {
-    double row;
-    double col;
-    int index;
-    int pos;
-} Cell_node;
+// typedef struct cell_node {
+    // double row;
+    // double col;
+    // int index;
+    // int pos;
+// } Cell_node;
 
 typedef struct grid {
     int num_rows;
     int num_columns;
     int size;
 
-    int target_cell_idx;
-    int upper_left_index;
-    int lower_right_index;
-    int curr_num_cells;
+    double dist_to_peak;
 
-    vector<Cell*> cells;
+    int curr_range;
 
-    vector<int> cell_offsets;
-    vector<int> nodes_ids;
+    // vector<Cell> cells;
+
+    vector<int> cell_offset;
+    vector<int> cell_nodes_list;
     // vector<Cell_node*> nodes_ids;
 
 } Grid;

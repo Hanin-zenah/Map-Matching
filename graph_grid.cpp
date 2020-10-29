@@ -7,16 +7,6 @@
     // return cell_index;
 // }
 
-// void initialize_cells(Graph* graph, Grid* grid, double size){
-    // grid -> num_rows = ceil(graph -> max_lat/size);
-    // grid -> num_columns = ceil(graph -> max_long/size);
-    // for (int i = 0; i < grid -> num_rows * grid -> num_columns; i++){
-        // Cell* c = (Cell*) malloc(sizeof(Cell));
-        // c -> nodes_count = 0;
-        // grid -> cells.push_back(c);
-    // }
-    // return;
-// }
 
 void make_grids(Graph* graph, Grid* grid, double size){
     grid -> size = size;
@@ -25,50 +15,53 @@ void make_grids(Graph* graph, Grid* grid, double size){
     grid -> num_columns = ceil(graph -> max_long/size);
     int num_cells = grid -> num_rows * grid -> num_columns;
 
+    if (grid -> num_columns == graph -> max_long/size){
+		grid -> num_columns++;}
+
+    if (grid -> num_rows == graph -> max_long/size){
+	grid -> num_rows++;}
+
     grid -> cell_offset.resize(num_cells + 1);
+    // cout<<"cell offset initialized and resized to: "<< grid -> cell_offset.size()<<endl;
     // for (int i = 1; i < grid -> cell_offset.size(); i++){
         // cell_offset[i] = 0;
     // }
+
     std::fill(grid -> cell_offset.begin(), grid -> cell_offset.end(), 0);
+    // cout<<"no problem assigning 0s: "<< grid -> cell_offset[3] <<endl;
     grid -> cell_nodes_list.resize(graph -> nodes.size());
     
     for (int i = 0; i < graph -> nodes.size(); i++){
         int col = floor(graph -> nodes[i].longitude/size); // floor this, cuz cell id starts with zero!
         int row = floor(graph -> nodes[i].lat/size);
         int index = grid -> num_columns * row + col;
-        // cout<<"i: "<< i <<" graph -> nodes[i].id: "<< graph -> nodes[i].id <<" graph -> nodes[i].lat: "<< graph -> nodes[i].lat<<endl;
-        // cout<<"row: "<<row<<" col: "<<col<<" index: "<<index<<endl;
-        // grid.cells[index] -> nodes_count++;
-        grid -> cell_offset[index]++;
-        // cout<<" grid -> cells[index]->nodes_count: "<<grid -> cells[index]->nodes_count<<endl;
+        grid -> cell_offset[index + 1]++;
     }
+
 
     int sum = 0;
     for (int i = 1; i < grid -> cell_offset.size(); i++){
         grid -> cell_offset[i] += sum;
-        sum += grid -> cell_offset[i];
+        sum = grid -> cell_offset[i];
     }
 
-    // grid -> cell_offsets.push_back(0);
-    // int sum = 0;
-    // for (int i = 0; i < grid -> cells.size(); i++){
-        // sum += grid -> cells[i] -> nodes_count;
-        // grid -> cell_offsets.push_back(sum);
-    // }
-    // cout<<"grid -> cell_offsets: "<<grid -> cell_offsets.size()<<endl;
-
-    // make_nodes_ids_vec(graph, grid, size);
-
-     //initialize this somewhere else?
 
     for (int i = 0; i < graph -> nodes.size(); i++){
-    int col = floor(graph -> nodes[i].longitude/size);
-    int row = floor(graph -> nodes[i].lat/size);
-    int index = grid -> num_columns * row + col;
-    int pos = grid -> cell_offset[index];
+        int col = floor(graph -> nodes[i].longitude/size);
+        int row = floor(graph -> nodes[i].lat/size);
+        int index = grid -> num_columns * row + col;
+        int pos = grid -> cell_offset[index];
 
-    grid -> cell_nodes_list[pos] = graph -> nodes[i].id;
-    grid -> cell_offset[index]++;  
+        // cout<<"i: "<< i <<" graph -> nodes[i].id: "<< graph -> nodes[i].id <<" graph -> nodes[i].lat: "<< graph -> nodes[i].lat<<
+        // " graph -> nodes[i].longitude: "<< graph -> nodes[i].longitude<<endl;
+        // cout<<"row: "<<row<<" col: "<<col<<" index: "<<index<<endl;
+// 
+        // cout<<"pos: "<<pos<<" grid -> cell_nodes_list.size(): "<<grid -> cell_nodes_list.size()<<endl;
+
+        grid -> cell_nodes_list[pos] = graph -> nodes[i].id;
+        // cout<<"cell_nodes_list[pos]: "<<grid -> cell_nodes_list[pos]<<index<<endl;
+        grid -> cell_offset[index]++;  
+        
     
     }
 

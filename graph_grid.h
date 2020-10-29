@@ -11,11 +11,10 @@
 
 using namespace std;
 
-#define GRID_INIT {0, 0} // ask Haneen on initialization, like how many components need to initialize and the order?
+#define GRID_INIT {0, 0, 0, 0} // ask Haneen on initialization, like how many components need to initialize and the order?
 
 
 typedef struct cell {
-
     int nodes_count;
 
 } Cell;
@@ -31,10 +30,10 @@ typedef struct grid {
     int num_rows;
     int num_columns;
     int size;
+    int curr_range;
 
     double dist_to_peak;
 
-    int curr_range;
 
     // vector<Cell> cells;
 

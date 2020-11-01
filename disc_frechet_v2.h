@@ -96,26 +96,26 @@ struct Comp_eps {
 
 
 /* distance of Vi, Tj in a corner */
-double nodes_dist(node g_nd, Point* t_nd, double x_scale, double y_scale);
+double nodes_dist(node g_nd, Point* t_nd);
 
 /* calculate the minimal leash length for discrete frechet */
-FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius, double x_scale, double y_scale);
+FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius);
 
 /* given a FSnode, build the 3 outgoing edges and target nodes using this node */
-double build_node(FSgraph* fsgraph, fsnode fsnd, int neighbor_id, int up, int right, double x_scale, double y_scale);
+double build_node(FSgraph* fsgraph, fsnode fsnd, int neighbor_id, int up, int right);
 
 /* given a nodes pair on a FS graph, returns the node pair after the next traversal */
 FSpair traversal(FSgraph* fsgraph, FSpair corner, Graph* graph, Trajectory* traj, 
-priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack, vector<FSedge*> superEdges, double x_scale, double y_scale);
+priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, stack <FSedge*>& Stack, vector<FSedge*> superEdges);
 
 /* always have a back up super edge in the priority queue while traversaling */
-void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super_edges);
+void back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, vector<FSedge*>& super_edges);
 
 /* increase the current leash length value when there is no readily traversable edges */
-FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, stack <FSedge*>& Stack);
+FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, vector<FSedge*>& super_edges);
 
 /* travel to the next reachable edge */
-FSnode* travel_reachable (FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& superEdges);
+FSnode* travel_reachable (FSgraph* fsgraph, stack <FSedge*>& Stack);
 
 double path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair);
 

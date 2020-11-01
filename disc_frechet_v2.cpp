@@ -15,10 +15,10 @@ bool found_fsnode_vec(FSgraph* fsgraph, FSnode* node) {
     return false;
 }
 
-void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super_edges) {
+void back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, vector<FSedge*>& super_edges) {
     if(!super_edges.empty()) {
         FSedge* fedge_b = super_edges.back();
-        Stack.push(fedge_b);
+        bigger_eps.push(fedge_b);
         super_edges.pop_back();
         FSnode* fnd_b = fedge_b -> trg;
         fnd_b -> parent = NULL;
@@ -37,10 +37,14 @@ void back_up_se(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super
     return;
 }
 
-FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, stack <FSedge*>& Stack){
+FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, vector<FSedge*>& super_edges){
     FSedge* min_eps_fedge = bigger_eps.top();
     bigger_eps.pop(); 
     /* check if it is a super edge and put the next super edge in the queue  */
+    /* if the edge is a super edge */
+    if(!min_eps_fedge -> src) {
+        back_up_se(fsgraph, bigger_eps, super_edges);
+    }
     // cout<<" Stack is empty, a new eps fron priority Queue: "<< min_eps_fedge -> botlneck_val<<endl;
     fsgraph -> eps = min_eps_fedge -> botlneck_val;
     FSnode* next_nd = min_eps_fedge -> trg; //does the .trg need to be a pointer? does the bigger_eps need to be a queue of pointers?
@@ -48,18 +52,14 @@ FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_
     return next_nd;
 }
 
-FSnode* travel_reachable(FSgraph* fsgraph, stack <FSedge*>& Stack, vector<FSedge*>& super_edges) {
+FSnode* travel_reachable(FSgraph* fsgraph, stack <FSedge*>& Stack){
     /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
         the current cell, might be from the previous cells if there are no reachable nodes in this cell */
     // cout<<"stack size: "<<Stack.size()<<endl;
-    FSedge* back_edge = Stack.top();
+    FSedge* next_edge = Stack.top();
     Stack.pop();
-    FSnode* next_nd = back_edge -> trg;
+    FSnode* next_nd = next_edge -> trg;
 
-    /* if the edge is a super edge */
-    if(!back_edge -> src) {
-        back_up_se(fsgraph, Stack, super_edges);
-    }
     return next_nd;
     }
 
@@ -78,7 +78,7 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
         pair.first = neighbor_id;
         // fnd -> vid = neighbor_id;
     }
-
+    
     pair.second = fsnd -> tid + right;
 
     // fnd -> tid = fsnd -> tid + right; 
@@ -91,7 +91,7 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
         fnd -> vid = pair.first; 
         fnd -> tid = pair.second;
         fnd -> visited = false; 
-        fnd -> reachable = false; 
+        // fnd -> reachable = false; 
         fnd -> dist = nodes_dist(graph -> nodes[fnd -> vid], traj -> points[fnd -> tid]); //error is here
         
         fnd -> parent = fsnd; //QH
@@ -179,13 +179,13 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
         if(Stack.empty()) {
                 /* case 1: if there are no more readily traversable edges in the freespace graph, update the eps (leash length) */
                 
-                next_nd = increase_eps(bigger_eps, fsgraph, Stack);
+                next_nd = increase_eps(bigger_eps, fsgraph, super_edges); 
         }    
         else { 
             /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
                 the current cell, might be from the previous cells if there are no reachable nodes in this cell */
             
-            next_nd = travel_reachable(fsgraph, Stack, super_edges);
+            next_nd = travel_reachable(fsgraph, Stack);
         }
     } 
     next_nd -> visited = true;
@@ -228,7 +228,7 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, double radius) 
     vector<FSedge*> vec;
     fsgraph -> adj_list[fnd] = vec;
 
-    back_up_se(fsgraph, Stack, super_edges);
+    back_up_se(fsgraph, bigger_eps, super_edges);
     bool finished = false;
     
     int i = 0;

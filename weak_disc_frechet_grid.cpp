@@ -15,7 +15,6 @@ bool found_fsnode_vec(FSgraph* fsgraph, FSnode* node) {
     return false;
 }
 
-
 void back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, 
 priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ) {
     if(!PQ.empty()) {
@@ -67,7 +66,6 @@ priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, Point* traj_nd, Graph*
         else{
             while (PQ.empty()){
                 ExtendGrid(graph, grid, traj_nd, PQ);
-                cout<<"-----------extended the grid!!!!!------------\n";
                 }
             back_up_se(fsgraph, bigger_eps, PQ);
         }
@@ -90,23 +88,25 @@ FSnode* travel_reachable(FSgraph* fsgraph, stack <FSedge*>& Stack){
     }
 
 double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right) {
+    // FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
     FSedge* fedge = (FSedge*) malloc(sizeof(FSedge));
 
-    FSpair pair; 
+    FSpair pair; // = {fnd.vid, fnd.tid};
+    // pair.first = fnd -> vid;
+    // pair.second = fnd -> tid;
 
     if(up == 0) {
         pair.first = fsnd -> vid;
+        // fnd -> vid = fsnd -> vid;
     } else {
         pair.first = neighbor_id;
-
+        // fnd -> vid = neighbor_id;
     }
     pair.second = fsnd -> tid + right;
 
-    // fnd -> tid = fsnd -> tid + right; 
     /* test if the corner/node pair already exists, if not, build a new node, but need to build a new edge regardless */
-
     if(fsgraph -> pair_dict.find(pair) == fsgraph -> pair_dict.end()) {
-        //if pair not in map 
+    //if pair not in map 
         FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
         fnd -> vid = pair.first; 
         fnd -> tid = pair.second;
@@ -148,10 +148,16 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
     auto it = fsgraph -> pair_dict.find(corner);
     FSnode* fnd = it -> second;
     vector<int> incidents = get_incident(graph, fnd -> vid);
+    vector<int> incidents_2 = trans_get_incident(graph, fnd -> vid);
+    incidents.insert( incidents.end(), incidents_2.begin(), incidents_2.end() );
     vector<double> btl_neck_vals; 
     double eps = build_node(fsgraph, graph, traj, fnd, fnd -> vid, 0, 1);
+    btl_neck_vals.push_back(eps);
+    if (fnd -> tid > 0){
+    double eps_2 = build_node(fsgraph, graph, traj, fnd, fnd -> vid, 0, -1); 
+    btl_neck_vals.push_back(eps_2);
+    }
     //fsgraph
-    btl_neck_vals.push_back(eps); // QH: maybe we can sort this and make the diagonal ones always traverse last?
     // cout<<"incidents.size(): "<<incidents.size()<<endl;
     for(int i = 0; i < incidents.size(); i++) {
         int neighbour_id  = incidents[i];
@@ -186,9 +192,9 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
             next_nd = travel_reachable(fsgraph, Stack);
         }
     } 
-    next_nd -> visited = true;
+    next_nd -> visited = true; // does this still matter in weak frechet????
     FSpair next_fspair;
-    next_fspair.first = next_nd -> vid;
+    next_fspair.first  = next_nd -> vid;
     next_fspair.second = next_nd -> tid;
 
     // cout<<"next_fspair.first: "<<next_fspair.first<<" next_fspair.second: "<<next_fspair.second<<endl;
@@ -233,11 +239,11 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, Grid* grid) {
     se -> trg = start_nd;
     se -> botlneck_val = dist;
     fsgraph -> eps = se -> botlneck_val;
-  
+
     FSpair pair; // = {fnd.vid, fnd.tid};
     pair.first  = start_nd -> vid;
     pair.second = start_nd -> tid;
-    // cout<<"starting pair: "<<pair.first<<"  " <<pair.second<<endl; 
+    cout<<"starting pair: "<<pair.first<<"  " <<pair.second<<endl; 
     fsgraph -> pair_dict[pair] = start_nd;
     vector<FSedge*> vec;
     fsgraph -> adj_list[start_nd] = vec;
@@ -248,12 +254,12 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, Grid* grid) {
     int i = 0;
     while (!finished) {
         pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, grid_PQ, traj_nd, grid);
-        // cout<<"current eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
+        cout<<"current eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
         i++;
         finished = (pair.second >= m - 1);
         
     }
-    cout<<"final eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
+    // cout<<"final eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
     return pair;
 }
 

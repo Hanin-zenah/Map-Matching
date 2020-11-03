@@ -28,7 +28,13 @@ priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ) {
         start_nd -> vid = gp.first;
         start_nd -> tid = 0;
         start_nd -> dist = dist;
-        start_nd -> visited = false;
+        // start_nd -> visited = false;
+
+        start_nd -> parent = NULL;
+        start_nd -> sp_parent = NULL; 
+        start_nd -> settled = false; 
+        start_nd -> sp_dist = INFINITY;
+
         se -> trg = start_nd;
         se -> botlneck_val = dist;
 
@@ -40,10 +46,9 @@ priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ) {
         back_up_pair.first = fnd_b -> vid;
         back_up_pair.second = fnd_b -> tid;
         fsgraph -> pair_dict[back_up_pair] = fnd_b;
-        if(!found_fsnode_vec(fsgraph, fnd_b)) {
-            fsgraph -> fsnodes.push_back(fnd_b);
-        }
-        // fsgraph -> fsnodes.push_back(fnd_b);
+
+        fsgraph -> fsnodes.push_back(fnd_b);
+        fsgraph -> source_set.push_back(fnd_b);
         vector<FSedge*> vec;
         fsgraph -> adj_list[fnd_b] = vec;
     }
@@ -86,19 +91,15 @@ FSnode* travel_reachable(FSgraph* fsgraph, stack <FSedge*>& Stack){
     }
 
 double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right) {
-    // FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
     FSedge* fedge = (FSedge*) malloc(sizeof(FSedge));
 
-    FSpair pair; // = {fnd.vid, fnd.tid};
-    // pair.first = fnd -> vid;
-    // pair.second = fnd -> tid;
+    FSpair pair; 
 
     if(up == 0) {
         pair.first = fsnd -> vid;
-        // fnd -> vid = fsnd -> vid;
     } else {
         pair.first = neighbor_id;
-        // fnd -> vid = neighbor_id;
+
     }
     pair.second = fsnd -> tid + right;
 
@@ -111,7 +112,9 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
         fnd -> vid = pair.first; 
         fnd -> tid = pair.second;
         fnd -> visited = false; 
-        // fnd -> reachable = false; 
+        fnd -> settled = false; 
+        fnd -> sp_dist = INFINITY;
+        fnd -> sp_parent = NULL;
         fnd -> dist = nodes_dist(graph -> nodes[fnd -> vid], traj -> points[fnd -> tid]); //error is here
         fnd -> parent = fsnd; 
         fsgraph -> fsnodes.push_back(fnd);
@@ -120,29 +123,19 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
         fedge -> trg = fnd; 
         vector<FSedge*> vec;
         fsgraph -> adj_list[fnd] = vec;
+        if(fnd -> tid == 0) {
+            fsgraph -> source_set.push_back(fnd);
+        }
     }
     else { 
          // /* pair already exists on graph */
         auto it = fsgraph -> pair_dict.find(pair);
         // /* if (it -> visited){ } won't build this node nor edge */
         fedge -> trg = it -> second;
-        // it -> second -> parent = fsnd;
-        // fedge -> trg -> parent = fsnd;
-        // fnd -> dist = fedge -> trg -> dist; 
-        // fnd -> parent = fsnd; //QH
     }
 
-    fedge -> src = fsnd; ///and fix this
-
-    //add to adjacency list here ... 
-    // if(fsgraph -> adj_list.find(fsnd) == fsgraph -> adj_list.end()) {
-    //     cout << "ADJACENCY LIST NOT FOUND\n";
-    // }
-    // else {
-        // cout << "FOUND ADJACENCY LIST\n";
+    fedge -> src = fsnd; 
         fsgraph -> adj_list.at(fsnd).push_back(fedge);
-
-    // }
 
     fedge -> botlneck_val = max(fedge -> trg -> dist, fsgraph -> eps); // the fnd.dist would be the same regardless the prior existence of this new corner
     fsgraph -> fsedges.push_back(fedge);
@@ -233,12 +226,18 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, Grid* grid) {
     start_nd -> tid = 0;
     start_nd -> dist = dist;
     start_nd -> visited = true;
+    start_nd -> settled = false;
     start_nd -> parent = NULL;
+    start_nd -> sp_parent = NULL;
+    start_nd -> sp_dist = INFINITY;
+    fsgraph -> fsnodes.push_back(start_nd);
+    fsgraph -> source_set.push_back(start_nd);
+
     se -> trg = start_nd;
     se -> botlneck_val = dist;
 
     fsgraph -> eps = se -> botlneck_val;
-    fsgraph -> fsnodes.push_back(start_nd);
+  
 
     FSpair pair; // = {fnd.vid, fnd.tid};
     pair.first  = start_nd -> vid;
@@ -285,7 +284,6 @@ void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_na
     ofstream file(file_name);
     FSnode* cur = fsgraph -> pair_dict.at(pair);
     while(cur -> parent) {
-        // path.push(cur);
         file<< graph -> nodes[cur -> vid].longitude <<" "<<graph -> nodes[cur -> vid].lat
         <<" "<<graph -> nodes[cur -> parent -> vid].longitude <<" "<<graph -> nodes[cur -> parent -> vid].lat<<endl;
         cur = cur -> parent;

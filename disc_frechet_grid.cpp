@@ -63,6 +63,7 @@ priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, Point* traj_nd, Graph*
         else{
             while (PQ.empty()){
                 ExtendGrid(graph, grid, traj_nd, PQ);
+                cout<<"-----------extended the grid!!!!!------------\n";
                 }
             back_up_se(fsgraph, bigger_eps, PQ);
         }
@@ -253,11 +254,12 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, Grid* grid) {
     int i = 0;
     while (!finished) {
         pair = traversal(fsgraph, graph, traj, pair, bigger_eps, Stack, grid_PQ, traj_nd, grid);
-        cout<<"current eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
+        // cout<<"current eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
         i++;
         finished = (pair.second >= m - 1);
         
     }
+    cout<<"final eps: "<<fsgraph -> eps<<" iteration: "<< i <<" "<<pair.first<<" "<<pair.second<<endl;
     return pair;
 }
 

@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
     //half the graph vertices -- that case may be slower
 
     Grid grid = GRID_INIT;
-    make_grids(&after_graph, &grid, 1000.00);
+    make_grids(&after_graph, &grid, 50.00);
     output_grid(&grid, "graph_grid_cell_offset_and_node_list.txt");
     auto t4 = chrono::high_resolution_clock::now();
     auto duration1 = chrono::duration_cast<std::chrono::milliseconds>( t4 - t3 ).count();
@@ -109,7 +109,7 @@ int main(int argc, char** argv) {
 
 
     vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 3, lon_min, lat_min, lat_scale, lon_scale);
-    Trajectory traj = trajs[0];
+    Trajectory traj = trajs[1];
     Point* traj_nd = traj.points[0];
     
     cout << "finished extracting the trajectory\n";

@@ -6,9 +6,7 @@ double edge_cost(FSedge* fedge, Graph* graph) {
     struct node src_node = graph -> nodes[src_id];
     struct node trg_node = graph -> nodes[trg_id];
     Euc_distance ed;
-    double x_scale = graph -> x_scale;
-    double y_scale = graph -> y_scale;
-    double cost = ed.euc_dist(src_node.lat, src_node.longitude, trg_node.lat, trg_node.longitude, graph -> x_scale, graph -> y_scale);
+    double cost = ed.euc_dist(src_node.lat, src_node.longitude, trg_node.lat, trg_node.longitude);
     return cost;
 }
     

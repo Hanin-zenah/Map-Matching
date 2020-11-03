@@ -26,65 +26,71 @@ int get_above_k(Graph* graph) {
 int main(int argc, char** argv) {
 
     if(argc < 2) {
-        cerr << "Not enough arguments; please provide a file name next to the program name to be read\n\nExample: ./a.out saarland.txt\n";
-        return 1;
-    }
+    cerr << "Not enough arguments; please provide a file name next to the program name to be read\n\nExample: ./a.out saarland.txt\n";
+    return 1;
+}
+        // /* read graph from given file */
+        Graph graph = GRAPH_INIT;
+        read_file(argv[1], &graph);
+        /* bounding box */
+        double lat_min = graph.min_lat;
+        double lat_max = graph.max_lat;
+        double lon_min = graph.min_long;
+        double lon_max = graph.max_long;
 
-    //read graph from given file
-    Graph graph = GRAPH_INIT;
-    read_file(argv[1], &graph);
+        graph.original_min_lat = lat_min;
+        graph.original_min_long = lat_max;
+        graph.original_max_lat = lon_min;
+        graph.original_max_long = lon_max;
 
-    //write file with the projected x_y coordinates (+ .dat file to graph)
+        cout<<graph.original_min_lat<<" "<<graph.original_min_long<<" "<<graph.original_max_lat<<" "<<graph.original_max_long<<endl;
+        
+        Bounds bd;
+        double g_dist1 = bd.geodesic_dist(lat_min,lon_min,lat_max,lon_min);
+        double g_dist2 = bd.geodesic_dist(lat_min,lon_max,lat_min,lon_min);
+        double g_dist3 = bd.geodesic_dist(lat_max,lon_max,lat_max,lon_min);
+        cout<<"geo disc: "<<g_dist1<<" "<<g_dist2<<" "<<g_dist3<<endl;
 
+        Euc_distance ed;
+        double e_dist1, e_dist2, e_dist3;
+        // /* calculate the "pixel" euclidean distance between the bounding points */
+        double lon_min_to_y = ed.lon_mercator_proj(lon_min, lon_min);
+        double lon_max_to_y = ed.lon_mercator_proj(lon_max, lon_min);
+        double lat_min_to_x = ed.lat_mercator_proj(lat_min, lat_min);
+        double lat_max_to_x = ed.lat_mercator_proj(lat_max, lat_min);   
 
-    //bounding box
-    double lat_min = graph.min_lat;
-    double lat_max = graph.max_lat;
-    double lon_min = graph.min_long;
-    double lon_max = graph.max_long;
+        e_dist1 = ed.euc_dist(lat_min_to_x,lon_min_to_y,lat_max_to_x,lon_min_to_y);
+        e_dist2 = ed.euc_dist(lat_min_to_x,lon_max_to_y,lat_min_to_x,lon_min_to_y);
+        e_dist3 = ed.euc_dist(lat_max_to_x,lon_max_to_y,lat_max_to_x,lon_min_to_y);
 
-    Bounds bd;
-    double g_dist1 = bd.geodesic_dist(lat_min,lon_min,lat_max,lon_min);
-    double g_dist2 = bd.geodesic_dist(lat_min,lon_max,lat_min,lon_min);
-    double g_dist3 = bd.geodesic_dist(lat_max,lon_max,lat_max,lon_min);
+        /* calculates the cost of the edges */
+        double lon_scale = (g_dist2/e_dist2 + g_dist3/e_dist3) * 0.5;
+        double lat_scale = g_dist1/e_dist1;
+        graph.lon_scale = lon_scale;
+        graph.lat_scale = lat_scale;
+        cout<<"euc dists: "<<e_dist1<<" "<<e_dist2<<" "<<e_dist3<<endl;
+        cout<<"scale: "<<lon_scale<<lat_scale<<endl;
+        ed.calc_edge_cost(&graph, lat_scale, lon_scale);
 
-    Euc_distance ed;
-    double e_dist, e_dist1, e_dist2, e_dist3;
+        /* strongly connected components */
+        Graph SCC_graph = GRAPH_INIT;
+        scc_graph(&graph, &SCC_graph);  
 
-    //calculate the "pixel" euclidean distance between the bounding points 
-    double lon_min_to_y = ed.lon_mercator_proj(lon_min, lon_min);
-    double lon_max_to_y = ed.lon_mercator_proj(lon_max, lon_min);
-    double lat_min_to_x = ed.lat_mercator_proj(lat_min, lat_min);
-    double lat_max_to_x = ed.lat_mercator_proj(lat_max, lat_min);
+        /* sub sampling */
+        cout<<"done scc graph"<<endl;
+        cout<<"before subsampling scc # edges and nodes: "<<SCC_graph.edges.size()<<" #nodes "<<SCC_graph.nodes.size()<<endl;
+        subsampling(&SCC_graph, 40);
+        outedge_offset_array(&SCC_graph);
+        inedge_offset_array(&SCC_graph);    
+        cout<<"original box: "<<graph.original_min_lat<<" "<<graph.original_min_long<<" "<<graph.original_max_lat<<" "<<graph.original_max_long<<endl;
+        
+        output_graph(&SCC_graph, "saarland_all_sub_40_projected.txt", lat_scale, lon_scale, lat_min, lat_max, lon_min, lon_max);
+        // graph_edge_cost(&SCC_graph, "subsampled_scc_40_for_hist_y_x.dat");
+        cout<<"before second SCC # edges: "<<SCC_graph.edges.size()<<" #nodes "<<SCC_graph.nodes.size()<<endl;
 
-    e_dist1 = ed.euc_dist(lat_min_to_x,lon_min_to_y,lat_max_to_x,lon_min_to_y, 1, 1);
-    e_dist2 = ed.euc_dist(lat_min_to_x,lon_max_to_y,lat_min_to_x,lon_min_to_y,1 ,1);
-
-    //calculates the cost of the edges 
-    double x_scale = (g_dist2+g_dist3)*0.5/e_dist2;
-    double y_scale = g_dist1/e_dist1;
-    ed.calc_edge_cost(&graph, x_scale, y_scale);
-
-
-    //strongly connected componetns
-    Graph SCC_graph = GRAPH_INIT;
-    scc_graph(&graph, &SCC_graph);
-
-    cout << "number of nodes: " << SCC_graph.n_nodes << endl;
-    cout << "number of edges: " << SCC_graph.n_edges << endl;
-
-
-    // cout << get_average_cost(&SCC_graph) << endl;
-    // cout << get_above_k(&graph) << endl;
-
-    //sub sampling 
-    // auto start = high_resolution_clock::now(); 
-    // subsampling(&graph, 100);
-    // auto stop = high_resolution_clock::now();
-
-    // auto duration = duration_cast<microseconds>(stop - start);
-    // cout << "Time taken by function: "
-    //      << duration.count() << " microseconds" << endl; 
+        Graph SCC_graph2 = GRAPH_INIT;
+        scc_graph(&SCC_graph, &SCC_graph2);
+        cout<<"after second SCC # edges: "<<SCC_graph2.edges.size()<<" #nodes "<<SCC_graph2.nodes.size()<<endl;  
 
     return 0;
 }

@@ -35,7 +35,7 @@ void read_next_k_bytes(ifstream& file, char* buffer, int k) {
 // lat lon timestamp
 // nPoints traceId subId
 // ...
-void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, double min_long, double min_lat) {
+void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, double min_long, double min_lat, double lat_scale, double lon_scale) {
     file.seekg(offset, ios::beg);
     if(file.eof()) {
         return;
@@ -66,10 +66,9 @@ void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, doubl
         read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
         latitude = *(int*)buffer;
         latitude /= pow(10, LON_LAT_COMMA_SHIFT);
+        /* overwrite the node's latitude in mercator projection */
         // cout<<"latitude before: "<<latitude<<endl;
-        // cout<<"min long: "<<min_lat<<endl;
-        // /* overwrite the node's latitude in mercator projection */
-        latitude = ed.lat_mercator_proj(latitude, min_lat);
+        latitude = ed.lat_mercator_proj(latitude, min_lat) * lat_scale;
         // cout<<"latitude after: "<<latitude<<endl;
 // 
         read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
@@ -77,8 +76,7 @@ void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, doubl
         longitude /= pow(10, LON_LAT_COMMA_SHIFT);
         /* overwrite the node's longitude in mercator projection */
         // cout<<"longitude before: "<<longitude<<endl;
-        // cout<<"min long: "<<min_long<<endl;
-        longitude = ed.lon_mercator_proj(longitude, min_long);
+        longitude = ed.lon_mercator_proj(longitude, min_long) * lon_scale;
         // cout<<"longitude after: "<<longitude<<endl;
 
         read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
@@ -88,7 +86,7 @@ void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, doubl
     }
 }
 
-vector<Trajectory> read_trajectories(string file_path, int k, double min_long, double min_lat) { //extract k trajectories?  //will figure it out later 
+vector<Trajectory> read_trajectories(string file_path, int k, double min_long, double min_lat, double lat_scale, double lon_scale) { //extract k trajectories?  //will figure it out later 
     ifstream file;
     file.open(file_path, ios::in | ios::binary);
     file.seekg(0, ios::beg);
@@ -98,7 +96,7 @@ vector<Trajectory> read_trajectories(string file_path, int k, double min_long, d
     for(int i = 0; i < k; i++) {
         if(!file.eof()) {
             int offset = file.tellg();
-            extract_next_trajectory(file, offset, &traj, min_long, min_lat);
+            extract_next_trajectory(file, offset, &traj, min_long, min_lat, lat_scale, lon_scale);
             trajs.push_back(traj);
             traj = DEF_TRAJ;
         }
@@ -136,9 +134,9 @@ void cleanup_trajectory(Trajectory* traj) {
 
 Euc_distance ed;
 
- void calc_traj_edge_cost(Trajectory* traj, double x_scale, double y_scale) {
+ void calc_traj_edge_cost(Trajectory* traj) {
     for(int i = 0; i <  traj -> edges.size(); i++){
-        traj -> edges[i] -> cost = ed.euc_dist(traj -> edges[i] -> src -> latitude, traj -> edges[i] -> src -> longitude, traj -> edges[i] -> trg -> latitude, traj -> edges[i] -> trg -> longitude, x_scale, y_scale);
+        traj -> edges[i] -> cost = ed.euc_dist(traj -> edges[i] -> src -> latitude, traj -> edges[i] -> src -> longitude, traj -> edges[i] -> trg -> latitude, traj -> edges[i] -> trg -> longitude);
     }
     return;
 }

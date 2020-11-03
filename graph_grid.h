@@ -34,7 +34,6 @@ typedef struct grid {
 
     double dist_to_peak;
 
-
     // vector<Cell> cells;
 
     vector<int> cell_offset;

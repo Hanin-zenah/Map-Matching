@@ -19,10 +19,10 @@ typedef struct GridPair_key {
     int first; //node id 
     double second; //distance to T0
 
-    bool operator==(const struct GridPair_key other) const { 
-        return (first == other.first
-            && second == other.second);
-    }
+    // bool operator==(const struct GridPair_key other) const { 
+        // return (first == other.first
+            // && second == other.second);
+    // }
 } Gpair;
 
 

@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
     cout << "Duration in milliseconds: " << duration1 << endl;
 
 
-    vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 3, lon_min, lat_min, lat_scale, lon_scale);
+    vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 6, lon_min, lat_min, lat_scale, lon_scale);
     Trajectory traj = trajs[1];
     Point* traj_nd = traj.points[0];
     
@@ -139,7 +139,26 @@ int main(int argc, char** argv) {
     cout<<"PQ length before extending: "<<PQ.size()<<endl;
 
     FSgraph fsgraph = FSGRAPH_INIT; 
+    cout<<"building free space graph\n";
     FSpair last_pair = min_eps(&after_graph, &traj, &fsgraph, &grid);
+
+    write_fsgraph(&fsgraph, "weak_fsgraph.dat");
+
+
+    write_sur_graph(&fsgraph, &after_graph, "weak_sur_graph_frechet.dat");
+    cout<<"finished printing survided graph"<<endl;
+    cout<<path_cost(&fsgraph, &after_graph, last_pair)<<endl;
+    cout<<"finished printing path"<<endl;
+    print_path(&fsgraph, &traj, &after_graph, "weak_frechet_path.dat", last_pair);
+    cout<<"finished writing out path"<<endl;
+    
+    /* run dijkstra on the freespace */
+    auto t5 = chrono::high_resolution_clock::now();
+    stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph, traj.length);
+    auto t6 = chrono::high_resolution_clock::now();
+    auto duration3 = chrono::duration_cast<std::chrono::milliseconds>( t6 - t5 ).count();
+    cout << "Duration2 in milliseconds: " << duration3 << endl;
+  
 
     cleanup(&fsgraph);
     cleanup_trajectory(&traj);

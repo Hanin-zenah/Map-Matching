@@ -167,7 +167,6 @@ priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> GridSearch(Graph* graph, Gr
 
     bool enough_range = range_check(grid, traj_nd, grid -> dist_to_peak, grid -> curr_range, graph_max_x,graph_max_y);
     if (!enough_range) {
-        cout<<"adding another layer of cells!\n";
         grid -> curr_range++;
         add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, closer_dist);
         return closer_dist;
@@ -186,9 +185,12 @@ void ExtendGrid(Graph* graph, Grid* grid, Point* traj_nd, priority_queue<Gpair, 
         grid -> curr_range++;
         add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
     }
+    grid -> curr_range++;
+    add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+    grid -> dist_to_peak = PQ.top().second; 
+
     bool enough_range = range_check(grid, traj_nd, grid -> dist_to_peak, grid -> curr_range, graph -> max_long, graph -> max_lat);
     if (!enough_range) {
-        cout<<"adding another layer of cells!\n";
         grid -> curr_range++;
         add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
 }

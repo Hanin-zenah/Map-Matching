@@ -48,10 +48,10 @@ void add_point(Trajectory* traj, double longitude, double latitude, int timestam
 void read_next_k_bytes(ifstream& file, char* buffer, int k);
 
 /* given a file ifstream; extract the next trajectory from a specified offset */
-void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, double min_long, double min_lat);
+void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, double min_long, double min_lat, double lat_scale, double lon_scale);
 
 /* reads k consecutive trajectories from a given file and stores it in a Trajectory vector */
-vector<Trajectory> read_trajectories(string file_path, int k, double min_long, double min_lat);
+vector<Trajectory> read_trajectories(string file_path, int k, double min_long, double min_lat, double lat_scale, double lon_scale);
 
 void write_traj(Trajectory* traj, string file_name);
 
@@ -59,6 +59,6 @@ void write_traj(Trajectory* traj, string file_name);
 void cleanup_trajectory(Trajectory* traj);
 
 /* calculate the cost for every edge in the trajectory */
-void calc_traj_edge_cost(Trajectory* traj, double x_scale, double y_scale);
+void calc_traj_edge_cost(Trajectory* traj);
 
 #endif

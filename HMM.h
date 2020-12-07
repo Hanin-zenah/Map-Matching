@@ -74,8 +74,9 @@ struct comp_travel_cost {
 };
 
 
-vector<Gpair> candidates(Graph* graph, Grid* grid, Point* traj_nd, int n);
+vector<Gpair> candidates(Graph* graph, Grid* grid, Point* traj_nd, int n, double radius);
 
+/* calculating parameters */
 double getMedian(vector<double> array);
 
 double sigma_est(Graph* graph, Grid* grid, Trajectory* traj);
@@ -84,9 +85,7 @@ double beta_est(double alpha, double t, double radius);
 
 double emission(double sigma, double dist);
 
-
-
-vector<pair<int, double>>  emission_set(Graph* graph, Grid* grid, Point* traj_nd, int n, double sigma);
+vector<pair<int, double>>  emission_set(Graph* graph, Grid* grid, Point* traj_nd, int n, double sigma, double radius);
 
 vector<pair<int,double>> get_inv_incident_pair(Graph* graph, int node_id);
 
@@ -99,17 +98,20 @@ vector<pair<int, double>> tran_dijkstra(Graph* graph, int node_id, vector<Gpair>
 vector<pair<int, double>> tran_matrix(Graph* graph, vector<Gpair> curr_candidates, vector<Gpair> prev_candidates, State prev_state);
 
 State state_prob(Graph* graph, Grid* grid, Point* T1, Point* T2, double beta, double sigma, 
-int n, State prev_state, vector<pair<int, double>> emi_probs);
+int n, State prev_state, vector<pair<int, double>> emi_probs, double radius);
 
 State create_state0(vector<pair<int, double>>  emi_set);
 
-vector<int> best_path(Graph* graph, Grid* grid, Trajectory* traj, int n, double sigma, double beta);
+vector<int> best_path(Graph* graph, Grid* grid, Trajectory* traj, int n, double sigma, double beta, double radius);
 
 vector<int> best_path_dijkstra(Graph* graph, vector<int> best_path);
 
 void write_HMM_graph(Graph* graph, vector<int> complete_path, string file_name);
 
-stack<int> path_closest_can(Graph* graph, Grid* grid, Trajectory* traj); // delete
+double HMM_path_cost(Graph* graph, vector<int> path);
+
+vector<int> path_closest_can(Graph* graph, Grid* grid, Trajectory* traj); // delete
+
 Gpair cloest_can(Graph* graph, Grid* grid, Point* traj_nd); // delete
 
 

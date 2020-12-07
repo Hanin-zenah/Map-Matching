@@ -1,29 +1,33 @@
 #include "HMM.h"
 
-vector<Gpair> candidates(Graph* graph, Grid* grid, Point* traj_nd, int n){
+vector<Gpair> candidates(Graph* graph, Grid* grid, Point* traj_nd, int n, double radius){
     grid -> curr_range = 0;
     priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> dist_PQ  = GridSearch(graph, grid, traj_nd);
-    vector<Gpair> next_n = next_n_nodes(graph, grid, traj_nd, dist_PQ, n); //in ascending order by the distance to trajectory node;
+    vector<Gpair> next_n = next_n_nodes(graph, grid, traj_nd, dist_PQ, n, radius); //in ascending order by the distance to trajectory node;
+    if (next_n.size() == 0){
+        cout<<"closest node distance: "<<dist_PQ.top().second<<endl;
+        cerr << "Please increase searching range to include at least the closest node\n";
+    }
     return next_n;
 }
 
-// Gpair cloest_can(Graph* graph, Grid* grid, Point* traj_nd){
-    // grid -> curr_range = 0;
-    // priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> dist_PQ  = GridSearch(graph, grid, traj_nd);
-    // Gpair close = dist_PQ.top();
-    // return close;
-// }
-// 
-// stack<int> path_closest_can(Graph* graph, Grid* grid, Trajectory* traj){
-    // stack<int> path;
-    // for (int i = 0; i < traj ->length; i++){
-        // Gpair best_can = cloest_can(graph, grid, traj -> points[i]);
-        // path.push(best_can.first);
-        // cout<<"node ID: "<<best_can.first<<" distance "<<best_can.second<<endl;
-// 
-    // }
-    // return path;
-// }
+Gpair cloest_can(Graph* graph, Grid* grid, Point* traj_nd){
+    grid -> curr_range = 0;
+    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> dist_PQ  = GridSearch(graph, grid, traj_nd);
+    Gpair close = dist_PQ.top();
+    return close;
+}
+
+vector<int> path_closest_can(Graph* graph, Grid* grid, Trajectory* traj){
+    vector<int> path;
+    for (int i = 0; i < traj ->length; i++){
+        Gpair best_can = cloest_can(graph, grid, traj -> points[i]);
+        path.push_back(best_can.first);
+        cout<<"node ID: "<<best_can.first<<" distance "<<best_can.second<<endl;
+
+    }
+    return path;
+}
 
 double emission(double sigma, double dist){ //change the dist to a T and a candidate and calculate the dist within the function
     double prob = 1/ (sqrt(2 * M_PI) * sigma) * exp( - 0.5 * pow((dist/sigma),2.0));
@@ -70,13 +74,13 @@ bool compare_pair_dist(pair<int, double> pair1, pair<int, double> pair2) {
 }
 
 
-vector<pair<int, double>>  emission_set(Graph* graph, Grid* grid, Point* traj_nd, int n, double sigma){ //with candidate node ids
+vector<pair<int, double>>  emission_set(Graph* graph, Grid* grid, Point* traj_nd, int n, double sigma, double radius){ //with candidate node ids
     grid -> curr_range = 0;
-    vector<Gpair> next_n = candidates(graph, grid, traj_nd, n); // in ascending order by the distance to trajectory node;
+    vector<Gpair> next_n = candidates(graph, grid, traj_nd, n, radius); // in ascending order by the distance to trajectory node;
     // /* priority_queue<pair<int, double> , vector<pair<int, double>>, Comp_cdd_emi> emission_PQ; */
     vector<pair<int, double>> emissions;
     double sum_emi =0;
-    for (int i = 0; i < n; i++){
+    for (int i = 0; i < next_n.size(); i++){
         double dist = next_n[i].second;
         double emi_prob = emission(sigma, dist);
         pair<int, double> emi_pair; // sorted by the V's distance to T, in increasing order;
@@ -134,17 +138,12 @@ double beta_est(double alpha, double t, double radius){
 }
 
 vector<pair<int, double>> tran_dijkstra(Graph* graph, int node_id, vector<Gpair> prev_candidates){ // run dijkstra for transition probability calculation
-    // cout<<"is the source node a target?: "<<graph -> nodes[node_id].id<<" "<<graph -> nodes[node_id].target<<endl;
     /* all distance set to infinity while reading the graph */
     int num_tar = src_candidate(graph, prev_candidates);
-
-    // cout<<"num_tar: "<<num_tar<<endl;
     priority_queue<struct node, vector<struct node>, comp_travel_cost> PQ;
     vector <int> dirty_nodes; 
     graph -> nodes[node_id].dist = 0; 
     struct node src_nd = graph -> nodes[node_id]; // making a copy of the graph node
-    // cout<<"is the source node a target now?: "<<src_nd.id<<" "<<src_nd.target<<endl;
-
     PQ.push(src_nd);
     dirty_nodes.push_back(node_id);
     // cout<<"is the source node a target nowwww?: "<<PQ.top().id<<" "<<PQ.top().dist<<" target?: "<<PQ.top().target<<endl;
@@ -198,119 +197,138 @@ vector<pair<int, double>> tran_dijkstra(Graph* graph, int node_id, vector<Gpair>
 }
 
 State state_prob(Graph* graph, Grid* grid, Point* T1, Point* T2, double beta, double sigma, 
-int n, State prev_state, vector<pair<int, double>> emi_probs){ 
+int n, State prev_state, vector<pair<int, double>> emi_probs, double radius){ 
     // emission vector sorted by the V's distance to T, in increasing order;
-    vector<Gpair> curr_candidates = candidates(graph, grid, T2, n); // don't forget trans matric normalization
-    vector<Gpair> prev_candidates = candidates(graph, grid, T1, n);
-
-    // vector<pair<int, double>> emi_set = emission_set(graph, grid, T2, n, sigma); this is given in the parameters
-
+    vector<Gpair> curr_candidates = candidates(graph, grid, T2, n, radius); // don't forget trans matric normalization
+    vector<Gpair> prev_candidates = candidates(graph, grid, T1, n, radius);
     State curr_state;
-    curr_state.cdd_nd_id.resize(n, 0.0);
-    curr_state.prdc_state.resize(n, -1);
-    curr_state.state_prob.resize(n, 0.0);
+    int num_can = curr_candidates.size();
+    curr_state.cdd_nd_id.resize(num_can, 0.0);
+    curr_state.prdc_state.resize(num_can, -1);
+    curr_state.state_prob.resize(num_can, 0.0);
 
     for (int i = 0; i < curr_candidates.size(); i++){
         Gpair gp = curr_candidates[i]; 
         curr_state.cdd_nd_id[i] = gp.first;
+        
         vector<pair<int, double>> trans_vec = tran_dijkstra(graph, gp.first, prev_candidates);
+        // cout<<"trans_vec.size(): "<<trans_vec.size()<<endl;
         /* max{P(i,j)*T(k,j)*Q(i-1,k)} for each P(i,j)/Q(i,j)/candidate cell */
+        // cout<<"for candidate: "<<i<<" created inverse dijkstra for candidate: "<<i<<" size of trans_vec: "<<trans_vec.size()<<endl;
+        double sum_trans = 0.0;
         for (int j = 0; j < trans_vec.size(); j++){
             pair<int, double> SP = trans_vec[j];
             double trans_prob = transition(beta, T1, T2, SP.second);
-            // cout<<"trans_prob: "<<trans_prob<<endl;
-            double pair_prob = prev_state.state_prob[i] * trans_prob * emi_probs[i].second;// picking the maximum so the constant emission prob isn't neccesary
-            /* prev_state.state_prob[i] * trans_prob * emi_probs[i].second; */
+            trans_vec[j].second = trans_prob;
+            sum_trans += trans_prob;           
+        }
+        // multiply while normalizing transition probabilities
+        for (int j = 0; j < trans_vec.size(); j++){
+            pair<int, double> SP = trans_vec[j];
+            // cout<<"prev_state.state_prob[j]: j: "<<j<<" "<<prev_state.state_prob[j]<<endl; // use j not i? prev_state.size() should = trans_vec.size()
+            double pair_prob= prev_state.state_prob[j] * SP.second/sum_trans * emi_probs[i].second;// picking the maximum so the constant emission prob isn't neccesary
             // cout<<"pair_prob: "<<pair_prob<<endl;
-            // cout<<"curr_state.state_prob "<<i<<" "<<curr_state.state_prob[i]<<endl;
-            if( pair_prob > curr_state.state_prob[i]){
-                cout<<"max state prob got updated from: "<<curr_state.state_prob[i]<<" to ";
+            if( pair_prob >= curr_state.state_prob[i]){
+                // cout<<" "<<j<<" max state prob for "<<i<<" got updated from: "<<curr_state.state_prob[i]<<" to ";
                 curr_state.state_prob[i] = pair_prob; // curr_state and curr_candidates has the same length, use the same index i
                 curr_state.prdc_state[i] = SP.first;
-                cout<<curr_state.state_prob[i]<<" from node: "<<curr_state.prdc_state[i] <<endl;
+                // cout<<curr_state.state_prob[i]<<" from node: "<<curr_state.prdc_state[i] <<endl;
             }
-        }  
+        } // right place???
+        sum_trans = 0.0; // to reset
     }
+
     /* normalize the state probability */
     double sum_state_prob = 0.0;// std::accumulate(curr_state.state_prob.begin(), curr_state.state_prob.end(), 0);
     for (int i = 0; i < curr_state.state_prob.size(); i++){
         sum_state_prob += curr_state.state_prob[i];
         // cout<<"curr_state.state_prob "<<i<<" "<<curr_state.state_prob[i]<<endl;
     }
-    cout<<"sum_state_prob: "<<sum_state_prob<<endl;
+
     // calculatet the sum in a loop so can also figure out what's the max state probablitie and flag the predecessor 
     // -- need to flag predecessor for each state cel not just the max!!!!
     for (int i = 0; i < curr_state.state_prob.size(); i++){
         curr_state.state_prob[i] = curr_state.state_prob[i]/sum_state_prob;
-        cout<<"candidate ID: "<<curr_state.cdd_nd_id[i]<<" state_prob after normalization: "<<i<<" "<<curr_state.state_prob[i]<<" predecessor: "<<curr_state.prdc_state[i]<<endl;
+        // cout<<"candidate ID: "<<curr_state.cdd_nd_id[i]<<" state_prob after normalization: "<<i<<" "<<curr_state.state_prob[i]<<" predecessor: "<<curr_state.prdc_state[i]<<endl;
     }
     return curr_state;
 }
 
 
-State create_state0(vector<pair<int, double>>  emi_set){
+State create_state0(vector<pair<int, double>>  emi_set, double num_can){
     State state_0; // does it need initializatoin?
-    state_0.cdd_nd_id.resize(10, 0.0);
-    state_0.prdc_state.resize(10, -1);
-    state_0.state_prob.resize(10, 0.0);
-
+    state_0.cdd_nd_id.resize(num_can, 0.0);
+    state_0.prdc_state.resize(num_can, -1);
+    state_0.state_prob.resize(num_can, 0.0);
     for (int i = 0; i < emi_set.size(); i++){
-     state_0.cdd_nd_id[i] = emi_set[i].first ;
-     
+     state_0.cdd_nd_id[i] = emi_set[i].first ;   
     }
     for (int i = 0; i < emi_set.size(); i++){
      state_0.state_prob[i] = emi_set[i].second;
     }
-
     return state_0;
 }
 
 
-vector<int> best_path(Graph* graph, Grid* grid, Trajectory* traj, int n, double sigma, double beta ){ 
+vector<int> best_path(Graph* graph, Grid* grid, Trajectory* traj, int n, double sigma, double beta, double radius){ 
     
-    vector<pair<int, double>> emi_0 = emission_set(graph, grid, traj->points[0], n, sigma);
-    State state0 = create_state0(emi_0);
+    vector<pair<int, double>> emi_0 = emission_set(graph, grid, traj->points[0], n, sigma, radius);
+    State state0 = create_state0(emi_0, emi_0.size());
     stack<State> state_stack; // want last in first out -- stack
     state_stack.push(state0);
-
-    State prev_state = state0; 
-
+    // State prev_state = state0; 
+    int state_num = 1; //delete
     for (int i =  0; i < traj -> length - 1; i++){ // change back to i < traj -> length - 1
+        // cout<<"state_num: "<<state_num<<endl;
         State prev_state = state_stack.top();
-        vector<pair<int, double>> curr_emi = emission_set(graph, grid, traj->points[i + 1], n, sigma);
-        State cur_state = state_prob(graph, grid, traj->points[i], traj->points[i + 1], beta, sigma, n, prev_state, curr_emi);
+        vector<pair<int, double>> curr_emi = emission_set(graph, grid, traj->points[i + 1], n, sigma, radius);
+        State cur_state = state_prob(graph, grid, traj->points[i], traj->points[i + 1], beta, sigma, n, prev_state, curr_emi, radius);
         state_stack.push(cur_state);
         prev_state = cur_state;
-
+        state_num++;
     }
     vector<int> best_path; 
     while(!state_stack.empty()){
         State curr = state_stack.top();
         state_stack.pop();
         double max_prob = 0.0;
-        int pre_can = 0;
+        int pre_can = -1; //maybe change to -1??
         for (int i = 0; i < curr.prdc_state.size(); i++){
-            if( curr.state_prob[i] > max_prob ){
+            // cout<<"curr.state_prob[i]: "<<i<<" "<<curr.state_prob[i]<<endl;
+            if( curr.state_prob[i] >= max_prob ){
                 pre_can = curr.prdc_state[i];
             }
         }
+        // cout<<"previous candidate: "<<pre_can<<endl;
     best_path.push_back(pre_can); // remove nodes that have the same node ID if they're consective
+    state_num--;
     }
     reverse(best_path.begin(), best_path.end());
     /* stack is LIFO, so the match at the traj end is the first one poped, 
     we need to reverse the order, so that the last item pushed 
     from best path is traj[0] match and will be index 0 in the returned path*/
-
-    for (int i = 0; i < best_path.size() - 2; i++){
+    for (int i = 0; i < best_path.size() - 1; i++){
         if(best_path[i] == best_path[i+1] || best_path[i] == -1){
+            // cout<<"erasing: best_path[i]"<<best_path[i]<<endl;
         best_path.erase(best_path.begin() + i);
+        i--;
         }
     }
+    /* the previous loop cannot check the last one so add an additional check here */
+    if (best_path[best_path.size() - 1] == -1){
+        best_path.erase(best_path.begin() + best_path.size() - 1);
+    }
+
+    // cout<<"best_path.size after erasing: "<<best_path.size()<<endl;
+    // for (int i = 0; i < best_path.size(); i++){
+        // cout<<best_path[i]<<endl;
+    // }
+    
     return best_path;
 }
 
 stack<int> node_to_node_dijkstra(Graph* graph, int node_id, int node_id2){ 
-    // cout<<"run dijkstra for final nodes\n";
+    // cout<<"run dijkstra for nodes: "<<node_id<<" "<<node_id2<<endl;
     priority_queue<struct node, vector<struct node>, comp_travel_cost> PQ;
     vector <int> dirty_nodes; 
     graph -> nodes[node_id].dist = 0; 
@@ -362,6 +380,7 @@ vector<int> best_path_dijkstra(Graph* graph, vector<int> best_path){
     vector<int> complete_path;
     stack<int> SP;
     for (int i = 0; i < best_path.size() - 2; i++){
+        // cout<<"best_path_dijkstra iteration: "<<i<<endl;
         int id = best_path[i];
         int id2 = best_path[i+1];
         SP = node_to_node_dijkstra(graph, id, id2);
@@ -371,6 +390,20 @@ vector<int> best_path_dijkstra(Graph* graph, vector<int> best_path){
         }
     }
     return complete_path;
+}
+
+double HMM_path_cost(Graph* graph, vector<int> path) {
+    double path_cost = 0;
+    for (int i = 0; i < path.size() - 2; i++){
+        int id = path[i];
+        int id2 = path[i+1];
+        struct node src_node = graph -> nodes[id];
+        struct node trg_node = graph -> nodes[id2];
+        Euc_distance ed;
+        double cost = ed.euc_dist(src_node.lat, src_node.longitude, trg_node.lat, trg_node.longitude);
+        path_cost += cost;
+    }
+    return path_cost;
 }
 
 
@@ -389,3 +422,4 @@ void write_HMM_graph(Graph* graph, vector<int> complete_path, string file_name){
     }
     file.close();
 }
+

@@ -123,6 +123,10 @@ void read_processed_graph(string file_name, Graph* graph) {
         istringstream vals(buffer);
         struct node n;
         vals >> n.id >> n.osmid >> n.lat >> n.longitude;
+        n.dist = INFINITY;
+        n.target = false;
+        n.settled = false;
+        n.parent_id = -1;
         graph -> nodes.push_back(n);
         check_boundaries(graph -> nodes[i].lat, graph -> nodes[i].longitude, graph);
     }

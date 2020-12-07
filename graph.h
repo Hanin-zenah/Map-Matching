@@ -21,7 +21,11 @@ struct node {
     double longitude;
     double lat;
     int id;
+    double dist;
     uint64_t osmid;
+    bool target; 
+    bool settled;
+    int parent_id;
 };
 
 struct edge {

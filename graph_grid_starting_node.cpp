@@ -110,28 +110,40 @@ void add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int range, Point
     return;
 }
 
-bool range_check(Grid* grid, Point* traj_nd, double dist_peak, int range, double graph_max_x, double graph_max_y){
+bool range_check(Grid* grid, Point* traj_nd, Graph* graph, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> PQ){
+    double graph_max_x = graph -> max_long;
+    double graph_max_y = graph -> max_lat;
+
+    double dist_peak = grid -> dist_to_peak;
     int col = floor(traj_nd -> longitude/ grid -> size);
     int row = floor(traj_nd -> latitude/ grid -> size);
     double T0_x = traj_nd -> longitude;
     double T0_y = traj_nd -> latitude;
 
+    if (PQ.empty()){
+         while(PQ.empty() && grid -> curr_range <= max(grid -> num_columns - 1, grid -> num_rows - 1)){
+         add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+         grid -> curr_range++;
+     }
+     add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+    }
+
     bool within_range = true;
 
     double left_limit = max(0.00, T0_x - dist_peak);
-    int left = max(0, col - range);
+    int left = max(0, col - grid -> curr_range) + 1;
     double left_bd = left * grid -> size;
 
     double right_limit = min(graph_max_x, T0_x + dist_peak);
-    int right = min(grid -> num_columns - 1, col + range);
+    int right = min(grid -> num_columns - 1, col + grid -> curr_range);
     double right_bd = right * grid -> size;
 
     double upper_limit = min(graph_max_y, T0_y + dist_peak);
-    int upper = min(grid -> num_rows - 1, row + range);
+    int upper = min(grid -> num_rows - 1, row + grid -> curr_range);
     double upper_bd = upper * grid -> size;
     
     double lower_limit = max(0.0, T0_y - dist_peak);
-    int lower = max(0, row - range);
+    int lower = max(0, row - grid -> curr_range) + 1;
     double lower_bd = lower * grid -> size;
 
     if (left_limit <= left_bd || right_limit >= right_bd || upper_limit >= upper_bd || lower_limit <= lower_bd){ 
@@ -141,101 +153,77 @@ bool range_check(Grid* grid, Point* traj_nd, double dist_peak, int range, double
 }
 
 priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> GridSearch(Graph* graph, Grid* grid, Point* traj_nd){
-    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>  closer_dist;
-    int col = floor(traj_nd -> longitude/ grid -> size);
-    int row = floor(traj_nd -> latitude/ grid -> size);
-    int index = grid -> num_columns * row + col;
-
-    cout<<"grid number of columns: "<<grid->num_columns<<" number rows: "<<grid->num_rows<<endl;
-    cout<<"search query point   column: "<<col<<" row: "<<row<<" index: "<<index<<endl;
-
-    double graph_max_x = graph -> max_long;
-    double graph_max_y = graph -> max_lat;
-    
-    int range = 0;
-
-    while(closer_dist.empty()){
-    add_range_to_Q(grid, graph, col, row, range, traj_nd, closer_dist);
-    range++; // is this the correct place to calculate this?
-    }
-    add_range_to_Q(grid, graph, col, row, range, traj_nd, closer_dist);
-
-    cout<<" current nodes_idx_list size before range check: "<<closer_dist.size()<<endl;
-
-    grid -> dist_to_peak = closer_dist.top().second; 
-    grid -> curr_range   = range;
-
-    bool enough_range = range_check(grid, traj_nd, grid -> dist_to_peak, grid -> curr_range, graph_max_x,graph_max_y);
-    if (!enough_range) {
-        grid -> curr_range++;
-        add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, closer_dist);
-        return closer_dist;
-    }
-    else{
-        return closer_dist;
-    }
-}
-
-
-void ExtendGrid(Graph* graph, Grid* grid, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ){ //while loop this in discret frechet
+    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> PQ;
     int col = floor(traj_nd -> longitude/ grid -> size);
     int row = floor(traj_nd -> latitude/ grid -> size);
 
-    while(PQ.empty()){
-        grid -> curr_range++;
+    // cout<<"grid number of columns: "<<grid->num_columns<<" number rows: "<<grid->num_rows<<endl;
+    // cout<<"search query point   column: "<<col<<" row: "<<row<<endl;
+
+    while(PQ.empty() && grid -> curr_range <= max(grid -> num_columns - 1, grid -> num_rows - 1)){
         add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+        grid -> curr_range++; 
     }
-    grid -> curr_range++;
     add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+
+    // cout<<" current nodes_idx_list size before range check: "<<PQ.size()<<endl;
+
     grid -> dist_to_peak = PQ.top().second; 
 
-    bool enough_range = range_check(grid, traj_nd, grid -> dist_to_peak, grid -> curr_range, graph -> max_long, graph -> max_lat);
+    bool enough_range = range_check(grid, traj_nd, graph, PQ);
+    if (!enough_range) {
+        grid -> curr_range++;
+        add_range_to_Q(grid, graph, col, row, grid -> curr_range,traj_nd, PQ);
+        return PQ;
+    }
+    else{
+        return PQ;
+    }
+}
+
+
+Gpair next_closest_node(Graph* graph, Grid* grid, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ){ 
+    int col = floor(traj_nd -> longitude/ grid -> size);
+    int row = floor(traj_nd -> latitude/ grid -> size);
+
+    Gpair closest_nd = PQ.top();
+    PQ.pop();
+    grid -> dist_to_peak = PQ.top().second; 
+    bool enough_range = range_check(grid, traj_nd, graph, PQ);
     if (!enough_range) {
         grid -> curr_range++;
         add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+    }
+    return closest_nd;
 }
-    return;
+
+vector<Gpair> next_n_nodes(Graph* graph, Grid* grid, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, int n, double radius){ 
+    int col = floor(traj_nd -> longitude/ grid -> size);
+    int row = floor(traj_nd -> latitude/ grid -> size);
+
+// cout<<"before increasing range PQ.size(): "<<PQ.size()<<endl;
+
+    while (PQ.size()< n){
+        // cout<<"increasing the range\n";
+        grid -> curr_range++;
+        add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+        // /* bool enough_range = range_check(grid, traj_nd, graph, PQ);
+        // if (!enough_range) {
+            // grid -> curr_range++;
+            // add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+        // }*/
+    }
+    vector<Gpair> next_n;
+    for (int i = 0; i < n && PQ.top().second <= radius; i++){
+        Gpair g = PQ.top();
+        next_n.push_back(g);
+        PQ.pop();
+    }
+    
+    //  grid -> curr_range = 0; reset the range inside a function whenever search for a new node;
+
+    return next_n; // in ascending order by the distance to trajectory node;
 }
 
 
 
-//  
-// int next_closest_node(vector<FSnode*> SN_PQ){
-    // return SN_PQ[0] -> vid;
-// }
-// 
-// vector<int> nodes_in_range(vector<FSnode*> SN_PQ, double radius){
-    // vector<int> nd_list;
-    // for (int i = 0; i < SN_PQ.size(); i++){
-        // if (SN_PQ[i] -> dist <= radius){
-            // nd_list.push_back(SN_PQ[i] -> vid);
-        // }
-        // else{
-            // break;
-        // }
-    // }
-    // return nd_list;
-// }
-
-// vector<FSedge*> convert_to_se(priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> PQ, double radius) {
-    // vector<FSedge*> se_list;
-    // /* when building a FSgraph, only need to know the node id, and the initial bottle neck val */
-    // for(int i = 0; i < PQ.size(); i++) {
-        // Gpair gp = PQ.top();
-        // double dist = gp.second;
-        // PQ.pop();
-        // if(dist <= radius) {
-            // FSedge* se = (FSedge*) malloc(sizeof(FSedge));
-            // FSnode* start_nd = (FSnode*) malloc(sizeof(FSnode));
-            // se -> src = NULL;
-            // start_nd -> vid = gp.first;
-            // start_nd -> tid = 0;
-            // start_nd -> dist = dist;
-            // start_nd -> visited = false;
-            // se -> trg = start_nd;
-            // se -> botlneck_val = dist;
-            // se_list.push_back(se);
-        // }
-    // }
-    // return se_list;
-// }

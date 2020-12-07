@@ -7,8 +7,8 @@
 #include <vector> 
 #include <cstdlib>
 #include <cmath>
+#include <queue> 
 #include "graph.h" 
-#include "disc_frechet_v2.h" // CHANGE LATER TO _proj
 #include "scale_projection.h"
 #include "graph_grid.h"
 
@@ -19,24 +19,24 @@ typedef struct GridPair_key {
     int first; //node id 
     double second; //distance to T0
 
-    // bool operator==(const struct GridPair_key other) const { 
-        // return (first == other.first
-            // && second == other.second);
-    // }
+    bool operator==(const struct GridPair_key other) const { 
+        return (first == other.first
+            && second == other.second);
+    }
 } Gpair;
 
 
-struct GridPairHash {
-    size_t operator()(const Gpair g) const {
-        using std::size_t;
-        using std::hash;
-        using std::string;
-
-        return ((hash<int>()(g.first)
-                ^ (hash<double>()(g.second) << 1)) >> 1);
-
-    }
-};
+// struct GridPairHash {
+//     size_t operator()(const Gpair g) const {
+        // using std::size_t;
+        // using std::hash;
+        // using std::string;
+// 
+        // return ((hash<int>()(g.first)
+                // ^ (hash<double>()(g.second) << 1)) >> 1);
+// 
+//     }
+// };
 
 /* to sort the min priority queue for cloest nodes to T0 */
 struct Comp_dist_to_t { 
@@ -54,19 +54,20 @@ double dist_from_T0(Point* traj_nd, node g_nd);
 bool available_nodes(Grid* grid, int col, int row, int range);
 
 /* expand the included grid cells from n*n to (n+1)*(n+1) */
-void add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int range, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ);
+void add_range_to_Q(Grid* grid, Graph* graph, int col, int row,
+int range, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ);
 
-bool range_check(Grid* grid, Point* traj_nd, double dist_peak, int range, double graph_max_x, double graph_max_y);
-
+/* check if the outer layer of cells is touched by the radius of distance to peak */
+bool range_check(Grid* grid, Point* traj_nd, Graph* graph, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> PQ);
 
 /* list out the node IDs of the nodes that are within the specified distance using grid look up */
 priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> GridSearch(Graph* graph, Grid* grid, Point* traj_nd);
 
-// vector<int>& nodes_in_range(vector<FSnode*> SN_PQ, double radius);
 
-void ExtendGrid(Graph* graph, Grid* grid, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ);
+Gpair next_closest_node(Graph* graph, Grid* grid, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ);
 
-// vector<FSedge*> convert_to_se(priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, double radius);
+vector<Gpair> next_n_nodes(Graph* graph, Grid* grid, Point* traj_nd, 
+priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, int n, double radius);
 
 #endif
 

@@ -2,12 +2,12 @@
 #include "graph.h"
 #include "graph_for_hist.h"
 #include "graph_grid.h"
+#include "graph_grid_starting_node.h"
 #include "graph_subsampling.h"
 #include "disc_frechet_grid.h"
 #include "trajectory.h"
 #include "trajectory_split.h"
-#include "graph_grid_starting_node.h"
-#include "freespace_shortest_path.h"
+// #include "freespace_shortest_path.h"
 #include <chrono>
 
 
@@ -96,12 +96,12 @@ int main(int argc, char** argv) {
 
     auto t3 = chrono::high_resolution_clock::now();
     // change the measure to microsecond or nanosecond;
-    //emurate over a radius, or top 50 or 100 cloest -- should still remain very quick
-    //essentially stay lenant
-    //half the graph vertices -- that case may be slower
+    // emurate over a radius, or top 50 or 100 cloest -- should still remain very quick
+    // essentially stay lenient??
+    // half the graph vertices -- that case may be slower
 
     Grid grid = GRID_INIT;
-    make_grids(&after_graph, &grid, 50.00);
+    make_grids(&after_graph, &grid, 60.0);
     output_grid(&grid, "graph_grid_cell_offset_and_node_list.txt");
     auto t4 = chrono::high_resolution_clock::now();
     auto duration1 = chrono::duration_cast<std::chrono::milliseconds>( t4 - t3 ).count();
@@ -111,56 +111,65 @@ int main(int argc, char** argv) {
     vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 6, lon_min, lat_min, lat_scale, lon_scale);
     Trajectory traj = trajs[1];
     Point* traj_nd = traj.points[0];
-    
+    // 
     cout << "finished extracting the trajectory\n";
     calc_traj_edge_cost(&traj);
 
     subsample_traj(&traj, 15);
     cout << "length of trajectory :"<< traj.length << endl;
-
+// 
     write_traj(&traj, "traj_frechet_with_sub.dat");
-
+// 
     auto t1 = chrono::high_resolution_clock::now();
 // 
     priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> PQ;
-
-    PQ = GridSearch(&after_graph, &grid, traj_nd);
 // 
-    auto t2 = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
-    cout << "Duration in milliseconds: " << duration << endl;
+    PQ = GridSearch(&after_graph, &grid, traj_nd);
+
     cout<<"number of closest nodes: "<<PQ.size()<<endl;
-    cout<<"range size: "<<grid.curr_range<<endl;
+
+   vector<Gpair> next_n;
+
+    next_n = next_n_nodes(&after_graph, &grid, traj_nd, PQ, 100, 300);
+
+    cout<<"next_n length: "<<next_n.size()<<endl;
+
+    auto t2 = chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+    cout << "Duration in milliseconds: " << duration<< endl;
+    
+
+    // cout<<"range size: "<<grid.curr_range<<endl;
     // while (!PQ.empty()){
         // cout<<" next closest dist ID and distance: "<<PQ.top().first<<" "<<PQ.top().second<<endl;
         // PQ.pop();
     // }
-    cout<<"distance to peak: "<<grid.dist_to_peak<<endl;
-    cout<<"PQ length before extending: "<<PQ.size()<<endl;
+    // cout<<"distance to peak: "<<grid.dist_to_peak<<endl;
+    // cout<<"PQ length before extending: "<<PQ.size()<<endl;
 
-    FSgraph fsgraph = FSGRAPH_INIT; 
-    cout<<"building free space graph\n";
-    FSpair last_pair = min_eps(&after_graph, &traj, &fsgraph, &grid);
+    // FSgraph fsgraph = FSGRAPH_INIT; 
+    // cout<<"building free space graph\n";
+    // FSpair last_pair = min_eps(&after_graph, &traj, &fsgraph, &grid);
 
-    write_fsgraph(&fsgraph, "weak_fsgraph.dat");
+    // write_fsgraph(&fsgraph, "weak_fsgraph.dat");
 
 
-    write_sur_graph(&fsgraph, &after_graph, "weak_sur_graph_frechet.dat");
-    cout<<"finished printing survided graph"<<endl;
-    cout<<path_cost(&fsgraph, &after_graph, last_pair)<<endl;
-    cout<<"finished printing path"<<endl;
-    print_path(&fsgraph, &traj, &after_graph, "weak_frechet_path.dat", last_pair);
-    cout<<"finished writing out path"<<endl;
+    // write_sur_graph(&fsgraph, &after_graph, "weak_sur_graph_frechet.dat");
+    // cout<<"finished printing survided graph"<<endl;
+    // cout<<path_cost(&fsgraph, &after_graph, last_pair)<<endl;
+    // cout<<"finished printing path"<<endl;
+    // print_path(&fsgraph, &traj, &after_graph, "weak_frechet_path.dat", last_pair);
+    // cout<<"finished writing out path"<<endl;
     
     /* run dijkstra on the freespace */
-    auto t5 = chrono::high_resolution_clock::now();
-    stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph, traj.length);
-    auto t6 = chrono::high_resolution_clock::now();
-    auto duration3 = chrono::duration_cast<std::chrono::milliseconds>( t6 - t5 ).count();
-    cout << "Duration2 in milliseconds: " << duration3 << endl;
+    // auto t5 = chrono::high_resolution_clock::now();
+    // stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph, traj.length);
+    // auto t6 = chrono::high_resolution_clock::now();
+    // auto duration3 = chrono::duration_cast<std::chrono::milliseconds>( t6 - t5 ).count();
+    // cout << "Duration2 in milliseconds: " << duration3 << endl;
   
 
-    cleanup(&fsgraph);
-    cleanup_trajectory(&traj);
+    // cleanup(&fsgraph);
+    // cleanup_trajectory(&traj);
     return 0;
 }

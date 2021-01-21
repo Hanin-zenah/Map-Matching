@@ -1,24 +1,23 @@
 #include "HMM.h"
 
-vector<Gpair> candidates(Graph* graph, Grid* grid, Point* traj_nd, int n, double radius){
+#include "starting_node_look_up.h"
+
+Grid_search gs;
+
+vector<Gpair> HMM::candidates(Graph* graph, Grid* grid, Point* traj_nd, int n, double radius){
     grid -> curr_range = 0;
-    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> dist_PQ  = GridSearch(graph, grid, traj_nd);
-    vector<Gpair> next_n = next_n_nodes(graph, grid, traj_nd, dist_PQ, n, radius); //in ascending order by the distance to trajectory node;
-    if (next_n.size() == 0){
-        cout<<"closest node distance: "<<dist_PQ.top().second<<endl;
-        cerr << "Please increase searching range to include at least the closest node\n";
-    }
+    vector<Gpair> next_n = gs.next_n_nodes(graph, grid, traj_nd, n, radius); //in ascending order by the distance to trajectory node;
     return next_n;
 }
 
-Gpair cloest_can(Graph* graph, Grid* grid, Point* traj_nd){
+Gpair HMM::cloest_can(Graph* graph, Grid* grid, Point* traj_nd){
     grid -> curr_range = 0;
-    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> dist_PQ  = GridSearch(graph, grid, traj_nd);
+    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> dist_PQ  = gs.GridSearch(graph, grid, traj_nd);
     Gpair close = dist_PQ.top();
     return close;
 }
 
-vector<int> path_closest_can(Graph* graph, Grid* grid, Trajectory* traj){
+vector<int> HMM::path_closest_can(Graph* graph, Grid* grid, Trajectory* traj){
     vector<int> path;
     for (int i = 0; i < traj ->length; i++){
         Gpair best_can = cloest_can(graph, grid, traj -> points[i]);
@@ -29,23 +28,23 @@ vector<int> path_closest_can(Graph* graph, Grid* grid, Trajectory* traj){
     return path;
 }
 
-double emission(double sigma, double dist){ //change the dist to a T and a candidate and calculate the dist within the function
+double HMM::emission(double sigma, double dist){ //change the dist to a T and a candidate and calculate the dist within the function
     double prob = 1/ (sqrt(2 * M_PI) * sigma) * exp( - 0.5 * pow((dist/sigma),2.0));
     return prob;
 }
-// 
-double transition(double beta, Point*  T1, Point* T2, double SP){
+
+double HMM::transition(double beta, Point*  T1, Point* T2, double SP){
     double dist = sqrt(pow((T2 -> longitude - T1 -> longitude),2.0)+pow((T2 -> latitude - T1 -> latitude),2.0));
     double prob = 1/beta * exp(-abs(SP - dist)/beta);
     return prob;
 }
 
 
-double sigma_est(Graph* graph, Grid* grid, Trajectory* traj){
+double HMM::sigma_est(Graph* graph, Grid* grid, Trajectory* traj){
     vector<double> error_array;
     for (int i = 0; i < traj -> length; i++){
         grid -> curr_range = 0;
-        priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> PQ  = GridSearch(graph, grid, traj -> points[i]);
+        priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> PQ  = gs.GridSearch(graph, grid, traj -> points[i]);
         /* the second component in the pair is the euclidean distance of the current vertex to the current trajectory point */
         if(!PQ.empty()){
             Gpair p = PQ.top();
@@ -59,7 +58,7 @@ double sigma_est(Graph* graph, Grid* grid, Trajectory* traj){
     return sigma;
 }
 
-double getMedian(vector<double> array){
+double HMM::getMedian(vector<double> array){
     int n = array.size();
     // sort the array
     sort(array.begin(), array.end());
@@ -69,15 +68,14 @@ double getMedian(vector<double> array){
         }
     return (array[(n - 1) / 2] + array[n / 2]) / 2.0;
 }
-bool compare_pair_dist(pair<int, double> pair1, pair<int, double> pair2) {
+bool HMM::compare_pair_dist(pair<int, double> pair1, pair<int, double> pair2) {
     return pair1.second < pair2.second;
 }
 
 
-vector<pair<int, double>>  emission_set(Graph* graph, Grid* grid, Point* traj_nd, int n, double sigma, double radius){ //with candidate node ids
+vector<pair<int, double>>  HMM::emission_set(Graph* graph, Grid* grid, Point* traj_nd, int n, double sigma, double radius){ //with candidate node ids
     grid -> curr_range = 0;
     vector<Gpair> next_n = candidates(graph, grid, traj_nd, n, radius); // in ascending order by the distance to trajectory node;
-    // /* priority_queue<pair<int, double> , vector<pair<int, double>>, Comp_cdd_emi> emission_PQ; */
     vector<pair<int, double>> emissions;
     double sum_emi =0;
     for (int i = 0; i < next_n.size(); i++){
@@ -99,7 +97,7 @@ vector<pair<int, double>>  emission_set(Graph* graph, Grid* grid, Point* traj_nd
 }
 
 
-vector<pair<int,double>> get_inv_incident_pair(Graph* graph, int node_id){
+vector<pair<int,double>> HMM::get_inv_incident_pair(Graph* graph, int node_id){
     vector<pair<int,double>> incidents;
 
     int n_neighbours = graph -> in_offsets[node_id + 1] - graph -> in_offsets[node_id];
@@ -117,7 +115,7 @@ vector<pair<int,double>> get_inv_incident_pair(Graph* graph, int node_id){
 }
 
 
-int src_candidate(Graph* graph, vector<Gpair> candidates){
+int HMM::src_candidate(Graph* graph, vector<Gpair> candidates){
     int num_tar = 0;
     for (int i = 0; i < candidates.size(); i++){
         Gpair p = candidates[i];
@@ -129,7 +127,7 @@ int src_candidate(Graph* graph, vector<Gpair> candidates){
 }
 
 
-double beta_est(double alpha, double t, double radius){
+double HMM::beta_est(double alpha, double t, double radius){
     double b = alpha/(1.0 - alpha) * radius/ t; 
     // d is the search radius used to identify candidate roads around the observations zi.
     // where t is the maximal ratio between great circle distance and route distance which can be considered plausible.
@@ -137,7 +135,7 @@ double beta_est(double alpha, double t, double radius){
     return b;
 }
 
-vector<pair<int, double>> tran_dijkstra(Graph* graph, int node_id, vector<Gpair> prev_candidates){ // run dijkstra for transition probability calculation
+vector<pair<int, double>> HMM::tran_dijkstra(Graph* graph, int node_id, vector<Gpair> prev_candidates){ // run dijkstra for transition probability calculation
     /* all distance set to infinity while reading the graph */
     int num_tar = src_candidate(graph, prev_candidates);
     priority_queue<struct node, vector<struct node>, comp_travel_cost> PQ;
@@ -196,7 +194,7 @@ vector<pair<int, double>> tran_dijkstra(Graph* graph, int node_id, vector<Gpair>
     return SP;
 }
 
-State state_prob(Graph* graph, Grid* grid, Point* T1, Point* T2, double beta, double sigma, 
+State HMM::state_prob(Graph* graph, Grid* grid, Point* T1, Point* T2, double beta, double sigma, 
 int n, State prev_state, vector<pair<int, double>> emi_probs, double radius){ 
     // emission vector sorted by the V's distance to T, in increasing order;
     vector<Gpair> curr_candidates = candidates(graph, grid, T2, n, radius); // don't forget trans matric normalization
@@ -255,7 +253,7 @@ int n, State prev_state, vector<pair<int, double>> emi_probs, double radius){
 }
 
 
-State create_state0(vector<pair<int, double>>  emi_set, double num_can){
+State HMM::create_state0(vector<pair<int, double>>  emi_set, double num_can){
     State state_0; // does it need initializatoin?
     state_0.cdd_nd_id.resize(num_can, 0.0);
     state_0.prdc_state.resize(num_can, -1);
@@ -270,7 +268,7 @@ State create_state0(vector<pair<int, double>>  emi_set, double num_can){
 }
 
 
-vector<int> best_path(Graph* graph, Grid* grid, Trajectory* traj, int n, double sigma, double beta, double radius){ 
+vector<int> HMM::best_path(Graph* graph, Grid* grid, Trajectory* traj, int n, double sigma, double beta, double radius){ 
     
     vector<pair<int, double>> emi_0 = emission_set(graph, grid, traj->points[0], n, sigma, radius);
     State state0 = create_state0(emi_0, emi_0.size());
@@ -327,7 +325,7 @@ vector<int> best_path(Graph* graph, Grid* grid, Trajectory* traj, int n, double 
     return best_path;
 }
 
-stack<int> node_to_node_dijkstra(Graph* graph, int node_id, int node_id2){ 
+stack<int> HMM::node_to_node_dijkstra(Graph* graph, int node_id, int node_id2){ 
     // cout<<"run dijkstra for nodes: "<<node_id<<" "<<node_id2<<endl;
     priority_queue<struct node, vector<struct node>, comp_travel_cost> PQ;
     vector <int> dirty_nodes; 
@@ -375,11 +373,11 @@ stack<int> node_to_node_dijkstra(Graph* graph, int node_id, int node_id2){
     return SP;
 }
 
-vector<int> best_path_dijkstra(Graph* graph, vector<int> best_path){
+vector<int> HMM::best_path_dijkstra(Graph* graph, vector<int> best_path){
     // vector<int> best = best_path(&after_graph, &grid, &traj, 10, sigma, 40);
     vector<int> complete_path;
     stack<int> SP;
-    for (int i = 0; i < best_path.size() - 2; i++){
+    for (int i = 0; i < best_path.size() - 1; i++){
         // cout<<"best_path_dijkstra iteration: "<<i<<endl;
         int id = best_path[i];
         int id2 = best_path[i+1];
@@ -392,24 +390,27 @@ vector<int> best_path_dijkstra(Graph* graph, vector<int> best_path){
     return complete_path;
 }
 
-double HMM_path_cost(Graph* graph, vector<int> path) {
+double HMM::HMM_path_cost(Graph* graph, vector<int> path) {
     double path_cost = 0;
-    for (int i = 0; i < path.size() - 2; i++){
+    for (int i = 0; i < path.size() - 1; i++){
         int id = path[i];
         int id2 = path[i+1];
-        struct node src_node = graph -> nodes[id];
-        struct node trg_node = graph -> nodes[id2];
+        double src_lat, src_lon, trg_lat, trg_lon;
+        src_lat = graph -> nodes[id].lat;
+        src_lon = graph -> nodes[id].longitude;
+        trg_lat = graph -> nodes[id2].lat;
+        trg_lon = graph -> nodes[id2].longitude;
         Euc_distance ed;
-        double cost = ed.euc_dist(src_node.lat, src_node.longitude, trg_node.lat, trg_node.longitude);
+        double cost = ed.euc_dist(src_lat, src_lon, trg_lat, trg_lon);
         path_cost += cost;
     }
     return path_cost;
 }
 
 
-void write_HMM_graph(Graph* graph, vector<int> complete_path, string file_name){ 
+void HMM::write_HMM_graph(Graph* graph, vector<int> complete_path, string file_name){ 
     ofstream file(file_name);
-    for (int i =  0; i < complete_path.size() - 2; i++){
+    for (int i =  0; i < complete_path.size() - 1; i++){
         int id = complete_path[i];
         int id2 = complete_path[i+1];
         double src_lat, src_lon, trg_lat, trg_lon;
@@ -422,4 +423,50 @@ void write_HMM_graph(Graph* graph, vector<int> complete_path, string file_name){
     }
     file.close();
 }
+
+void HMM::make_a_HMM_graph(Graph* graph, vector<int> complete_path, Graph* HMM_graph){ 
+    // HMM_graph = graph;
+    // HMM_graph -> edges.clear();
+    // HMM_graph -> nodes.clear();
+    for (int i =  0; i < complete_path.size(); i++){
+        struct node nd;
+        nd.id = i;
+        nd.lat = graph -> nodes[complete_path[i]].lat;
+        nd.longitude = graph -> nodes[complete_path[i]].longitude;
+        HMM_graph -> nodes.push_back(nd);
+    //    double dist = dist_from_Traj0(traj_nd, HMM_graph -> nodes[i]);
+        // cout<<nd.longitude<<" "<<nd.lat<<" "<<dist<<endl;
+    }
+    for (int i =  0; i < complete_path.size() - 1; i++){
+        int id = complete_path[i];
+        int id2 = complete_path[i+1];
+        double src_lat, src_lon, trg_lat, trg_lon;
+        src_lat = graph -> nodes[id].lat;
+        src_lon = graph -> nodes[id].longitude;
+        trg_lat = graph -> nodes[id2].lat;
+        trg_lon = graph -> nodes[id2].longitude;
+        struct edge e;
+        e.srcid = i ;
+        e.trgtid = i+1;
+        e.id = i;
+        Euc_distance ed;
+        e.cost = ed.euc_dist(src_lat, src_lon, trg_lat, trg_lon);
+        HMM_graph -> edges.push_back(e);
+    }
+    HMM_graph -> lat_scale = graph -> lat_scale;
+    HMM_graph -> lon_scale = graph -> lon_scale;
+    HMM_graph -> min_lat = graph -> min_lat;
+    HMM_graph -> min_long = graph -> min_long;
+    HMM_graph -> max_lat = graph -> max_lat;
+    HMM_graph -> max_long = graph -> max_long;
+    HMM_graph -> n_nodes = HMM_graph -> nodes.size();
+    HMM_graph -> n_edges = HMM_graph -> edges.size();
+    outedge_offset_array(HMM_graph);
+    inedge_offset_array(HMM_graph);
+    
+    // output_graph(HMM_graph, file_name, graph -> lat_scale, graph -> lon_scale, 
+// graph -> min_lat, graph -> max_lat, graph -> min_long, graph -> max_long);
+    return;
+}
+
 

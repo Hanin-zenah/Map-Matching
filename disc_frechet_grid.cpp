@@ -15,11 +15,10 @@ bool found_fsnode_vec(FSgraph* fsgraph, FSnode* node) {
     return false;
 }
 
-
-void back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, 
-priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ) {
+Grid_search gs;
+void back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, Graph* graph, Point* traj_nd, Grid* grid) {
     if(!PQ.empty()) {
-        Gpair gp = PQ.top();
+        Gpair gp = gs.next_closest_node(graph, grid, traj_nd, PQ);
         PQ.pop();
         double dist = gp.second;
         FSedge* se = (FSedge*) malloc(sizeof(FSedge));
@@ -61,16 +60,7 @@ priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, Point* traj_nd, Graph*
     /* check if it is a super edge and put the next super edge in the queue  */
     /* if the edge is a super edge */
     if(!min_eps_fedge -> src) {
-        if (!PQ.empty()){
-            back_up_se(fsgraph, bigger_eps, PQ);
-        }
-        else{
-            while (PQ.empty()){
-                ExtendGrid(graph, grid, traj_nd, PQ);
-                cout<<"-----------extended the grid!!!!!------------\n";
-                }
-            back_up_se(fsgraph, bigger_eps, PQ);
-        }
+            back_up_se(fsgraph, bigger_eps, PQ, graph, traj_nd, grid);
     }
     fsgraph -> eps = min_eps_fedge -> botlneck_val;
     FSnode* next_nd = min_eps_fedge -> trg;
@@ -171,9 +161,8 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
         }
     }
     FSnode* next_nd = (FSnode*) malloc(sizeof(FSnode));
-    next_nd -> visited = true;// maybe where the problem is
-    // cout<<"next_nd -> visited: "<<next_nd -> visited<<endl;
-    while(next_nd -> visited) {
+    next_nd -> visited = true;// maybe where the problem is-- it's not necessary to create this node?
+    while(next_nd -> visited) { // till we find a pair/FSnode that hasn't been visited？
         // cout<<"Stack.empty(): "<<Stack.empty()<<endl;
         if(Stack.empty()) {
                 /* case 1: if there are no more readily traversable edges in the freespace graph, update the eps (leash length) */
@@ -206,8 +195,7 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, Grid* grid) {
      * sorted by descending distance 
      */
 
-    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> grid_PQ;
-    grid_PQ = GridSearch(graph, grid, traj -> points[0]);
+    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> grid_PQ = gs.GridSearch(graph, grid, traj -> points[0]);
 
     if(grid_PQ.empty()) {
         cerr << "Error -- couldn't find any node in the grid"<<endl;
@@ -242,7 +230,7 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, Grid* grid) {
     vector<FSedge*> vec;
     fsgraph -> adj_list[start_nd] = vec;
 
-    back_up_se(fsgraph, bigger_eps, grid_PQ);
+    back_up_se(fsgraph, bigger_eps, grid_PQ, graph, traj_nd, grid);
     bool finished = false;
     
     int i = 0;

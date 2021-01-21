@@ -1,9 +1,9 @@
 #include "starting_node_look_up.h"
-#include "disc_frechet_v2.h"
+#include "disc_frechet.h"
 
 using namespace std;
 
-double dist_from_T0(Point* traj_nd, node g_nd) {
+double dist_from_Traj0(Point* traj_nd, node g_nd) {
     double dist; 
     dist = sqrt(pow((traj_nd -> latitude - g_nd.lat), 2) + 
                     pow((traj_nd -> longitude - g_nd.longitude), 2));
@@ -18,7 +18,7 @@ vector<FSedge*> SearchNodes(Graph* graph, Point* traj_nd, double radius) {
     vector<FSedge*> se_list;
     /* when building a FSgraph, only need to know the node id, and the initial bottle neck val */
     for(int i = 0; i < graph -> nodes.size(); i++) {
-        double dist = dist_from_T0(traj_nd, graph -> nodes[i]);
+        double dist = dist_from_Traj0(traj_nd, graph -> nodes[i]);
         if(dist <= radius) {
             FSedge* se = (FSedge*) malloc(sizeof(FSedge));
             FSnode* start_nd = (FSnode*) malloc(sizeof(FSnode));

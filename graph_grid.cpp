@@ -8,7 +8,7 @@
 // }
 
 
-void make_grids(Graph* graph, Grid* grid, double size){
+void Build_grid::make_grids(Graph* graph, Grid* grid, double size){
     grid -> size = size;
     // initialize_cells(graph, grid, size);
     grid -> num_rows = ceil(graph -> max_lat/size);
@@ -28,11 +28,10 @@ void make_grids(Graph* graph, Grid* grid, double size){
     // }
 
     std::fill(grid -> cell_offset.begin(), grid -> cell_offset.end(), 0);
-    // cout<<"no problem assigning 0s: "<< grid -> cell_offset[3] <<endl;
     grid -> cell_nodes_list.resize(graph -> nodes.size());
     
     for (int i = 0; i < graph -> nodes.size(); i++){
-        int col = floor(graph -> nodes[i].longitude/size); // floor this, cuz cell id starts with zero!
+        int col = floor(graph -> nodes[i].longitude/size); // floor this -- cell id starts with zero
         int row = floor(graph -> nodes[i].lat/size);
         int index = grid -> num_columns * row + col;
         grid -> cell_offset[index + 1]++;
@@ -74,7 +73,7 @@ void make_grids(Graph* graph, Grid* grid, double size){
     return;
 }
 
-void output_grid(Grid* grid, string file_name){
+void Build_grid::output_grid(Grid* grid, string file_name){
     ofstream txt_file(file_name);
     txt_file << grid -> cell_offset.size() << endl;
     txt_file << grid -> cell_nodes_list.size() << endl;

@@ -1,5 +1,5 @@
-#ifndef DISC_FRECHET_V2_H
-#define DISC_FRECHET_V2_H
+#ifndef DISC_FRECHET_GRID_H
+#define DISC_FRECHET_GRID_H
 
 #include <iostream>
 #include <cmath>
@@ -13,9 +13,10 @@
 #include <unordered_map> 
 #include <cstdlib>
 #include "graph.h"
+#include "graph_grid.h"
+#include "graph_grid_starting_node.h"
 #include "trajectory.h"
 #include "scale_projection.h"
-#include "graph_grid_starting_node.h"
 
 #define FSGRAPH_INIT {0}
 
@@ -114,8 +115,8 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
 // vector<FSedge*> convert_to_se(priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, double radius);
 
 /* always have a back up super edge in the priority queue while traversaling */
-void back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps,
- priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ);
+void back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, 
+Graph* graph, Point* traj_nd, Grid* grid); 
 
 /* increase the current leash length value when there is no readily traversable edges */
 FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, 

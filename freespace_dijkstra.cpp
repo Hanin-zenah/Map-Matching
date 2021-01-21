@@ -51,7 +51,7 @@ FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m,
     return NULL;
 }
 
-stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m) {
+stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m, int i) {
     priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq> PQ; //stores nodes for now, later can change to store only edges 
     for(FSnode* source: fsgraph -> source_set) {
         source -> sp_dist = 0;
@@ -85,14 +85,16 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m) {
         cerr << "Dijkstra Failed; returned NULL\n";
         return path;
     }
-    cout<<"shorter path length "<< cur -> sp_dist <<endl;
+    cout<<"shorter frechet distance path length "<< cur -> sp_dist <<endl;
     
     //extract path 
-    ofstream file("dijkstra_path.dat");
+    char buff[100];
+    snprintf(buff, sizeof(buff), "london_dijkstra_path_traj%d.dat", i);
+    ofstream file(buff);
     while(cur -> sp_parent) {
         path.push(cur);
-        file << graph -> nodes[cur -> vid].lat << " " << graph -> nodes[cur -> vid].longitude
-        << " " << graph -> nodes[cur -> sp_parent -> vid].lat <<" "<< graph -> nodes[cur -> sp_parent -> vid].longitude<<endl;
+        file << graph -> nodes[cur -> vid].longitude << " " << graph -> nodes[cur -> vid].lat
+        << " " << graph -> nodes[cur -> sp_parent -> vid].longitude <<" "<< graph -> nodes[cur -> sp_parent -> vid].lat<<endl;
         cur = cur -> sp_parent;  
     }
 

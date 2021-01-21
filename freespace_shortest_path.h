@@ -1,4 +1,4 @@
-#include "disc_frechet_v2.h"
+#include "disc_frechet_grid.h"
 #include <limits>
 
 #define INF_D (numeric_limits<double>::max())
@@ -35,7 +35,7 @@ FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m,
 
 
 /* returns the shortest matching path of the freespace */
-stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m);
+stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m, int i);
 
 void print_dijk_path(stack<FSnode*> SP, Graph* graph, string file_name);
 

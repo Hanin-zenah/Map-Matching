@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     double g_dist1 = bd.geodesic_dist(lat_min,lon_min,lat_max,lon_min);
     double g_dist2 = bd.geodesic_dist(lat_min,lon_max,lat_min,lon_min);
     double g_dist3 = bd.geodesic_dist(lat_max,lon_max,lat_max,lon_min);
-
+// 
     cout<<"geo disc: "<<g_dist1<<" "<<g_dist2<<" "<<g_dist3<<endl;
     Euc_distance ed;
     double e_dist1, e_dist2, e_dist3;
@@ -60,6 +60,8 @@ int main(int argc, char** argv) {
     cout<<"scale: "<<lon_scale<<lat_scale<<endl;
 // 
     ed.calc_edge_cost(&graph, lat_scale, lon_scale);
+
+    graph_edge_cost(&graph, "Saarland_all_edges.dat"); 
 // 
     Graph SCC_graph = GRAPH_INIT;
     scc_graph(&graph, &SCC_graph);            
@@ -67,10 +69,10 @@ int main(int argc, char** argv) {
     cout<<"done scc graph"<<endl;
     cout<<"before subsampling scc # edges and nodes: "<<SCC_graph.edges.size()<<" #nodes "<<SCC_graph.nodes.size()<<endl;
 // 
-    subsampling(&SCC_graph, 50);
-// 
+    subsampling(&SCC_graph, 40);
 
-// greater-london-200601.all
+    graph_edge_cost(&SCC_graph, "SCC_Saarland_all_edges.dat"); 
+// 
     outedge_offset_array(&SCC_graph);
     inedge_offset_array(&SCC_graph);    
     cout<<"original box: "<<graph.original_min_lat<<" "<<graph.original_min_long<<" "<<graph.original_max_lat<<" "<<graph.original_max_long<<endl;
@@ -80,6 +82,9 @@ int main(int argc, char** argv) {
     Graph SCC_graph2 = GRAPH_INIT;
     scc_graph(&SCC_graph, &SCC_graph2);
     cout<<"after second SCC # edges: "<<SCC_graph2.edges.size()<<" #nodes "<<SCC_graph2.nodes.size()<<endl;  
+
+    // read_processed_graph(argv[1], &graph);
+    // write_graph(&graph, "greater-london_sub_50_projected.dat");
     
 return 0;
 }

@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <cmath>
 #include "graph.h" 
+#include "trajectory.h"
 #include "scale_projection.h"
 
 using namespace std;
@@ -44,11 +45,17 @@ typedef struct grid {
 
 // make it into own class, have constructors
 
-void initialize_cells(Graph* graph, Grid* grid, double size);
+class Build_grid{
+    public:
 
-void make_grids(Graph* graph, Grid* grid, double size);
+        // /* compute how many grid cells a graph needs */
+        // void initialize_cells(Graph* graph, Grid* grid, double size);
 
-void output_grid(Grid* grid, string file_name);
+        /* build grid cells for a graph */
+        void make_grids(Graph* graph, Grid* grid, double size);
 
+        /* store the grid, mainly for checking purposes */
+        void output_grid(Grid* grid, string file_name);
+};
 
 #endif

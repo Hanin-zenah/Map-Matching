@@ -4,14 +4,14 @@
 
 using namespace std;
 
-double dist_from_T0(Point* traj_nd, node g_nd) {
+double Grid_search::dist_from_T0(Point* traj_nd, node g_nd) {
     double dist; 
     dist = sqrt(pow((traj_nd -> latitude - g_nd.lat), 2) + 
                     pow((traj_nd -> longitude - g_nd.longitude), 2));
     return dist; 
 }  
 
-void add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int range, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ){
+void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int range, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ){
 
     // TODO: this is wrong when a cell on the boundary was already added to the PQ
     // Needs to be done separately per loop: hor-top, hor-bot,...
@@ -110,7 +110,7 @@ void add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int range, Point
     return;
 }
 
-bool range_check(Grid* grid, Point* traj_nd, Graph* graph, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> PQ){
+bool Grid_search::range_check(Grid* grid, Point* traj_nd, Graph* graph, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> PQ){
     double graph_max_x = graph -> max_long;
     double graph_max_y = graph -> max_lat;
 
@@ -152,7 +152,7 @@ bool range_check(Grid* grid, Point* traj_nd, Graph* graph, priority_queue<Gpair,
     return within_range;
 }
 
-priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> GridSearch(Graph* graph, Grid* grid, Point* traj_nd){
+priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> Grid_search::GridSearch(Graph* graph, Grid* grid, Point* traj_nd){
     priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> PQ;
     int col = floor(traj_nd -> longitude/ grid -> size);
     int row = floor(traj_nd -> latitude/ grid -> size);
@@ -167,7 +167,6 @@ priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> GridSearch(Graph* graph, Gr
     add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
 
     // cout<<" current nodes_idx_list size before range check: "<<PQ.size()<<endl;
-
     grid -> dist_to_peak = PQ.top().second; 
 
     bool enough_range = range_check(grid, traj_nd, graph, PQ);
@@ -182,7 +181,7 @@ priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> GridSearch(Graph* graph, Gr
 }
 
 
-Gpair next_closest_node(Graph* graph, Grid* grid, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ){ 
+Gpair Grid_search::next_closest_node(Graph* graph, Grid* grid, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ){ 
     int col = floor(traj_nd -> longitude/ grid -> size);
     int row = floor(traj_nd -> latitude/ grid -> size);
 
@@ -197,33 +196,71 @@ Gpair next_closest_node(Graph* graph, Grid* grid, Point* traj_nd, priority_queue
     return closest_nd;
 }
 
-vector<Gpair> next_n_nodes(Graph* graph, Grid* grid, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, int n, double radius){ 
+// vector<Gpair> Grid_search::next_n_nodes(Graph* graph, Grid* grid, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, int n, double radius){ 
+    // int col = floor(traj_nd -> longitude/ grid -> size);
+    // int row = floor(traj_nd -> latitude/ grid -> size);
+// 
+    // while (PQ.size()< n){
+        // grid -> curr_range++;
+        // add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+    // }
+    // vector<Gpair> next_n;
+    // for (int i = 0; i < n && PQ.top().second <= radius; i++){
+        // Gpair g = PQ.top();
+        // next_n.push_back(g);
+        // PQ.pop();
+    // }
+    // 
+// 
+    // return next_n; // in ascending order by the distance to trajectory node;
+// }
+
+vector<Gpair> Grid_search::next_n_nodes(Graph* graph, Grid* grid, Point* traj_nd, int n_cans, double radius){
+    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> PQ;
     int col = floor(traj_nd -> longitude/ grid -> size);
     int row = floor(traj_nd -> latitude/ grid -> size);
 
-// cout<<"before increasing range PQ.size(): "<<PQ.size()<<endl;
+    while(PQ.empty() && grid -> curr_range <= max(grid -> num_columns - 1, grid -> num_rows - 1)){
+        add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+        grid -> curr_range++; 
+    }
 
-    while (PQ.size()< n){
-        // cout<<"increasing the range\n";
+    add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ); // always include one more layer of what's touched already
+    grid -> dist_to_peak = PQ.top().second; 
+
+    bool enough_range = range_check(grid, traj_nd, graph, PQ); // check if the additional layer that just got added can be touched but the searching radius, if it's touched, add one more layer
+    if (!enough_range) {
+        grid -> curr_range++;
+        add_range_to_Q(grid, graph, col, row, grid -> curr_range,traj_nd, PQ);
+    }
+
+    if (PQ.top().second >= radius){
+        cerr << "Please increase searching range to at least: "<<PQ.top().second<<endl;
+    }
+
+    vector<Gpair> next_n;
+    for (int i = 0; i < PQ.size(); i++){
+        if(PQ.top().second <= radius){ 
+            Gpair g = PQ.top();
+            next_n.push_back(g);
+            PQ.pop();
+            }
+        else{
+            break;
+        }}
+
+    while (next_n.size() < n_cans && next_n.back().second <= radius){
         grid -> curr_range++;
         add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
-        // /* bool enough_range = range_check(grid, traj_nd, graph, PQ);
-        // if (!enough_range) {
-            // grid -> curr_range++;
-            // add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
-        // }*/
-    }
-    vector<Gpair> next_n;
-    for (int i = 0; i < n && PQ.top().second <= radius; i++){
-        Gpair g = PQ.top();
-        next_n.push_back(g);
-        PQ.pop();
-    }
-    
-    //  grid -> curr_range = 0; reset the range inside a function whenever search for a new node;
-
-    return next_n; // in ascending order by the distance to trajectory node;
+        for (int i = 0; i < PQ.size(); i++){
+            if(PQ.top().second <= radius){ 
+                Gpair g = PQ.top();
+                next_n.push_back(g);
+                PQ.pop();
+                }
+            else{
+                break;
+            }}         
+        }
+        return next_n; // in ascending order by the distance to trajectory node;   
 }
-
-
-

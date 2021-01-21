@@ -13,9 +13,9 @@
 #include <stack> 
 #include "graph.h" 
 #include "scale_projection.h"
-#include "disc_frechet_grid.h"
 #include "graph_grid.h"
 #include "graph_grid_starting_node.h"
+
 
 using namespace std;
 
@@ -36,23 +36,6 @@ using namespace std;
 
 // double transition(Zt, Zt+1, Xt-i, );
 
-typedef struct C_node {
-    double longitude;
-    double lat;
-    int id;
-    double dist;
-    bool target;
-    int parent_id;
-} C_node;
-
-
-struct Comp_cdd_emi { 
-    bool operator()(const pair<int, double> node1, const pair<int, double> node2) const {
-        return node1.second > node2.second ;
-    }
-};
-
-
 typedef struct state{
     // Do I need to initialize this?
     vector<int> cdd_nd_id;
@@ -65,8 +48,6 @@ typedef struct all_states{
     vector<State*> states_vec;
 } All_states;
 
-bool compare_pair_dist(pair<int, double> pair1, pair<int, double> pair2); 
-
 struct comp_travel_cost {
     bool operator()(struct node nd1, struct node nd2) {
         return nd1.dist > nd2.dist; 
@@ -74,45 +55,64 @@ struct comp_travel_cost {
 };
 
 
-vector<Gpair> candidates(Graph* graph, Grid* grid, Point* traj_nd, int n, double radius);
+class HMM{
+    public:
+        vector<Gpair> candidates(Graph* graph, Grid* grid, Point* traj_nd, int n, double radius);
 
-/* calculating parameters */
-double getMedian(vector<double> array);
+        /* calculating parameters */
+        double getMedian(vector<double> array); // delete if delete sigma
 
-double sigma_est(Graph* graph, Grid* grid, Trajectory* traj);
+        /* delete the sigma, either use a default value or the user-defined value */
+        double sigma_est(Graph* graph, Grid* grid, Trajectory* traj);
 
-double beta_est(double alpha, double t, double radius);
+        /* calculating beta */
+        double beta_est(double alpha, double t, double radius);
 
-double emission(double sigma, double dist);
+        /* calculating the emission probability for one candidate */
+        double emission(double sigma, double dist);
 
-vector<pair<int, double>>  emission_set(Graph* graph, Grid* grid, Point* traj_nd, int n, double sigma, double radius);
+        /* calculating the transition probability between two candidate given their SP to each other*/
+        double transition(double beta, Point*  T1, Point* T2, double SP);
 
-vector<pair<int,double>> get_inv_incident_pair(Graph* graph, int node_id);
+        /* comparing distance */
+        bool compare_pair_dist(pair<int, double> pair1, pair<int, double> pair2); 
 
-int src_candidate(Graph* graph, vector<Gpair> candidates);
+        /* calculating the emission probabilities for entire set of candidates */
+        vector<pair<int, double>>  emission_set(Graph* graph, Grid* grid, Point* traj_nd, int n, double sigma, double radius);
 
-stack<int> node_to_node_dijkstra(Graph* graph, int node_id, int node_id2);
+        /* finding all the incoming nodes on the graph from a given node */
+        vector<pair<int,double>> get_inv_incident_pair(Graph* graph, int node_id);
 
-vector<pair<int, double>> tran_dijkstra(Graph* graph, int node_id, vector<Gpair> prev_candidates);
+        /* number of source candidates????????????????????????? */
+        int src_candidate(Graph* graph, vector<Gpair> candidates);
 
-vector<pair<int, double>> tran_matrix(Graph* graph, vector<Gpair> curr_candidates, vector<Gpair> prev_candidates, State prev_state);
+        /* Compute a sequence of node IDs that gives the shortest path between two nodes*/
+        stack<int> node_to_node_dijkstra(Graph* graph, int node_id, int node_id2);
 
-State state_prob(Graph* graph, Grid* grid, Point* T1, Point* T2, double beta, double sigma, 
-int n, State prev_state, vector<pair<int, double>> emi_probs, double radius);
+        /* running the node_to_node_dijkstra between each previous candidate and a current candidate */
+        vector<pair<int, double>> tran_dijkstra(Graph* graph, int node_id, vector<Gpair> prev_candidates);
 
-State create_state0(vector<pair<int, double>>  emi_set);
+        vector<pair<int, double>> tran_matrix(Graph* graph, vector<Gpair> curr_candidates, vector<Gpair> prev_candidates, State prev_state);
 
-vector<int> best_path(Graph* graph, Grid* grid, Trajectory* traj, int n, double sigma, double beta, double radius);
+        State state_prob(Graph* graph, Grid* grid, Point* T1, Point* T2, double beta, double sigma, 
+        int n, State prev_state, vector<pair<int, double>> emi_probs, double radius);
 
-vector<int> best_path_dijkstra(Graph* graph, vector<int> best_path);
+        State create_state0(vector<pair<int, double>>  emi_set, double num_can);
 
-void write_HMM_graph(Graph* graph, vector<int> complete_path, string file_name);
+        vector<int> best_path(Graph* graph, Grid* grid, Trajectory* traj, int n, double sigma, double beta, double radius);
 
-double HMM_path_cost(Graph* graph, vector<int> path);
+        vector<int> best_path_dijkstra(Graph* graph, vector<int> best_path);
 
-vector<int> path_closest_can(Graph* graph, Grid* grid, Trajectory* traj); // delete
+        void write_HMM_graph(Graph* graph, vector<int> complete_path, string file_name);
 
-Gpair cloest_can(Graph* graph, Grid* grid, Point* traj_nd); // delete
+        double HMM_path_cost(Graph* graph, vector<int> path);
 
+        vector<int> path_closest_can(Graph* graph, Grid* grid, Trajectory* traj); // delete
+
+        Gpair cloest_can(Graph* graph, Grid* grid, Point* traj_nd); // delete
+
+        /* convert the path to a graph so that we can calculate the frechet distance between it and the trajectory */
+        void make_a_HMM_graph(Graph* graph, vector<int> complete_path, Graph* HMM_graph);
+};
 
 #endif

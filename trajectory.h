@@ -61,4 +61,7 @@ void cleanup_trajectory(Trajectory* traj);
 /* calculate the cost for every edge in the trajectory */
 void calc_traj_edge_cost(Trajectory* traj);
 
+/* return the length in meter of the trajectory */
+double calc_traj_length(Trajectory* traj);
+
 #endif

@@ -7,7 +7,7 @@
 #include <cstdlib>
 #include <cmath>
 #include "graph.h" 
-#include "disc_frechet_v2.h"
+#include "disc_frechet.h"
 #include "scale_projection.h"
 
 using namespace std;
@@ -17,7 +17,7 @@ using namespace std;
 bool compare_dist(FSedge* sp1, FSedge* sp2);
 
 /* return the distance between 2 nodes are within the required radius */
- double dist_from_T0(Point* traj_nd, node g_nd, double x_scale, double y_scale);
+ double dist_from_Traj0(Point* traj_nd, node g_nd);
 
 /* list out the node IDs of the nodes that are within the specified distance */
 vector<FSedge*> SearchNodes(Graph* graph, Point* traj_nd, double radius);

@@ -6,9 +6,9 @@
 #include <vector> 
 #include <cstdlib>
 #include <cmath>
-#include "graph.h" 
-#include "trajectory.h"
-#include "scale_projection.h"
+#include "../preprocessing/graph.h" 
+#include "../trajectories/trajectory.h"
+#include "../preprocessing/scale_projection.h"
 
 using namespace std;
 

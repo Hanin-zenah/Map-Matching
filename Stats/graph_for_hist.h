@@ -6,12 +6,14 @@
 #include <sstream>
 #include <string>
 #include <vector> 
-#include "graph.h"
+#include "../preprocessing/graph.h"
 
 using namespace std;
 
+class EdgeStat{
 /* generates only edges with edge IDs and costs */
-
-void graph_edge_cost(Graph* graph, string file_name);
+    public:
+    void graph_edge_cost(Graph* graph, string file_name);
+};
 
 #endif

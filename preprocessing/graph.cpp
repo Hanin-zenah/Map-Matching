@@ -35,7 +35,7 @@ void read_file(string file_name, Graph* graph) {
     ifstream file; 
     file.open(file_name);
     if(!file) {
-        cerr << "Unable to open file";
+        cerr << "Unable to open file\n";
         return;
     }
 
@@ -82,18 +82,6 @@ void read_file(string file_name, Graph* graph) {
     return;
 }
 
-// void convert_coordinates(Graph* graph, double x_scale, double y_scale){
-    // Euc_distance ed;
-    // overwrite the node's coordinates in mercator projection
-    // for(int i = 0; i < graph -> n_nodes; i++) {
-        // graph -> nodes[i].lat = ed.lat_mercator_proj(graph -> nodes[i].lat, graph -> min_lat);
-        // graph -> nodes[i].longitude = ed.lon_mercator_proj(graph -> nodes[i].longitude, graph -> min_long);
-    // }
-    // write_graph(graph, "graph_x_y.dat");
-// 
-    // return;
-    // }
-
 
 void read_processed_graph(string file_name, Graph* graph) {
     if(file_name.empty()) {
@@ -107,10 +95,6 @@ void read_processed_graph(string file_name, Graph* graph) {
     }
 
     string buffer;
-    // /* skip the first five lines */
-    // for(int i = 0; i < IGNORE_LINES; i++) {
-        // getline(file, buffer);
-    // }
     /* read the total number of nodes and edges, store them in graph struct */
     file >> graph -> n_nodes >> graph -> n_edges >> graph -> lat_scale >> graph -> lon_scale>>
      graph -> original_min_lat >> graph -> original_max_lat >> graph -> original_min_long >> graph -> original_max_long;
@@ -391,7 +375,6 @@ void scc_graph(Graph* graph, Graph* SCC_graph) {
         }
     }
 
-    //parallelize this?
     for(int i = 0; i < SCC_graph -> n_edges; i++) {
         int source = SCC_graph -> edges[i].srcid;
         int target = SCC_graph -> edges[i].trgtid;

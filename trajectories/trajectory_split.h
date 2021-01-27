@@ -6,7 +6,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <vector>
-#include "scale_projection.h"
+#include "../preprocessing/scale_projection.h"
 #include "trajectory.h"
 
 #define TRAJ_VAL_SIZE (4)

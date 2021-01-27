@@ -8,8 +8,8 @@
 #include <cstdlib>
 #include <cmath>
 #include <queue> 
-#include "graph.h" 
-#include "scale_projection.h"
+#include "../preprocessing/graph.h" 
+#include "../preprocessing/scale_projection.h"
 #include "graph_grid.h"
 
 using namespace std;

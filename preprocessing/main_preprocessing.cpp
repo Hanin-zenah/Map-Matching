@@ -65,11 +65,12 @@ int main(int argc, char** argv) {
     cin>>threshold;
     subsampling(&SCC_graph, threshold); 
     outedge_offset_array(&SCC_graph);
+    inedge_offset_array(&SCC_graph); 
     
     cout<<"Please enter output pre-processed filename:\n";
     string output_fname;
     cin>>output_fname;
-    output_graph(&SCC_graph, output_fname , lat_scale, lon_scale, lat_min, lat_max, lon_min, lon_max); //"greater-london-_sub_50_projected.txt"
+    output_graph(&SCC_graph, output_fname, lat_scale, lon_scale, lat_min, lat_max, lon_min, lon_max); //"greater-london-_sub_50_projected.txt"
     
     /* checking sub-sampling results */
     cout<<"before second SCC # edges: "<<SCC_graph.edges.size()<<" #nodes "<<SCC_graph.nodes.size()<<endl;

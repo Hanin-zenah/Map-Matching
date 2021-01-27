@@ -81,7 +81,7 @@ void subsampling(Graph* graph, double threshold){
     graph -> n_edges = graph -> edges.size();
     
 
-    // write_graph(graph, fname);
+
     return;
 }
 

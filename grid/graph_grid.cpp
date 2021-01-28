@@ -1,5 +1,5 @@
-#include "graph_grid.h"
-#include "graph.h"
+#include "../preprocessing/graph_grid.h"
+#include "../preprocessing/graph.h"
 
 
 // int cell_mapping(int row_id, int col_id, int num_rows, int num_cells){

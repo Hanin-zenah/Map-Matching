@@ -264,3 +264,26 @@ vector<Gpair> Grid_search::next_n_nodes(Graph* graph, Grid* grid, Point* traj_nd
         }
         return next_n; // in ascending order by the distance to trajectory node;   
 }
+
+
+priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> Grid_search::k_nodes(Graph* graph, Grid* grid, Point* traj_nd, int k){
+    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> PQ;
+    int col = floor(traj_nd -> longitude/ grid -> size);
+    int row = floor(traj_nd -> latitude/ grid -> size);
+
+    while(PQ.size() < k){
+        add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+        grid -> curr_range++; 
+    }
+
+    add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ); // always include one more layer of what's touched already
+    grid -> dist_to_peak = PQ.top().second; 
+
+    bool enough_range = range_check(grid, traj_nd, graph, PQ); // check if the additional layer that just got added can be touched but the searching radius, if it's touched, add one more layer
+    if (!enough_range) {
+        grid -> curr_range++;
+        add_range_to_Q(grid, graph, col, row, grid -> curr_range,traj_nd, PQ);
+    }
+
+    return PQ;  
+}

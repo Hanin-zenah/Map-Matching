@@ -59,6 +59,9 @@ class Grid_search{
         // vector<Gpair> next_n_nodes(Graph* graph, Grid* grid, Point* traj_nd, 
         // priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, int n, double radius);
 
+        /* compute a PQ of next k closest nodes sorted ascendingly by their distance to query point */
+        priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> Grid_search::k_nodes(Graph* graph, Grid* grid, Point* traj_nd, int k);
+
 };
 
 #endif

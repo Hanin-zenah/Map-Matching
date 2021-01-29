@@ -14,16 +14,16 @@ The downloaded data was then processed with the publicly available tool from the
 
 Available matching algorithms in this tool:
 ------------
-Discrete Fréchet Matching Path (DFMP)\n\n
-Shortest Discrete Fréchet Matching Path (SDFMP)\n\n
+Discrete Fréchet Matching Path (DFMP)
+Shortest Discrete Fréchet Matching Path (SDFMP)
 Weak Discrete Fréchet Matching Path (WDFMP)\n\n
 Weak Shortest Discrete Fréchet Matching Path (WDFMP)\n\n
 Hidden Markov Model (HMM)\n\n
 
 User-defined parameters for HMM:
 ------------
-• M – Candidate searching radius\n\n
-• N – Candidate set size\n\n
+• M – Candidate searching radius
+N – Candidate set size\n\n
 • 𝜎 – Capture the GPS noise\n\n
 • α – A value between 0 and 1 and controls the tradeoff between transition and observation weights. Higher α values put more weight on route plausibility.\n\n
 • R – The maximal ratio between observation distance and candidate distance
@@ -50,7 +50,8 @@ For the second run, the following command-line arguments need to be passed to th
 • M (only for HMM) or “none”
 • Statistics: “runtime statistics”, or “runtime quality”, or “runtime statistics and quality”, or “none”
 • Output format: txtOSMID, txtVID, JSON
-o txtOSMID: returns one line of vertex OSMIDs per trajectory. o txtVID: returns one line of vertex IDs per trajectory.
+o txtOSMID: returns one line of vertex OSMIDs per trajectory. 
+o txtVID: returns one line of vertex IDs per trajectory.
 o JSON: For each trajectory, it returns one line of vertex OSMIDs and one line of vertex IDs, as well as the corresponding statistics queried in the statistics argument.
 
 

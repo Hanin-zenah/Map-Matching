@@ -14,20 +14,20 @@ The downloaded data was then processed with the publicly available tool from the
 
 Available matching algorithms in this tool:
 ------------
-Discrete Fréchet Matching Path (DFMP)
-Shortest Discrete Fréchet Matching Path (SDFMP)
-Weak Discrete Fréchet Matching Path (WDFMP)
-Weak Shortest Discrete Fréchet Matching Path (WDFMP)
-Hidden Markov Model (HMM)
+Discrete Fréchet Matching Path (DFMP)\n\n
+Shortest Discrete Fréchet Matching Path (SDFMP)\n\n
+Weak Discrete Fréchet Matching Path (WDFMP)\n\n
+Weak Shortest Discrete Fréchet Matching Path (WDFMP)\n\n
+Hidden Markov Model (HMM)\n\n
 
 User-defined parameters for HMM:
 ------------
-• M – Candidate searching radius
-• N – Candidate set size
-• 𝜎 – Capture the GPS noise
-• α – A value between 0 and 1 and controls the tradeoff between transition and observation weights. Higher α values put more weight on route plausibility.
+• M – Candidate searching radius\n\n
+• N – Candidate set size\n\n
+• 𝜎 – Capture the GPS noise\n\n
+• α – A value between 0 and 1 and controls the tradeoff between transition and observation weights. Higher α values put more weight on route plausibility.\n\n
 • R – The maximal ratio between observation distance and candidate distance
-that can be considered plausible.
+that can be considered plausible.\n\n
 
 
 Command line arguements:

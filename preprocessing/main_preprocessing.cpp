@@ -7,6 +7,8 @@
 #include "../trajectories/trajectory.h"
 #include "../trajectories/trajectory_split.h"
 #include <chrono>
+#include <limits.h> 
+#include <stdlib.h>  // for strtol
 
 
 int main(int argc, char** argv) {
@@ -60,17 +62,23 @@ int main(int argc, char** argv) {
 
     /* sub-sampling */
     cout<<"before subsampling scc # edges and nodes: "<<SCC_graph.edges.size()<<" #nodes "<<SCC_graph.nodes.size()<<endl;
-    cout<<"Please enter subsampling threshold:\n";
+    // cout<<"Please enter subsampling threshold:\n";
+    // int threshold;
+    // cin>>threshold;
+ 
+    char *p;
     int threshold;
-    cin>>threshold;
+    long conv = strtol(argv[2], &p, 10);
+    threshold = conv;   
+
     subsampling(&SCC_graph, threshold); 
     outedge_offset_array(&SCC_graph);
     inedge_offset_array(&SCC_graph); 
     
-    cout<<"Please enter output pre-processed filename:\n";
-    string output_fname;
-    cin>>output_fname;
-    output_graph(&SCC_graph, output_fname, lat_scale, lon_scale, lat_min, lat_max, lon_min, lon_max); //"greater-london-_sub_50_projected.txt"
+    // cout<<"Please enter output pre-processed filename:\n";
+    // string output_fname;
+    // cin>>output_fname;
+    output_graph(&SCC_graph, argv[3], lat_scale, lon_scale, lat_min, lat_max, lon_min, lon_max); //"greater-london-_sub_50_projected.txt"
     
     /* checking sub-sampling results */
     cout<<"before second SCC # edges: "<<SCC_graph.edges.size()<<" #nodes "<<SCC_graph.nodes.size()<<endl;

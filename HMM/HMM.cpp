@@ -1,6 +1,6 @@
 #include "HMM.h"
 
-#include "starting_node_look_up.h"
+#include "../DF_sol/starting_node_look_up.h"
 
 Grid_search gs;
 

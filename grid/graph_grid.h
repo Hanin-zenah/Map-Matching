@@ -12,7 +12,7 @@
 
 using namespace std;
 
-#define GRID_INIT {0, 0, 0, 0} // ask Haneen on initialization, like how many components need to initialize and the order?
+#define GRID_INIT {0, 0, 0, 0} 
 
 
 typedef struct cell {
@@ -20,12 +20,6 @@ typedef struct cell {
 
 } Cell;
 
-// typedef struct cell_node {
-    // double row;
-    // double col;
-    // int index;
-    // int pos;
-// } Cell_node;
 
 typedef struct grid {
     int num_rows;
@@ -35,15 +29,11 @@ typedef struct grid {
 
     double dist_to_peak;
 
-    // vector<Cell> cells;
-
     vector<int> cell_offset;
     vector<int> cell_nodes_list;
-    // vector<Cell_node*> nodes_ids;
 
 } Grid;
 
-// make it into own class, have constructors
 
 class Build_grid{
     public:

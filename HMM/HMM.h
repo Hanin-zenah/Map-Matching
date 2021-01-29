@@ -11,10 +11,10 @@
 #include <limits>
 #include <queue>
 #include <stack> 
-#include "graph.h" 
-#include "scale_projection.h"
-#include "graph_grid.h"
-#include "graph_grid_starting_node.h"
+#include "../preprocessing/graph.h" 
+#include "../preprocessing/scale_projection.h"
+#include "../grid/graph_grid.h"
+#include "../grid/graph_grid_starting_node.h"
 
 
 using namespace std;

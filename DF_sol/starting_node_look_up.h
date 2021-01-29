@@ -6,9 +6,9 @@
 #include <vector> 
 #include <cstdlib>
 #include <cmath>
-#include "graph.h" 
+#include "../preprocessing/graph.h" 
+#include "../preprocessing/scale_projection.h"
 #include "disc_frechet.h"
-#include "scale_projection.h"
 
 using namespace std;
 

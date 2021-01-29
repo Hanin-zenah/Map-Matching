@@ -1,12 +1,12 @@
 /* here goes the main function which will call all the necessary function to preprocess the graph */
-#include "graph.h"
-#include "graph_for_hist.h"
-#include "graph_grid.h"
-#include "graph_grid_starting_node.h"
-#include "graph_subsampling.h"
-#include "disc_frechet.h"
-#include "trajectory.h"
-#include "trajectory_split.h"
+#include "../preprocessing/graph.h"
+#include "../Stats/graph_for_hist.h"
+#include "../grid/graph_grid.h"
+#include "../grid/graph_grid_starting_node.h"
+#include "../preprocessing/graph_subsampling.h"
+#include "../DF_sol/disc_frechet.h"
+#include "../trajectories/trajectory.h"
+#include "../trajectories/trajectory_split.h"
 #include "HMM.h"
 // #include "freespace_shortest_path.h"
 #include <chrono>
@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 
     // output_grid(&grid, "graph_grid_cell_offset_and_node_list.txt"); // for checking purposes
 
-    vector<Trajectory> trajs = read_trajectories(argv[2], 5, lon_min, lat_min, lat_scale, lon_scale);
+    vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 5, lon_min, lat_min, lat_scale, lon_scale);
 
     // vector<Trajectory> trajs = read_trajectories("saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 5, lon_min, lat_min, lat_scale, lon_scale);
     Trajectory traj = trajs[0];
@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
  
     subsample_traj(&traj, 50);
 
-    write_traj(&traj, argv[3]);
+    write_traj(&traj, "saarland_traj.dat");
 
     // traj = trajs[1];
     // calc_traj_edge_cost(&traj);
@@ -88,80 +88,74 @@ int main(int argc, char** argv) {
     // subsample_traj(&traj, 40);
     // write_traj(&traj, "traj_frechet_with_sub_traj5.dat");
     
-    
 
-HMM hmm;
+    HMM hmm;
 
-double sigma = hmm.sigma_est(&after_graph, &grid, &traj);
+    double sigma = hmm.sigma_est(&after_graph, &grid, &traj);
 
-double beta = hmm.beta_est(0.5, 100, 30);
+    double beta = hmm.beta_est(0.5, 100, 30);
 
-beta = 200; // stop overwriting;
+    beta = 200; // stop overwriting;
 
-double radius = 500.00;
+    double radius = 500.00;
 
-int num_candidate = 50;
+    int num_candidate = 50;
 
-auto start_HMM = std::chrono::high_resolution_clock::now();
+    auto start_HMM = std::chrono::high_resolution_clock::now();
 
-vector<int> best = hmm.best_path(&after_graph, &grid, &traj, num_candidate, sigma, beta, radius);
+    vector<int> best = hmm.best_path(&after_graph, &grid, &traj, num_candidate, sigma, beta, radius);
 
-vector<int> com_path = hmm.best_path_dijkstra(&after_graph, best);
+    vector<int> com_path = hmm.best_path_dijkstra(&after_graph, best);
 
-auto elapsed_HMM = std::chrono::high_resolution_clock::now() - start_HMM;
-long long microseconds_HMM = std::chrono::duration_cast<std::chrono::microseconds>(elapsed_HMM).count();
-
-
-cout<<"finished nodes to nodes dijkstra\n";
-
-double HMM_length = hmm.HMM_path_cost(&after_graph, com_path);
-
-cout<<"Building Grid Duration in microseconds: " << microseconds_grid << endl;
-
-cout<<"grid size: "<<grid_size<<endl;
-
-cout<<"HMM sigma: "<<sigma<<endl;
-
-cout<<"HMM beta: "<<beta<<endl;
-
-cout<<"HMM radius: "<<radius<<endl;
-
-cout<<"HMM num candidate: "<<num_candidate<<endl;
-
-cout<<"HMM in microseconds: " << microseconds_HMM << endl;
-
-cout <<"length of trajectory :"<< traj.length << endl;
-
-cout<<"length of the traj: "<<traj_length<<endl;
-
-cout<<"length of the HMM matching path: "<<HMM_length<<endl;
-
-// /* try to fit the HMM results into a freespace and see what's the frechet distance between this HMM results and traj */
-
-Graph HMM_graph = GRAPH_INIT;
-
-hmm.make_a_HMM_graph(&after_graph, com_path, &HMM_graph);
-
-outedge_offset_array(&HMM_graph);
-inedge_offset_array(&HMM_graph);
-
-cout<<"convert the path to graph\n";
-
-FSgraph fsgraph = FSGRAPH_INIT; 
-
-FSpair last_pair = min_eps(&HMM_graph, &traj, &fsgraph, 750.00);
-
-cout<<"final fsgraph.eps: "<<fsgraph.eps<<endl;
-
- 
-hmm.write_HMM_graph(&after_graph, com_path, "HMM_matching_path_beta_200_radius_500_can_50_traj0_london.dat");
+    auto elapsed_HMM = std::chrono::high_resolution_clock::now() - start_HMM;
+    long long microseconds_HMM = std::chrono::duration_cast<std::chrono::microseconds>(elapsed_HMM).count();
 
 
-cleanup(&fsgraph);
-// 
-cleanup_trajectory(&traj);
+    cout<<"finished nodes to nodes dijkstra\n";
+
+    double HMM_length = hmm.HMM_path_cost(&after_graph, com_path);
+
+    cout<<"Building Grid Duration in microseconds: " << microseconds_grid << endl;
+
+    cout<<"grid size: "<<grid_size<<endl;
+
+    cout<<"HMM sigma: "<<sigma<<endl;
+
+    cout<<"HMM beta: "<<beta<<endl;
+
+    cout<<"HMM radius: "<<radius<<endl;
+
+    cout<<"HMM num candidate: "<<num_candidate<<endl;
+
+    cout<<"HMM in microseconds: " << microseconds_HMM << endl;
+
+    cout <<"length of trajectory :"<< traj.length << endl;
+
+    cout<<"length of the traj: "<<traj_length<<endl;
+
+    cout<<"length of the HMM matching path: "<<HMM_length<<endl;
+
+    // /* try to fit the HMM results into a freespace and see what's the frechet distance between this HMM results and traj */
+
+    Graph HMM_graph = GRAPH_INIT;
+
+    hmm.make_a_HMM_graph(&after_graph, com_path, &HMM_graph);
+
+    outedge_offset_array(&HMM_graph);
+    inedge_offset_array(&HMM_graph);
+
+    cout<<"convert the path to graph\n";
+
+    hmm.write_HMM_graph(&after_graph, com_path, "HMM_matching_path_beta_200_radius_500_can_50_traj0_london.dat");
+
+    // FSgraph fsgraph = FSGRAPH_INIT; 
+    // FSpair last_pair = min_eps(&HMM_graph, &traj, &fsgraph, 750.00);
+    // cout<<"final fsgraph.eps: "<<fsgraph.eps<<endl;
+        
+    // cleanup(&fsgraph);
+    // cleanup_trajectory(&traj);
 
 
-return 0;
+    return 0;
 }
 

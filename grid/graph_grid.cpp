@@ -1,4 +1,4 @@
-#include "../preprocessing/graph_grid.h"
+#include "graph_grid.h"
 #include "../preprocessing/graph.h"
 
 

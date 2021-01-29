@@ -282,7 +282,7 @@ priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> Grid_search::k_nodes(Graph*
     bool enough_range = range_check(grid, traj_nd, graph, PQ); // check if the additional layer that just got added can be touched but the searching radius, if it's touched, add one more layer
     if (!enough_range) {
         grid -> curr_range++;
-        add_range_to_Q(grid, graph, col, row, grid -> curr_range,traj_nd, PQ);
+        add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
     }
 
     return PQ;  

@@ -1,16 +1,8 @@
-HOWTO Build:
-------------
-
-mkdir build
-cd build
-cmake ../
-make
-
 Data Collection:
 ------------
 The map and trajectory data are publicly available from the OpenStreetMap project. 
 
-The current data used for analysis and research was downloaded by regions from Geofabrik’s website.
+The current data used for analysis and research was downloaded by regions from Geofabrik’s website： https://www.geofabrik.de/<br />
 The downloaded data was then processed with the publicly available tool from the OsmGraphCreater Github repository: https://github.com/fmi-alg/OsmGraphCreator, where the data can be processed and converted to a text file containing vertices coordinates and edges on the graph.
 
 Available matching algorithms in this tool:
@@ -60,3 +52,26 @@ _txtVID: returns one line of vertex IDs per trajectory._
 _JSON: For each trajectory, it returns one line of vertex OSMIDs and one line of vertex IDs, as well as the corresponding statistics queried in the statistics argument._
 
 
+Building the Tool
+------------
+1. git clone --recursive https://github.com/MapMatching-research/Map-Matching mapmatching
+
+2. mkdir 
+<br />build
+<br />cd build
+<br />cmake ../
+<br />make
+
+
+3. cd mapmatching && mkdir build && cd build
+4. cmake -DCMAKE_BUILD_TYPE=lto ../
+
+References:
+------------
+Alt, H., & Godau, M. (1995). Computing The Fréchet Distance Between Two Polygonal Curves. International Journal of Computational Geometry & Applications, 05(01n02), 75-91. doi:10.1142/s0218195995000064
+<br />Alt, H., Efrat, A., Rote, G., & Wenk, C. (2003). Matching planar maps. Journal of Algorithms, 49(2), 262-283. doi:10.1016/s0196-6774(03)00085-3
+<br />Brakatsoulas, S., Pfoser, D., Salas, R., & Wenk, C. (2005). On Map-matching Vehicle Tracking Data. In Proc. 31st VLDB Conf. 853–864.
+<br />E.Thomas & M.Heikki. (1994). Computing Discrete Frechet Distance.
+<br />Koller, H., Widhalm, P., Dragaschnig, M., & Graser, A. (2015). Fast Hidden Markov Model Map-Matching for Sparse and Noisy Trajectories. 2015 IEEE 18th International Conference on Intelligent Transportation Systems. doi:10.1109/itsc.2015.411
+<br />Newson, P., & Krumm, J. (2009). Hidden Markov map matching through noise and sparseness. Proceedings of the 17th ACM SIGSPATIAL International Conference on Advances in Geographic Information Systems - GIS 09. doi:10.1145/1653771.1653818
+<br />Seybold, M. P. (2017). Robust Map Matching for Heterogeneous Data via Dominance Decompositions. Proceedings of the 2017 SIAM International Conference on Data Mining, 813-821. doi:10.1137/1.9781611974973.91

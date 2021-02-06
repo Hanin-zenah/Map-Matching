@@ -37,10 +37,6 @@ typedef struct grid {
 
 class Build_grid{
     public:
-
-        // /* compute how many grid cells a graph needs */
-        // void initialize_cells(Graph* graph, Grid* grid, double size);
-
         /* build grid cells for a graph */
         void make_grids(Graph* graph, Grid* grid, double size);
 

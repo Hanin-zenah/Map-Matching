@@ -11,9 +11,7 @@ double Grid_search::dist_from_T0(Point* traj_nd, node g_nd) {
     return dist; 
 }  
 
-void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int range, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ){
-
-    // TODO: this is wrong when a cell on the boundary was already added to the PQ
+void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int range, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ)
     // Needs to be done separately per loop: hor-top, hor-bot,...
     int left  = max(0, col - range);
     int right = min(grid -> num_columns - 1, col + range);
@@ -22,15 +20,12 @@ void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int
 
     int starting_idx, ending_idx;
     int num_columns = grid -> num_columns;
-    int num_rows    = grid -> num_rows;
-//   cout<<"starting to add nodes\n";
+    int num_rows    = grid -> num_rows
 
    if (grid -> num_rows - 1 >= row + range){
-    //    cout<<"entered horizontal top: \n";
         /* horizontal top */
         starting_idx = num_columns * upper + left;
         ending_idx   = num_columns * upper + right;
-
         int pos1 = grid -> cell_offset[starting_idx];
         int pos2 = grid -> cell_offset[ending_idx + 1]; 
         for (int k = pos1; k < pos2; k++){
@@ -39,14 +34,11 @@ void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int
                 grid_nd.first  = nd_id;
                 grid_nd.second = dist_from_T0(traj_nd, graph -> nodes[nd_id]);
                 PQ.push(grid_nd);
-            }
-   }
-//    cout<<"horizontal top fine\n";
+            }}
     
     if(upper > lower){
     /* horizontal bottom */
         if (row >= range){
-            // cout<<"entered horizontal bottom: \n";
             starting_idx = num_columns * lower + left;
             ending_idx   = num_columns * lower + right;
 
@@ -60,37 +52,28 @@ void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int
                 PQ.push(grid_nd);
                 }
         }
-        //  cout<<"horizontal bottom fine\n";
 
     int index_i;
     if (col >= range){
     /* vertical left */   
         for (int i =  row - range + 1; i <=  min(row + range - 1, num_rows - 1); i++){
-            // cout<<"current range: "<<range<<"  i:  "<<i<<endl;
             int a = row - range + 1;
             int b = row + range - 1;
-            // cout<<" for vertical left ---- row - range + 1: "<< a << " row + range - 1: " <<b<<endl;
             index_i = (num_columns * i)  + left;
             int pos1 = grid -> cell_offset[index_i];
             int pos2 = grid -> cell_offset[index_i + 1]; 
-            // cout<<"index_i: "<<index_i<<" pos1: "<<pos1<<" pos2: "<<pos2<<endl;
                 for (int k = pos1; k < pos2; k++){
                     int nd_id = grid -> cell_nodes_list[k];
                     Gpair grid_nd;
                     grid_nd.first = nd_id;
                     grid_nd.second = dist_from_T0(traj_nd, graph -> nodes[nd_id]);
                     PQ.push(grid_nd);
-            }}
-        }
-        //  cout<<"vertical left fine\n";
+            }}}
 
         if (grid -> num_columns - 1 >= col + range){
-            // cout<<"grid -> num_columns - 1 >= col + range is okay\n";
-            // cout<<"entered vertical right: \n";
             /* vertical right */
             int a = row - range + 1;
-            int b = row + range - 1;
-            // cout<<" for vertical right ---- row - range + 1: "<< a << " row + range - 1: " <<b<<endl;
+            int b = row + range - 1
             for (int i =  max(row - range + 1, 0); i <=  row + range - 1; i++){
                 index_i = (num_columns * i)  + right;
                 int pos1 = grid -> cell_offset[i];
@@ -101,12 +84,7 @@ void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int
                         grid_nd.first = nd_id;
                         grid_nd.second = dist_from_T0(traj_nd, graph -> nodes[nd_id]);
                         PQ.push(grid_nd);
-
-                }}
-        }
-        // cout<<"vertical right fine\n";
-            }
-            
+                }}}}
     return;
 }
 
@@ -157,16 +135,12 @@ priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> Grid_search::GridSearch(Gra
     int col = floor(traj_nd -> longitude/ grid -> size);
     int row = floor(traj_nd -> latitude/ grid -> size);
 
-    // cout<<"grid number of columns: "<<grid->num_columns<<" number rows: "<<grid->num_rows<<endl;
-    // cout<<"search query point   column: "<<col<<" row: "<<row<<endl;
-
     while(PQ.empty() && grid -> curr_range <= max(grid -> num_columns - 1, grid -> num_rows - 1)){
         add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
         grid -> curr_range++; 
     }
     add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
 
-    // cout<<" current nodes_idx_list size before range check: "<<PQ.size()<<endl;
     grid -> dist_to_peak = PQ.top().second; 
 
     bool enough_range = range_check(grid, traj_nd, graph, PQ);
@@ -196,24 +170,6 @@ Gpair Grid_search::next_closest_node(Graph* graph, Grid* grid, Point* traj_nd, p
     return closest_nd;
 }
 
-// vector<Gpair> Grid_search::next_n_nodes(Graph* graph, Grid* grid, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, int n, double radius){ 
-    // int col = floor(traj_nd -> longitude/ grid -> size);
-    // int row = floor(traj_nd -> latitude/ grid -> size);
-// 
-    // while (PQ.size()< n){
-        // grid -> curr_range++;
-        // add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
-    // }
-    // vector<Gpair> next_n;
-    // for (int i = 0; i < n && PQ.top().second <= radius; i++){
-        // Gpair g = PQ.top();
-        // next_n.push_back(g);
-        // PQ.pop();
-    // }
-    // 
-// 
-    // return next_n; // in ascending order by the distance to trajectory node;
-// }
 
 vector<Gpair> Grid_search::next_n_nodes(Graph* graph, Grid* grid, Point* traj_nd, int n_cans, double radius){
     priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> PQ;

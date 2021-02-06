@@ -1,16 +1,8 @@
 #include "graph_grid.h"
 #include "../preprocessing/graph.h"
 
-
-// int cell_mapping(int row_id, int col_id, int num_rows, int num_cells){
-    // int cell_index = num_rows * col_id + row_id;
-    // return cell_index;
-// }
-
-
 void Build_grid::make_grids(Graph* graph, Grid* grid, double size){
     grid -> size = size;
-    // initialize_cells(graph, grid, size);
     grid -> num_rows = ceil(graph -> max_lat/size);
     grid -> num_columns = ceil(graph -> max_long/size);
     int num_cells = grid -> num_rows * grid -> num_columns;
@@ -22,10 +14,6 @@ void Build_grid::make_grids(Graph* graph, Grid* grid, double size){
 	grid -> num_rows++;}
 
     grid -> cell_offset.resize(num_cells + 1);
-    // cout<<"cell offset initialized and resized to: "<< grid -> cell_offset.size()<<endl;
-    // for (int i = 1; i < grid -> cell_offset.size(); i++){
-        // cell_offset[i] = 0;
-    // }
 
     std::fill(grid -> cell_offset.begin(), grid -> cell_offset.end(), 0);
     grid -> cell_nodes_list.resize(graph -> nodes.size());
@@ -51,17 +39,8 @@ void Build_grid::make_grids(Graph* graph, Grid* grid, double size){
         int index = grid -> num_columns * row + col;
         int pos = grid -> cell_offset[index];
 
-        // cout<<"i: "<< i <<" graph -> nodes[i].id: "<< graph -> nodes[i].id <<" graph -> nodes[i].lat: "<< graph -> nodes[i].lat<<
-        // " graph -> nodes[i].longitude: "<< graph -> nodes[i].longitude<<endl;
-        // cout<<"row: "<<row<<" col: "<<col<<" index: "<<index<<endl;
-// 
-        // cout<<"pos: "<<pos<<" grid -> cell_nodes_list.size(): "<<grid -> cell_nodes_list.size()<<endl;
-
         grid -> cell_nodes_list[pos] = graph -> nodes[i].id;
-        // cout<<"cell_nodes_list[pos]: "<<grid -> cell_nodes_list[pos]<<index<<endl;
         grid -> cell_offset[index]++;  
-        
-    
     }
 
     /* reset cell offset */

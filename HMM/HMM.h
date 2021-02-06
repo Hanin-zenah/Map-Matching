@@ -19,25 +19,7 @@
 
 using namespace std;
 
-
-// an emission probability for each road segment 𝑟𝑖, 𝑝(𝑧𝑡|𝑟𝑖)
-
-//  sigma is the standard deviation of Zs
- 
-// R is a road segment, Z is a GPS measurement point, X is a point(or an actual vertex on the graph) that is on R and closest to Z
-
-// Then the distance of Z to X we can see it as the GPS measurement error
-
-// the 2009 paper used the median absolute deviation (MAD) technique to estimate the sigma of Z, which is a robust estimator of standard deviation
-
-// double emission(Z, X, sigma);
-
-// t is for timestamp on the trajectory and the i, j are for the node ids of the vertices.
-
-// double transition(Zt, Zt+1, Xt-i, );
-
 typedef struct state{
-    // Do I need to initialize this?
     vector<int> cdd_nd_id;
     vector<double> state_prob; // store transition probability here first then update it to state prob?
     vector<int> prdc_state; // predeccessor state ID

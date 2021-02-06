@@ -84,7 +84,6 @@ vector<pair<int, double>>  HMM::emission_set(Graph* graph, Grid* grid, Point* tr
         pair<int, double> emi_pair; // sorted by the V's distance to T, in increasing order;
         emi_pair.first = next_n[i].first;
         emi_pair.second = emi_prob;
-        // cout<<"emi_pair.first: "<<emi_pair.first<<" emi_pair.second "<<emi_pair.second<<endl;
         emissions.push_back(emi_pair);
         sum_emi += emi_prob;
     }
@@ -129,9 +128,9 @@ int HMM::src_candidate(Graph* graph, vector<Gpair> candidates){
 
 double HMM::beta_est(double alpha, double t, double radius){
     double b = alpha/(1.0 - alpha) * radius/ t; 
-    // d is the search radius used to identify candidate roads around the observations zi.
-    // where t is the maximal ratio between great circle distance and route distance which can be considered plausible.
-    // The calibration parameter β can be calculated intuitively as
+    /* d is the search radius used to identify candidate roads around the observations zi.
+    where t is the maximal ratio between great circle distance and route distance which can be considered plausible.
+    The calibration parameter β can be calculated intuitively */
     return b;
 }
 
@@ -144,10 +143,8 @@ vector<pair<int, double>> HMM::tran_dijkstra(Graph* graph, int node_id, vector<G
     struct node src_nd = graph -> nodes[node_id]; // making a copy of the graph node
     PQ.push(src_nd);
     dirty_nodes.push_back(node_id);
-    // cout<<"is the source node a target nowwww?: "<<PQ.top().id<<" "<<PQ.top().dist<<" target?: "<<PQ.top().target<<endl;
     while(!PQ.empty()){
         struct node nd = PQ.top();
-        // cout<<"poped a node from PQ: id: "<<nd.id<<endl;
         PQ.pop(); 
         if(nd.settled) { 
             continue;
@@ -161,19 +158,15 @@ vector<pair<int, double>> HMM::tran_dijkstra(Graph* graph, int node_id, vector<G
         if(num_tar == 0){
             break;
         }
-        vector<pair<int,double>> incidents = get_inv_incident_pair(graph, nd.id); //
+        vector<pair<int,double>> incidents = get_inv_incident_pair(graph, nd.id);
         for (pair<int,double> adj : incidents){
             int id = adj.first;
             double distance = adj.second;
-            // cout<<"src node: "<<nd.id<<" trg node: "<<id<<" distance between: "<<distance<<" trg node current dist: "<<graph -> nodes[id].dist<<endl;
             if (graph -> nodes[adj.first].dist > nd.dist + adj.second){
-                // cout<<"src node: "<<nd.id<<" node and its original dist before update: "<<adj.first<<" "<<graph -> nodes[adj.first].dist<<endl;
                 graph -> nodes[adj.first].dist = nd.dist + adj.second;
-                // cout<<"src node: "<<nd.id<<" after update: "<<adj.first<<" "<<graph -> nodes[adj.first].dist<<endl;
                 graph -> nodes[adj.first].parent_id = nd.id;
                 PQ.push(graph -> nodes[adj.first]);
                 dirty_nodes.push_back(graph -> nodes[adj.first].id);
-                // cout<<"PQ.size(): "<<PQ.size()<<" first one: "<<PQ.top().id<<" "<<PQ.top().dist<<endl;
             }
         }
     }
@@ -184,7 +177,6 @@ vector<pair<int, double>> HMM::tran_dijkstra(Graph* graph, int node_id, vector<G
         SP.push_back(make_pair(graph -> nodes[can.first].id,graph -> nodes[can.first].dist));
     }
     // reset everything touch was touch in this dijkstra for the next run.
-    // cout<<"number of dirty_nodes: "<<dirty_nodes.size()<<endl;
     for (int i = 0; i < dirty_nodes.size(); i++){
         graph -> nodes[dirty_nodes[i]].dist = INFINITY;
         graph -> nodes[dirty_nodes[i]].target = false;
@@ -210,9 +202,7 @@ int n, State prev_state, vector<pair<int, double>> emi_probs, double radius){
         curr_state.cdd_nd_id[i] = gp.first;
         
         vector<pair<int, double>> trans_vec = tran_dijkstra(graph, gp.first, prev_candidates);
-        // cout<<"trans_vec.size(): "<<trans_vec.size()<<endl;
         /* max{P(i,j)*T(k,j)*Q(i-1,k)} for each P(i,j)/Q(i,j)/candidate cell */
-        // cout<<"for candidate: "<<i<<" created inverse dijkstra for candidate: "<<i<<" size of trans_vec: "<<trans_vec.size()<<endl;
         double sum_trans = 0.0;
         for (int j = 0; j < trans_vec.size(); j++){
             pair<int, double> SP = trans_vec[j];
@@ -223,16 +213,12 @@ int n, State prev_state, vector<pair<int, double>> emi_probs, double radius){
         // multiply while normalizing transition probabilities
         for (int j = 0; j < trans_vec.size(); j++){
             pair<int, double> SP = trans_vec[j];
-            // cout<<"prev_state.state_prob[j]: j: "<<j<<" "<<prev_state.state_prob[j]<<endl; // use j not i? prev_state.size() should = trans_vec.size()
             double pair_prob= prev_state.state_prob[j] * SP.second/sum_trans * emi_probs[i].second;// picking the maximum so the constant emission prob isn't neccesary
-            // cout<<"pair_prob: "<<pair_prob<<endl;
             if( pair_prob >= curr_state.state_prob[i]){
-                // cout<<" "<<j<<" max state prob for "<<i<<" got updated from: "<<curr_state.state_prob[i]<<" to ";
                 curr_state.state_prob[i] = pair_prob; // curr_state and curr_candidates has the same length, use the same index i
                 curr_state.prdc_state[i] = SP.first;
-                // cout<<curr_state.state_prob[i]<<" from node: "<<curr_state.prdc_state[i] <<endl;
             }
-        } // right place???
+        }
         sum_trans = 0.0; // to reset
     }
 
@@ -240,21 +226,19 @@ int n, State prev_state, vector<pair<int, double>> emi_probs, double radius){
     double sum_state_prob = 0.0;// std::accumulate(curr_state.state_prob.begin(), curr_state.state_prob.end(), 0);
     for (int i = 0; i < curr_state.state_prob.size(); i++){
         sum_state_prob += curr_state.state_prob[i];
-        // cout<<"curr_state.state_prob "<<i<<" "<<curr_state.state_prob[i]<<endl;
     }
 
     // calculatet the sum in a loop so can also figure out what's the max state probablitie and flag the predecessor 
-    // -- need to flag predecessor for each state cel not just the max!!!!
+    // -- need to flag predecessor for each state cell not just the max!!!!
     for (int i = 0; i < curr_state.state_prob.size(); i++){
         curr_state.state_prob[i] = curr_state.state_prob[i]/sum_state_prob;
-        // cout<<"candidate ID: "<<curr_state.cdd_nd_id[i]<<" state_prob after normalization: "<<i<<" "<<curr_state.state_prob[i]<<" predecessor: "<<curr_state.prdc_state[i]<<endl;
     }
     return curr_state;
 }
 
 
 State HMM::create_state0(vector<pair<int, double>>  emi_set, double num_can){
-    State state_0; // does it need initializatoin?
+    State state_0;
     state_0.cdd_nd_id.resize(num_can, 0.0);
     state_0.prdc_state.resize(num_can, -1);
     state_0.state_prob.resize(num_can, 0.0);
@@ -277,7 +261,6 @@ vector<int> HMM::best_path(Graph* graph, Grid* grid, Trajectory* traj, int n, do
     // State prev_state = state0; 
     int state_num = 1; //delete
     for (int i =  0; i < traj -> length - 1; i++){ // change back to i < traj -> length - 1
-        // cout<<"state_num: "<<state_num<<endl;
         State prev_state = state_stack.top();
         vector<pair<int, double>> curr_emi = emission_set(graph, grid, traj->points[i + 1], n, sigma, radius);
         State cur_state = state_prob(graph, grid, traj->points[i], traj->points[i + 1], beta, sigma, n, prev_state, curr_emi, radius);
@@ -292,12 +275,10 @@ vector<int> HMM::best_path(Graph* graph, Grid* grid, Trajectory* traj, int n, do
         double max_prob = 0.0;
         int pre_can = -1; //maybe change to -1??
         for (int i = 0; i < curr.prdc_state.size(); i++){
-            // cout<<"curr.state_prob[i]: "<<i<<" "<<curr.state_prob[i]<<endl;
             if( curr.state_prob[i] >= max_prob ){
                 pre_can = curr.prdc_state[i];
             }
         }
-        // cout<<"previous candidate: "<<pre_can<<endl;
     best_path.push_back(pre_can); // remove nodes that have the same node ID if they're consective
     state_num--;
     }
@@ -317,16 +298,10 @@ vector<int> HMM::best_path(Graph* graph, Grid* grid, Trajectory* traj, int n, do
         best_path.erase(best_path.begin() + best_path.size() - 1);
     }
 
-    // cout<<"best_path.size after erasing: "<<best_path.size()<<endl;
-    // for (int i = 0; i < best_path.size(); i++){
-        // cout<<best_path[i]<<endl;
-    // }
-    
     return best_path;
 }
 
 stack<int> HMM::node_to_node_dijkstra(Graph* graph, int node_id, int node_id2){ 
-    // cout<<"run dijkstra for nodes: "<<node_id<<" "<<node_id2<<endl;
     priority_queue<struct node, vector<struct node>, comp_travel_cost> PQ;
     vector <int> dirty_nodes; 
     graph -> nodes[node_id].dist = 0; 
@@ -361,7 +336,6 @@ stack<int> HMM::node_to_node_dijkstra(Graph* graph, int node_id, int node_id2){
     while(curr_nd != node_id){
         SP.push(curr_nd);
         curr_nd = graph -> nodes[curr_nd].parent_id;
-        // cout<<"curr_nd: "<<curr_nd<<endl;
     }
     // reset everything touch was touch in this dijkstra for the next run.
     for (int i = 0; i < dirty_nodes.size(); i++){
@@ -374,11 +348,9 @@ stack<int> HMM::node_to_node_dijkstra(Graph* graph, int node_id, int node_id2){
 }
 
 vector<int> HMM::best_path_dijkstra(Graph* graph, vector<int> best_path){
-    // vector<int> best = best_path(&after_graph, &grid, &traj, 10, sigma, 40);
     vector<int> complete_path;
     stack<int> SP;
     for (int i = 0; i < best_path.size() - 1; i++){
-        // cout<<"best_path_dijkstra iteration: "<<i<<endl;
         int id = best_path[i];
         int id2 = best_path[i+1];
         SP = node_to_node_dijkstra(graph, id, id2);
@@ -435,7 +407,6 @@ void HMM::make_a_HMM_graph(Graph* graph, vector<int> complete_path, Graph* HMM_g
         nd.longitude = graph -> nodes[complete_path[i]].longitude;
         HMM_graph -> nodes.push_back(nd);
     //    double dist = dist_from_Traj0(traj_nd, HMM_graph -> nodes[i]);
-        // cout<<nd.longitude<<" "<<nd.lat<<" "<<dist<<endl;
     }
     for (int i =  0; i < complete_path.size() - 1; i++){
         int id = complete_path[i];

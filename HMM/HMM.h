@@ -83,7 +83,7 @@ class HMM{
         /* finding all the incoming nodes on the graph from a given node */
         vector<pair<int,double>> get_inv_incident_pair(Graph* graph, int node_id);
 
-        /* number of source candidates????????????????????????? */
+        /* number of source candidates */
         int src_candidate(Graph* graph, vector<Gpair> candidates);
 
         /* Compute a sequence of node IDs that gives the shortest path between two nodes*/
@@ -92,24 +92,27 @@ class HMM{
         /* running the node_to_node_dijkstra between each previous candidate and a current candidate */
         vector<pair<int, double>> tran_dijkstra(Graph* graph, int node_id, vector<Gpair> prev_candidates);
 
+        /* compute transition matrix/probabilities */
         vector<pair<int, double>> tran_matrix(Graph* graph, vector<Gpair> curr_candidates, vector<Gpair> prev_candidates, State prev_state);
-
+        
+        /* compute state probabilities */
         State state_prob(Graph* graph, Grid* grid, Point* T1, Point* T2, double beta, double sigma, 
         int n, State prev_state, vector<pair<int, double>> emi_probs, double radius);
 
+        /* create state 0 where the state probabilities are the emission probabilities*/
         State create_state0(vector<pair<int, double>>  emi_set, double num_can);
 
+        /* compute the best path */
         vector<int> best_path(Graph* graph, Grid* grid, Trajectory* traj, int n, double sigma, double beta, double radius);
 
+        /* compute the dijkstra SP between all the vertices on the best path, the best path vertices and the vertices on the SPs togethere is the as final path */
         vector<int> best_path_dijkstra(Graph* graph, vector<int> best_path);
 
+        /* write HMM solution out to a .dat file*/
         void write_HMM_graph(Graph* graph, vector<int> complete_path, string file_name);
 
+        /* compute HMM solution cost*/
         double HMM_path_cost(Graph* graph, vector<int> path);
-
-        vector<int> path_closest_can(Graph* graph, Grid* grid, Trajectory* traj); // delete
-
-        Gpair cloest_can(Graph* graph, Grid* grid, Point* traj_nd); // delete
 
         /* convert the path to a graph so that we can calculate the frechet distance between it and the trajectory */
         void make_a_HMM_graph(Graph* graph, vector<int> complete_path, Graph* HMM_graph);

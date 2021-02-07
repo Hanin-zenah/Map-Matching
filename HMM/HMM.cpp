@@ -1,5 +1,4 @@
 #include "HMM.h"
-
 #include "../DF_sol/starting_node_look_up.h"
 
 Grid_search gs;
@@ -8,24 +7,6 @@ vector<Gpair> HMM::candidates(Graph* graph, Grid* grid, Point* traj_nd, int n, d
     grid -> curr_range = 0;
     vector<Gpair> next_n = gs.next_n_nodes(graph, grid, traj_nd, n, radius); //in ascending order by the distance to trajectory node;
     return next_n;
-}
-
-Gpair HMM::cloest_can(Graph* graph, Grid* grid, Point* traj_nd){
-    grid -> curr_range = 0;
-    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> dist_PQ  = gs.GridSearch(graph, grid, traj_nd);
-    Gpair close = dist_PQ.top();
-    return close;
-}
-
-vector<int> HMM::path_closest_can(Graph* graph, Grid* grid, Trajectory* traj){
-    vector<int> path;
-    for (int i = 0; i < traj ->length; i++){
-        Gpair best_can = cloest_can(graph, grid, traj -> points[i]);
-        path.push_back(best_can.first);
-        cout<<"node ID: "<<best_can.first<<" distance "<<best_can.second<<endl;
-
-    }
-    return path;
 }
 
 double HMM::emission(double sigma, double dist){ //change the dist to a T and a candidate and calculate the dist within the function

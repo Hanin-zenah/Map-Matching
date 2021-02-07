@@ -11,7 +11,7 @@ double Grid_search::dist_from_T0(Point* traj_nd, node g_nd) {
     return dist; 
 }  
 
-void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int range, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ)
+void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int range, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ){
     // Needs to be done separately per loop: hor-top, hor-bot,...
     int left  = max(0, col - range);
     int right = min(grid -> num_columns - 1, col + range);
@@ -20,7 +20,7 @@ void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int
 
     int starting_idx, ending_idx;
     int num_columns = grid -> num_columns;
-    int num_rows    = grid -> num_rows
+    int num_rows    = grid -> num_rows;
 
    if (grid -> num_rows - 1 >= row + range){
         /* horizontal top */
@@ -73,7 +73,7 @@ void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int
         if (grid -> num_columns - 1 >= col + range){
             /* vertical right */
             int a = row - range + 1;
-            int b = row + range - 1
+            int b = row + range - 1;
             for (int i =  max(row - range + 1, 0); i <=  row + range - 1; i++){
                 index_i = (num_columns * i)  + right;
                 int pos1 = grid -> cell_offset[i];

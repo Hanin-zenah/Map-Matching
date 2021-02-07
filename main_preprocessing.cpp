@@ -1,11 +1,11 @@
 /* here goes the main function which will call all the necessary function to preprocess the graph */
-#include "graph.h"
-#include "../Stats/graph_for_hist.h"
-#include "../grid/graph_grid.h"
-#include "../grid/graph_grid.h"
-#include "graph_subsampling.h"
-#include "../trajectories/trajectory.h"
-#include "../trajectories/trajectory_split.h"
+#include "preprocessing/graph.h"
+#include "Stats/graph_for_hist.h"
+#include "grid/graph_grid.h"
+#include "grid/graph_grid.h"
+#include "preprocessing/graph_subsampling.h"
+#include "trajectories/trajectory.h"
+#include "trajectories/trajectory_split.h"
 #include <chrono>
 #include <limits.h> 
 #include <stdlib.h>  // for strtol

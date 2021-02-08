@@ -27,7 +27,9 @@ int main(int argc, char** argv) {
 
     Grid grid = GRID_INIT;
 
-    double grid_size = 500.00;
+    std::string grid_size_str = argv[2];
+    double grid_size = std::stod(grid_size_str);
+    // double grid_size = 500.00;
     
     Build_grid build_grid;
     build_grid.make_grids(&after_graph, &grid, grid_size);
@@ -38,7 +40,7 @@ int main(int argc, char** argv) {
     cout<<"Building Grid Duration in microseconds: " << microseconds_grid << endl;
 
 
-    vector<Trajectory> trajs = read_trajectories(argv[2], 5, lon_min, lat_min, lat_scale, lon_scale);
+    vector<Trajectory> trajs = read_trajectories(argv[3], 5, lon_min, lat_min, lat_scale, lon_scale);
     Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];
 
@@ -49,86 +51,82 @@ int main(int argc, char** argv) {
     calc_traj_edge_cost(&traj);
     double traj_length = calc_traj_length(&traj);
  
-    subsample_traj(&traj, 50);
+    subsample_traj(&traj, argv[4]);
 
-    write_traj(&traj, "trajactory.dat");    
+    write_traj(&traj, "trajactory.dat");   
 
-    string method = argv[3];
-    if (method == "HMM"){
+    HMM hmm;
 
-        HMM hmm;
+    std::string sigma_str = argv[5];
+    double sigma = std::stod(sigma_str);
+    // double sigma = hmm.sigma_est(&after_graph, &grid, &traj); // this can be the default value if the input is missing
 
-        std::string sigma_str = argv[4];
-        double sigma = std::stod(sigma_str);
-        // double sigma = hmm.sigma_est(&after_graph, &grid, &traj); // this can be the default value if the input is missing
+    std::string beta_str = argv[6];
+    double beta = std::stod(beta_str);
+    // double beta = hmm.beta_est(0.5, 100, 30); // this can be the default value if the input is missing
 
-        std::string beta_str = argv[5];
-        double beta = std::stod(beta_str);
-        // double beta = hmm.beta_est(0.5, 100, 30); // this can be the default value if the input is missing
+    std::string radius_str = argv[7];
+    double radius = std::stod(radius_str);
+    // double radius = 500.00;
 
-        std::string radius_str = argv[6];
-        double radius = std::stod(radius_str);
-        // double radius = 500.00;
+    std::string num_candidate_str = argv[8];
+    int num_candidate = std::stoi(num_candidate_str);
+    // int num_candidate = 50;
 
-        std::string num_candidate_str = argv[7];
-        int num_candidate = std::stoi(num_candidate_str);
-        // int num_candidate = 50;
+    auto start_HMM = std::chrono::high_resolution_clock::now();
 
-        auto start_HMM = std::chrono::high_resolution_clock::now();
+    vector<int> best = hmm.best_path(&after_graph, &grid, &traj, num_candidate, sigma, beta, radius);
 
-        vector<int> best = hmm.best_path(&after_graph, &grid, &traj, num_candidate, sigma, beta, radius);
+    vector<int> com_path = hmm.best_path_dijkstra(&after_graph, best);
 
-        vector<int> com_path = hmm.best_path_dijkstra(&after_graph, best);
-
-        auto elapsed_HMM = std::chrono::high_resolution_clock::now() - start_HMM;
-        long long microseconds_HMM = std::chrono::duration_cast<std::chrono::microseconds>(elapsed_HMM).count();
+    auto elapsed_HMM = std::chrono::high_resolution_clock::now() - start_HMM;
+    long long microseconds_HMM = std::chrono::duration_cast<std::chrono::microseconds>(elapsed_HMM).count();
 
 
-        cout<<"finished nodes to nodes dijkstra\n";
+    cout<<"finished nodes to nodes dijkstra\n";
 
-        double HMM_length = hmm.HMM_path_cost(&after_graph, com_path);
+    double HMM_length = hmm.HMM_path_cost(&after_graph, com_path);
 
-        cout<<"Building Grid Duration in microseconds: " << microseconds_grid << endl;
+    cout<<"Building Grid Duration in microseconds: " << microseconds_grid << endl;
 
-        cout<<"grid size: "<<grid_size<<endl;
+    cout<<"grid size: "<<grid_size<<endl;
 
-        cout<<"HMM sigma: "<<sigma<<endl;
+    cout<<"HMM sigma: "<<sigma<<endl;
 
-        cout<<"HMM beta: "<<beta<<endl;
+    cout<<"HMM beta: "<<beta<<endl;
 
-        cout<<"HMM radius: "<<radius<<endl;
+    cout<<"HMM radius: "<<radius<<endl;
 
-        cout<<"HMM num candidate: "<<num_candidate<<endl;
+    cout<<"HMM num candidate: "<<num_candidate<<endl;
 
-        cout<<"HMM in microseconds: " << microseconds_HMM << endl;
+    cout<<"HMM in microseconds: " << microseconds_HMM << endl;
 
-        cout <<"length of trajectory :"<< traj.length << endl;
+    cout <<"length of trajectory :"<< traj.length << endl;
 
-        cout<<"length of the traj: "<<traj_length<<endl;
+    cout<<"length of the traj: "<<traj_length<<endl;
 
-        cout<<"length of the HMM matching path: "<<HMM_length<<endl;
+    cout<<"length of the HMM matching path: "<<HMM_length<<endl;
 
-        /* try to fit the HMM results into a freespace and see what's the frechet distance between this HMM results and traj */
+    /* try to fit the HMM results into a freespace and see what's the frechet distance between this HMM results and traj */
 
-        Graph HMM_graph = GRAPH_INIT;
+    Graph HMM_graph = GRAPH_INIT;
 
-        hmm.make_a_HMM_graph(&after_graph, com_path, &HMM_graph);
+    hmm.make_a_HMM_graph(&after_graph, com_path, &HMM_graph);
 
-        outedge_offset_array(&HMM_graph);
-        inedge_offset_array(&HMM_graph);
+    outedge_offset_array(&HMM_graph);
+    inedge_offset_array(&HMM_graph);
 
-        cout<<"convert the path to graph\n";
+    cout<<"convert the path to graph\n";
 
-        hmm.write_HMM_graph(&after_graph, com_path, argv[8]);
+    hmm.write_HMM_graph(&after_graph, com_path, argv[9]);
 
-        FSgraph fsgraph = FSGRAPH_INIT; 
-        FSpair last_pair = min_eps(&HMM_graph, &traj, &fsgraph, 750.00);
-        cout<<"final fsgraph.eps: "<<fsgraph.eps<<endl;
-// 
-        cleanup(&fsgraph);
-        cleanup_trajectory(&traj);
+    FSgraph fsgraph = FSGRAPH_INIT; 
+    FSpair last_pair = min_eps(&HMM_graph, &traj, &fsgraph, 750.00);
+    cout<<"final fsgraph.eps: "<<fsgraph.eps<<endl;
 
-    }
+    cleanup(&fsgraph);
+    cleanup_trajectory(&traj);
+
     return 0;
 }
 

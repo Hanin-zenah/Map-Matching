@@ -13,10 +13,10 @@
 #include <unordered_map> 
 #include <cstdlib>
 #include "../preprocessing/graph.h"
-#include "../preprocessing/graph_grid.h"
+#include "../preprocessing/scale_projection.h"
+#include "../grid/graph_grid.h"
 #include "../grid/graph_grid_starting_node.h"
 #include "../trajectories/trajectory.h"
-#include "../preprocessing/scale_projection.h"
 
 #define FSGRAPH_INIT {0}
 

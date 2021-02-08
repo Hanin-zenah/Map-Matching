@@ -51,7 +51,7 @@ FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m,
     return NULL;
 }
 
-stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m, int i) {
+stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m, string file_name) {
     priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq> PQ; //stores nodes for now, later can change to store only edges 
     for(FSnode* source: fsgraph -> source_set) {
         source -> sp_dist = 0;
@@ -88,9 +88,7 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m, int i) 
     cout<<"shorter frechet distance path length "<< cur -> sp_dist <<endl;
     
     //extract path 
-    char buff[100];
-    snprintf(buff, sizeof(buff), "london_dijkstra_path_traj%d.dat", i);
-    ofstream file(buff);
+    ofstream file(file_name);
     while(cur -> sp_parent) {
         path.push(cur);
         file << graph -> nodes[cur -> vid].longitude << " " << graph -> nodes[cur -> vid].lat
@@ -118,9 +116,5 @@ stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m, int i) 
     // return;
 // }
 
-/* note to self: 
-    we are storing the edges in the priority queue so we dont have to deal with decrease_key operation of the nodes evey single time we update the distance */
-/* 
-speedup: 
-use bidirectional dijkstra
-*/
+
+

@@ -5,5 +5,9 @@ project(sp-geo-map-matching)
 add_executable(preprocess preprocessing/scale_projection.cpp preprocessing/graph.cpp main_preprocessing.cpp)
 set_property(TARGET preprocess PROPERTY CXX_STANDARD 17)
 
-add_executable(mapmatching preprocessing/graph.cpp grid/graph_grid.cpp preprocessing/scale_projection.cpp trajectories/trajectory.cpp trajectories/trajectory_split.cpp grid/graph_grid_starting_node.cpp HMM/HMM.cpp main_HMM.cpp)
-set_property(TARGET mapmatching PROPERTY CXX_STANDARD 17)
+add_executable(hmm_matching preprocessing/graph.cpp grid/graph_grid.cpp preprocessing/scale_projection.cpp trajectories/trajectory.cpp trajectories/trajectory_split.cpp grid/graph_grid_starting_node.cpp HMM/HMM.cpp main_HMM.cpp)
+set_property(TARGET hmm_matching PROPERTY CXX_STANDARD 17)
+
+add_executable(DFMP_matching preprocessing/graph.cpp preprocessing/scale_projection.cpp grid/graph_grid.cpp trajectories/trajectory.cpp trajectories/trajectory_split.cpp DF_sol/disc_frechet_grid.cpp DF_sol/freespace_dijkstra.cpp  grid/graph_grid_starting_node.cpp main_DFMP.cpp)
+set_property(TARGET DFMP_matching PROPERTY CXX_STANDARD 17)
+

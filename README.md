@@ -10,7 +10,7 @@ Available matching algorithms in this tool:
 Discrete Fréchet Matching Path (DFMP)
 <br />Shortest Discrete Fréchet Matching Path (SDFMP)
 <br />Weak Discrete Fréchet Matching Path (WDFMP)
-<br />Weak Shortest Discrete Fréchet Matching Path (WDFMP)
+<br />Weak Shortest Discrete Fréchet Matching Path (WSDFMP)
 <br />Hidden Markov Model (HMM)
 
 User-defined parameters for HMM:

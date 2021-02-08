@@ -35,7 +35,7 @@ FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m,
 
 
 /* returns the shortest matching path of the freespace */
-stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m, int i);
+stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m, string file_name);
 
 void print_dijk_path(stack<FSnode*> SP, Graph* graph, string file_name);
 

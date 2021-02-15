@@ -15,10 +15,12 @@
 
 using namespace std;
 
-/* adds a trajectory edge */
-void split_traj(Trajectory* traj, int tedge_id);
+class Traj_subsample{
+    public:
+    /* adds a trajectory edge */
+    void split_traj(Trajectory* traj, int tedge_id);
 
-/* subsample a trajectory */
-void subsample_traj(Trajectory* traj, double threshold);
-
+    /* subsample a trajectory */
+    void subsample_traj(Trajectory* traj, double threshold);
+};
 #endif

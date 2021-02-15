@@ -2,7 +2,7 @@
 #include "trajectory.h"
 
 
-void add_point(Trajectory* traj, double longitude, double latitude, int timestamp) {
+void Traj::add_point(Trajectory* traj, double longitude, double latitude, int timestamp) {
     Point* point = (Point*) malloc(sizeof(Point));
     point -> longitude = longitude; 
     point -> latitude = latitude;
@@ -19,7 +19,7 @@ void add_point(Trajectory* traj, double longitude, double latitude, int timestam
     }
 }
 
-void read_next_k_bytes(ifstream& file, char* buffer, int k) {
+void Traj::read_next_k_bytes(ifstream& file, char* buffer, int k) {
     if(!file.eof()) {
         //read from file if we havent reached end of file 
         memset(buffer, 0, k);
@@ -35,7 +35,7 @@ void read_next_k_bytes(ifstream& file, char* buffer, int k) {
 // lat lon timestamp
 // nPoints traceId subId
 // ...
-void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, double min_long, double min_lat, double lat_scale, double lon_scale) {
+void Traj::extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, double min_long, double min_lat, double lat_scale, double lon_scale) {
     file.seekg(offset, ios::beg);
     if(file.eof()) {
         return;
@@ -86,7 +86,7 @@ void extract_next_trajectory(ifstream& file, int offset, Trajectory* traj, doubl
     }
 }
 
-vector<Trajectory> read_trajectories(string file_path, int k, double min_long, double min_lat, double lat_scale, double lon_scale) { //extract k trajectories?  //will figure it out later 
+vector<Trajectory> Traj::read_trajectories(string file_path, int k, double min_long, double min_lat, double lat_scale, double lon_scale) { //extract k trajectories?  //will figure it out later 
     ifstream file;
     file.open(file_path, ios::in | ios::binary);
     file.seekg(0, ios::beg);
@@ -108,7 +108,7 @@ vector<Trajectory> read_trajectories(string file_path, int k, double min_long, d
     return trajs;
 }
 
-void write_traj(Trajectory* traj, string file_name){
+void Traj::write_traj(Trajectory* traj, string file_name){
     ofstream file(file_name);
     for(int i = 0; i < traj -> edges.size(); i++) {
     //x y x y 
@@ -123,7 +123,7 @@ void write_traj(Trajectory* traj, string file_name){
 }
 
 
-void cleanup_trajectory(Trajectory* traj) {
+void Traj::cleanup_trajectory(Trajectory* traj) {
     for(int i = 0; i < traj -> points.size(); i++) {
         free(traj -> points[i]);
     }
@@ -134,14 +134,14 @@ void cleanup_trajectory(Trajectory* traj) {
 
 Euc_distance ed;
 
- void calc_traj_edge_cost(Trajectory* traj) {
+void Traj::calc_traj_edge_cost(Trajectory* traj) {
     for(int i = 0; i <  traj -> edges.size(); i++){
         traj -> edges[i] -> cost = ed.euc_dist(traj -> edges[i] -> src -> latitude, traj -> edges[i] -> src -> longitude, traj -> edges[i] -> trg -> latitude, traj -> edges[i] -> trg -> longitude);
     }
     return;
 }
 
-double calc_traj_length(Trajectory* traj) {
+double Traj::calc_traj_length(Trajectory* traj) {
     double length = 0.0;
     for(int i = 0; i <  traj -> edges.size(); i++){
         traj -> edges[i] -> cost = ed.euc_dist(traj -> edges[i] -> src -> latitude, traj -> edges[i] -> src -> longitude, traj -> edges[i] -> trg -> latitude, traj -> edges[i] -> trg -> longitude);
@@ -149,21 +149,3 @@ double calc_traj_length(Trajectory* traj) {
     }
     return length;
 }
-
-// int main() {
-//     vector<Trajectory> trajs = read_trajectories("trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", 1);
-//     Point* cur = trajs[0].head;
-//     cout << trajs[0].length << endl;
-//     while(cur != NULL) {
-//         cout << cur -> longitude << " " << cur -> latitude << endl;
-//         cur = cur -> next;
-//     }
-//     cur = trajs[0].head;
-//     Point* next;
-//     while(cur != NULL) {
-//         next = cur -> next;
-//         free(cur);
-//         cur = next;
-//     }
-//     return 0;
-// }

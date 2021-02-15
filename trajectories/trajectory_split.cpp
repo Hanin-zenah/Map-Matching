@@ -2,7 +2,7 @@
 #include <cmath>
 #include <vector>
 
-void split_traj(Trajectory* traj, int tedge_id) {
+void Traj_subsample::split_traj(Trajectory* traj, int tedge_id) {
     double x1, x2, y1, y2;
     Tedge* tedge = traj -> edges[tedge_id];
     x1 = tedge -> src -> latitude; 
@@ -29,7 +29,7 @@ return;
 }
 
 
-void subsample_traj(Trajectory* traj, double threshold){
+void Traj_subsample::subsample_traj(Trajectory* traj, double threshold){
     for (int i = 0; i <  traj -> edges.size(); i++) {  
         if (traj -> edges[i] -> cost > threshold) {
             while (traj -> edges[i] -> cost > threshold) {

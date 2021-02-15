@@ -1,22 +1,13 @@
 #include "disc_frechet_grid.h"
 #include "../grid/graph_grid.h"
 
-double nodes_dist(struct node g_nd, Point* t_nd) {
+double Discrete_Frechet::nodes_dist(struct node g_nd, Point* t_nd) {
     double dist = sqrt(pow((t_nd -> latitude - g_nd.lat), 2.0) + pow((t_nd -> longitude - g_nd.longitude), 2.0));
     return dist;
 }
 
-bool found_fsnode_vec(FSgraph* fsgraph, FSnode* node) {
-    for(FSnode* cur: fsgraph -> fsnodes) {
-        if(node == cur) {
-            return true;
-        }
-    }
-    return false;
-}
-
 Grid_search gs;
-void back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, Graph* graph, Point* traj_nd, Grid* grid) {
+void Discrete_Frechet::back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, Graph* graph, Point* traj_nd, Grid* grid) {
     if(!PQ.empty()) {
         Gpair gp = gs.next_closest_node(graph, grid, traj_nd, PQ);
         PQ.pop();
@@ -53,7 +44,7 @@ void back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vector<FSedge*>, Comp_
     return;
 }
 
-FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, 
+FSnode* Discrete_Frechet::increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, 
 priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, Point* traj_nd, Graph* graph, Grid* grid){
     FSedge* min_eps_fedge = bigger_eps.top();
     bigger_eps.pop(); 
@@ -68,7 +59,7 @@ priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, Point* traj_nd, Graph*
     return next_nd;
 }
 
-FSnode* travel_reachable(FSgraph* fsgraph, stack <FSedge*>& Stack){
+FSnode* Discrete_Frechet::travel_reachable(FSgraph* fsgraph, stack <FSedge*>& Stack){
     /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
         the current cell, might be from the previous cells if there are no reachable nodes in this cell */
     // cout<<"stack size: "<<Stack.size()<<endl;
@@ -79,9 +70,8 @@ FSnode* travel_reachable(FSgraph* fsgraph, stack <FSedge*>& Stack){
     return next_nd;
     }
 
-double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right) {
+double Discrete_Frechet::build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right) {
     FSedge* fedge = (FSedge*) malloc(sizeof(FSedge));
-
     FSpair pair; 
 
     if(up == 0) {
@@ -132,7 +122,7 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
     return fedge -> botlneck_val;
 }
 
-FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner, priority_queue<FSedge*, vector<FSedge*>, 
+FSpair Discrete_Frechet::traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner, priority_queue<FSedge*, vector<FSedge*>, 
                 Comp_eps>& bigger_eps, stack <FSedge*>& Stack, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, 
                 Point* traj_nd, Grid* grid) {
     auto it = fsgraph -> pair_dict.find(corner);
@@ -184,7 +174,7 @@ FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner
     return next_fspair;
 }
        
-FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, Grid* grid) {
+FSpair Discrete_Frechet::min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, Grid* grid) {
     int m = traj -> length;
     Point* traj_nd = traj -> points[0];
 
@@ -245,7 +235,7 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, Grid* grid) {
     return pair;
 }
 
-double path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair) {
+double Discrete_Frechet::path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair) {
     FSnode* cur = fsgraph -> pair_dict.at(pair);
     double path_cost = 0;
     while(cur -> parent) {
@@ -263,7 +253,7 @@ double path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair) {
 }
 
 
-void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name, FSpair pair) {
+void Discrete_Frechet::print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name, FSpair pair) {
     ofstream file(file_name);
     FSnode* cur = fsgraph -> pair_dict.at(pair);
     while(cur -> parent) {
@@ -275,7 +265,7 @@ void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_na
     return;
 }
 
-void cleanup(FSgraph* fsgraph) {
+void Discrete_Frechet::cleanup(FSgraph* fsgraph) {
     for(int i = 0; i < fsgraph -> fsnodes.size(); i++) {
         free(fsgraph -> fsnodes[i]);
     }
@@ -284,7 +274,7 @@ void cleanup(FSgraph* fsgraph) {
     }
 }
 
-void write_fsgraph(FSgraph* fsgraph, string file_name) { 
+void Discrete_Frechet::write_fsgraph(FSgraph* fsgraph, string file_name) { 
     ofstream file(file_name);
     for(int i = 0; i < fsgraph -> fsedges.size(); i++) {
         //x y x y 
@@ -299,7 +289,7 @@ void write_fsgraph(FSgraph* fsgraph, string file_name) {
     file.close();
 } 
 
-void write_sur_graph(FSgraph* fsgraph, Graph* graph, string file_name) { 
+void Discrete_Frechet::write_sur_graph(FSgraph* fsgraph, Graph* graph, string file_name) { 
     ofstream file(file_name);
     for(int i = 0; i < fsgraph -> fsedges.size(); i++) {
         //x y x y 

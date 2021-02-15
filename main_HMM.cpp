@@ -39,8 +39,9 @@ int main(int argc, char** argv) {
 
     cout<<"Building Grid Duration in microseconds: " << microseconds_grid << endl;
 
+    Traj tjtr;
 
-    vector<Trajectory> trajs = read_trajectories(argv[3], 5, lon_min, lat_min, lat_scale, lon_scale);
+    vector<Trajectory> trajs = tjtr.read_trajectories(argv[3], 5, lon_min, lat_min, lat_scale, lon_scale);
     Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];
 
@@ -48,12 +49,13 @@ int main(int argc, char** argv) {
     /* saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks */
 
     cout << "finished extracting the trajectory\n";
-    calc_traj_edge_cost(&traj);
-    double traj_length = calc_traj_length(&traj);
- 
-    subsample_traj(&traj, argv[4]);
+    tjtr.calc_traj_edge_cost(&traj);
+    double traj_length = tjtr.calc_traj_length(&traj);
+    
+    Traj_subsample traj_sub;
+    traj_sub.subsample_traj(&traj, argv[4]);
 
-    write_traj(&traj, "trajactory.dat");   
+    tjtr.write_traj(&traj, "trajactory.dat");   
 
     HMM hmm;
 
@@ -125,7 +127,7 @@ int main(int argc, char** argv) {
     cout<<"final fsgraph.eps: "<<fsgraph.eps<<endl;
 
     cleanup(&fsgraph);
-    cleanup_trajectory(&traj);
+    tjtr.cleanup_trajectory(&traj);
 
     return 0;
 }

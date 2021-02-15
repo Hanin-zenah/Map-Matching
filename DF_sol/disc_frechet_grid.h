@@ -97,43 +97,46 @@ struct Comp_eps {
 };
 
 
-/* distance of Vi, Tj in a corner */
-double nodes_dist(node g_nd, Point* t_nd);
+class Discrete_Frechet{
+    public:
 
-/* calculate the minimal leash length for discrete frechet */
-FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, Grid* grid);
+    /* distance of Vi, Tj in a corner */
+    double nodes_dist(node g_nd, Point* t_nd);
 
-/* given a FSnode, build the 3 outgoing edges and target nodes using this node */
-double build_node(FSgraph* fsgraph, fsnode fsnd, int neighbor_id, int up, int right);
+    /* calculate the minimal leash length for discrete frechet */
+    FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, Grid* grid);
 
-/* given a nodes pair on a FS graph, returns the node pair after the next traversal */
-FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner, priority_queue<FSedge*, vector<FSedge*>, 
-                Comp_eps>& bigger_eps, stack <FSedge*>& Stack, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, 
-                Point* traj_nd, Grid* grid);
+    /* given a FSnode, build the 3 outgoing edges and target nodes using this node */
+    double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right);
 
-/* converting the grid PQ to an array of candidate super edges */
-// vector<FSedge*> convert_to_se(priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, double radius);
+    /* given a nodes pair on a FS graph, returns the node pair after the next traversal */
+    FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner, priority_queue<FSedge*, vector<FSedge*>, 
+                    Comp_eps>& bigger_eps, stack <FSedge*>& Stack, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, 
+                    Point* traj_nd, Grid* grid);
 
-/* always have a back up super edge in the priority queue while traversaling */
-void back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, 
-Graph* graph, Point* traj_nd, Grid* grid); 
+    /* converting the grid PQ to an array of candidate super edges */
+    // vector<FSedge*> convert_to_se(priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, double radius);
 
-/* increase the current leash length value when there is no readily traversable edges */
-FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, 
-priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, Point* traj_nd);
+    /* always have a back up super edge in the priority queue while traversaling */
+    void back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, 
+    Graph* graph, Point* traj_nd, Grid* grid); 
 
-/* travel to the next reachable edge */
-FSnode* travel_reachable (FSgraph* fsgraph, stack <FSedge*>& Stack);
+    /* increase the current leash length value when there is no readily traversable edges */
+    FSnode* increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, 
+    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, Point* traj_nd, Graph* graph, Grid* grid);
 
-double path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair);
+    /* travel to the next reachable edge */
+    FSnode* travel_reachable (FSgraph* fsgraph, stack <FSedge*>& Stack);
 
-/* produce a graph that shows the path */
-void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name, FSpair pair);
+    double path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair);
 
-void cleanup(FSgraph* fsgraph);
+    /* produce a graph that shows the path */
+    void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name, FSpair pair);
 
-void write_fsgraph(FSgraph* fsgraph, string file_name);
+    void cleanup(FSgraph* fsgraph);
 
-void write_sur_graph(FSgraph* fsgraph, Graph* graph, string file_name);
+    void write_fsgraph(FSgraph* fsgraph, string file_name);
 
+    void write_sur_graph(FSgraph* fsgraph, Graph* graph, string file_name);
+};
 #endif

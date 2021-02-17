@@ -23,19 +23,19 @@ struct Comp_dijkstra_pq {
     }
 };
 
-/* returns a vector of the freespace graph with tid = given tid */
-vector<FSnode*> get_corresponding_FSnodes(FSgraph* fsgraph, int tid);
+class Freespace_Dijkstra{
+    /* returns a vector of the freespace graph with tid = given tid */
+    vector<FSnode*> get_corresponding_FSnodes(FSgraph* fsgraph, int tid);
 
-/* returns the edge cost (either 0 or the cost of the original graph edge */
-double edge_cost(FSedge* fedge, Graph* graph);
+    /* returns the edge cost (either 0 or the cost of the original graph edge */
+    double edge_cost(FSedge* fedge, Graph* graph);
 
-/* runs dijkstra on the freespace */
-FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m,
-                priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ);
+    /* runs dijkstra on the freespace */
+    FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m,
+                    priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ);
 
+    /* returns the shortest matching path of the freespace */
+    stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m, string file_name);
 
-/* returns the shortest matching path of the freespace */
-stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m, string file_name);
-
-void print_dijk_path(stack<FSnode*> SP, Graph* graph, string file_name);
-
+    void print_dijk_path(stack<FSnode*> SP, Graph* graph, string file_name);
+};

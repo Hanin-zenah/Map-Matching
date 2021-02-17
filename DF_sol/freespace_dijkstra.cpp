@@ -1,6 +1,6 @@
 #include "freespace_shortest_path.h"
 
-double edge_cost(FSedge* fedge, Graph* graph) {
+double Freespace_Dijkstra::edge_cost(FSedge* fedge, Graph* graph) {
     int src_id = fedge -> src -> vid;
     int trg_id = fedge -> trg -> vid;
     struct node src_node = graph -> nodes[src_id];
@@ -10,7 +10,7 @@ double edge_cost(FSedge* fedge, Graph* graph) {
     return cost;
 }
     
-FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m,
+FSnode* Freespace_Dijkstra::dijkstra(FSgraph* fsgraph, Graph* graph, int m,
                 priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ) {
 
     pair<FSedge*, double> p;
@@ -51,7 +51,7 @@ FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m,
     return NULL;
 }
 
-stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m, string file_name) {
+stack<FSnode*> Freespace_Dijkstra::find_shortest_path(FSgraph* fsgraph, Graph* graph, int m, string file_name) {
     priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq> PQ; //stores nodes for now, later can change to store only edges 
     for(FSnode* source: fsgraph -> source_set) {
         source -> sp_dist = 0;

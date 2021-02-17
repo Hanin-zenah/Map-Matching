@@ -69,9 +69,6 @@ int main(int argc, char** argv) {
     cout<<"Frechet matching duration in microseconds: " << microseconds_frechet << endl;
 
     cout<<"final fsgraph.eps: " << fsgraph.eps << endl;
-
-    cout<<"fsgraph -> fsedges.size: "<<fsgraph.fsedges.size()<<endl;
-    cout<<"fsgraph -> fsnodes.size: "<<fsgraph.fsnodes.size()<<endl;
      
     DF.write_sur_graph(&fsgraph, &after_graph, argv[6]);
     

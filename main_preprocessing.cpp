@@ -37,7 +37,6 @@ int main(int argc, char** argv) {
     double g_dist1 = bd.geodesic_dist(lat_min,lon_min,lat_max,lon_min);
     double g_dist2 = bd.geodesic_dist(lat_min,lon_max,lat_min,lon_min);
     double g_dist3 = bd.geodesic_dist(lat_max,lon_max,lat_max,lon_min);
- 
 
     Euc_distance ed;
     double e_dist1, e_dist2, e_dist3;
@@ -62,9 +61,6 @@ int main(int argc, char** argv) {
 
     /* sub-sampling */
     cout<<"before subsampling scc # edges and nodes: "<<SCC_graph.edges.size()<<" #nodes "<<SCC_graph.nodes.size()<<endl;
-    // cout<<"Please enter subsampling threshold:\n";
-    // int threshold;
-    // cin>>threshold;
  
     char *p;
     int threshold;
@@ -75,9 +71,6 @@ int main(int argc, char** argv) {
     outedge_offset_array(&SCC_graph);
     inedge_offset_array(&SCC_graph); 
     
-    // cout<<"Please enter output pre-processed filename:\n";
-    // string output_fname;
-    // cin>>output_fname;
     output_graph(&SCC_graph, argv[3], lat_scale, lon_scale, lat_min, lat_max, lon_min, lon_max); //"greater-london-_sub_50_projected.txt"
     
     /* checking sub-sampling results */

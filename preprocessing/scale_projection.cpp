@@ -38,11 +38,6 @@ void Euc_distance::calc_edge_cost(Graph* graph, double lat_scale, double lon_sca
     graph -> nodes[i].longitude = lon_mercator_proj(graph -> nodes[i].longitude, graph -> min_long) * lon_scale;
     }
 
-    // graph -> min_lat = ed.lat_mercator_proj(graph -> min_lat, graph -> min_lat) * lat_scale;
-    // graph -> max_lat = ed.lat_mercator_proj(graph -> max_lat, graph -> min_lat) * lat_scale; 
-    // graph -> min_long = ed.lon_mercator_proj(graph -> min_long, graph -> min_long) * lon_scale;
-    // graph -> max_long = ed.lon_mercator_proj(graph -> max_long, graph -> min_long) * lon_scale;
-
     for(int i = 0; i < graph -> n_edges; i++) {
         struct node src;
         struct node trgt;
@@ -55,8 +50,6 @@ void Euc_distance::calc_edge_cost(Graph* graph, double lat_scale, double lon_sca
 
 void flip_map(Graph* graph){
     if(graph -> max_long - graph -> min_long > 180){
-        //fliping the bounding box?
+        //fliping the bounding box
     }
-
-
 }

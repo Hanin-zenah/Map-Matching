@@ -8,7 +8,7 @@
 #include "trajectories/trajectory_split.h"
 #include <chrono>
 #include <limits.h> 
-#include <stdlib.h>  // for strtol
+#include <stdlib.h> 
 
 
 int main(int argc, char** argv) {
@@ -28,8 +28,8 @@ int main(int argc, char** argv) {
     double lon_max = graph.max_long;
  
     graph.original_min_lat = lat_min;
-    graph.original_min_long = lat_max;
-    graph.original_max_lat = lon_min;
+    graph.original_min_long = lon_min; 
+    graph.original_max_lat = lat_max;
     graph.original_max_long = lon_max;
  
     cout<<"bounding box: "<<graph.original_min_lat<<" "<<graph.original_min_long<<" "<<graph.original_max_lat<<" "<<graph.original_max_long<<endl;

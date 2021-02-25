@@ -149,3 +149,106 @@ double Traj::calc_traj_length(Trajectory* traj) {
     }
     return length;
 }
+
+/********************************************************************************************************************************/
+/* reading .txt trajectories */
+
+vector<Trajectory> Traj::read_txt_trajectories(string file_path, double min_long, double min_lat, double lat_scale, double lon_scale) { 
+    Trajectory traj = DEF_TRAJ;
+    vector<Trajectory> trajs;
+    if(file_path.empty()) {
+        cerr << "No file was provided";
+        return trajs;
+    }
+    ifstream file; 
+    file.open(file_path);
+    if(!file) {
+        cerr << "Unable to open file";
+        return trajs;
+    }
+    string buffer;
+    int number_trajs;
+    file >> number_trajs;
+
+    int offset = 0;
+    getline(file, buffer); //required to read an extra line somehow?
+
+    for(int i = 0; i < number_trajs; i++) {
+        if(!file.eof()) {
+            /* get the number of sampled points in the trajectory, trace id, sub id */
+            getline(file, buffer);
+            istringstream vals(buffer);
+            vals >> traj.length >> traj.traceId >> traj.subId;
+            
+            double longitude, latitude; 
+            int timestamp; 
+            for(int i = 0; i < traj.length; i++) {
+                getline(file, buffer);
+                istringstream vals(buffer);
+                vals >> latitude >> longitude >> timestamp;
+                /* overwrite the node's latitude in mercator projection */
+                latitude = ed.lat_mercator_proj(latitude, min_lat) * lat_scale;
+                /* overwrite the node's longitude in mercator projection */
+                longitude = ed.lon_mercator_proj(longitude, min_long) * lon_scale;
+                add_point(&traj, longitude, latitude, timestamp);
+            }
+
+            trajs.push_back(traj);
+            traj = DEF_TRAJ;
+        }
+        else {
+            return trajs;
+        }
+    }
+    file.close();
+    return trajs;
+}
+
+
+vector<Trajectory> Traj::read_processed_trajectories(string file_path, double min_long, double min_lat, double lat_scale, double lon_scale) { 
+    Trajectory traj = DEF_TRAJ;
+    vector<Trajectory> trajs;
+    if(file_path.empty()) {
+        cerr << "No file was provided";
+        return trajs;
+    }
+    ifstream file; 
+    file.open(file_path);
+    if(!file) {
+        cerr << "Unable to open file";
+        return trajs;
+    }
+    string buffer;
+    int number_trajs;
+    file >> number_trajs;
+    cout<<"number_trajs: "<<number_trajs<<endl;
+
+    int offset = 0;
+    getline(file, buffer); //required to read an extra line somehow?
+
+    for(int i = 0; i < number_trajs; i++) {
+        if(!file.eof()) {
+            /* get the number of sampled points in the trajectory, trace id, sub id */
+            getline(file, buffer);
+            istringstream vals(buffer);
+            vals >> traj.length >> traj.traceId >> traj.subId;
+            
+            double longitude, latitude; 
+            int timestamp; 
+            for(int i = 0; i < traj.length; i++) {
+                getline(file, buffer);
+                istringstream vals(buffer);
+                vals >> latitude >> longitude >> timestamp;
+                add_point(&traj, longitude, latitude, timestamp);
+            }
+
+            trajs.push_back(traj);
+            traj = DEF_TRAJ;
+        }
+        else {
+            return trajs;
+        }
+    }
+    file.close();
+    return trajs;
+}

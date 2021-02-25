@@ -24,6 +24,8 @@ struct Comp_dijkstra_pq {
 };
 
 class Freespace_Dijkstra{
+    public:
+    
     /* returns a vector of the freespace graph with tid = given tid */
     vector<FSnode*> get_corresponding_FSnodes(FSgraph* fsgraph, int tid);
 

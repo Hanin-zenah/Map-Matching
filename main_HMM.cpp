@@ -12,6 +12,10 @@
 
 
 int main(int argc, char** argv) {
+    if(argc < 10) {
+        cerr << "Not enough arguments; please provide all required inputs";
+        return 1;
+    }
 
     /* read processed graph from a given file */
     Graph after_graph = GRAPH_INIT;
@@ -69,11 +73,9 @@ int main(int argc, char** argv) {
 
     std::string radius_str = argv[7];
     double radius = std::stod(radius_str);
-    // double radius = 500.00;
 
     std::string num_candidate_str = argv[8];
     int num_candidate = std::stoi(num_candidate_str);
-    // int num_candidate = 50;
 
     auto start_HMM = std::chrono::high_resolution_clock::now();
 

@@ -67,6 +67,13 @@ class Traj{
 
     /* return the length in meter of the trajectory */
     double calc_traj_length(Trajectory* traj);
+
+    /* to read .txt input files */
+    vector<Trajectory> read_txt_trajectories(string file_path, double min_long, double min_lat, double lat_scale, double lon_scale);
+    
+    /* to read pre-processed .txt input files */
+    vector<Trajectory> read_processed_trajectories(string file_path, double min_long, double min_lat, double lat_scale, double lon_scale);
+
 };
 
 #endif

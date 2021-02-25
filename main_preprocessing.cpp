@@ -12,7 +12,7 @@
 
 
 int main(int argc, char** argv) {
-    if(argc < 2) {
+    if(argc < 4) {
         cerr << "Not enough arguments; please provide a file name next to the program name to be read\n\nExample: ./a.out saarland.txt\n";
         return 1;
     }

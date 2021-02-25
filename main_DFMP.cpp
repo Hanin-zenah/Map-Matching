@@ -11,10 +11,15 @@
 #include "DF_sol/freespace_shortest_path.h"
 #include <chrono>
 #include <limits.h> 
-#include <stdlib.h>  // for strtol
+#include <stdlib.h> 
 
 
 int main(int argc, char** argv) {
+   if(argc < 8) {
+       cerr << "Not enough arguments; please provide all required inputs";
+       return 1;
+   }
+
     /* read processed graph from a given file */
     Graph after_graph = GRAPH_INIT;
     read_processed_graph(argv[1], &after_graph);
@@ -38,13 +43,15 @@ int main(int argc, char** argv) {
     cout<<"Building Grid Duration in microseconds: " << microseconds_grid << endl;
 
     Traj tjtr;
-    vector<Trajectory> trajs = tjtr.read_trajectories(argv[3], 4, lon_min, lat_min, lat_scale, lon_scale);
+    vector<Trajectory> trajs = tjtr.read_processed_trajectories(argv[3], lon_min, lat_min, lat_scale, lon_scale);
     /* london-geq50m-clean-unmerged-2016-10-09-greater-london.binTracks */
     /* saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks */
 
-    Grid grid_copy =grid;
+    // Grid grid_copy =grid;
     Trajectory traj = trajs[0];
     Point* traj_nd = traj.points[0];
+
+cout<<"trajectory read\n";
 
     tjtr.calc_traj_edge_cost(&traj);
     double traj_length = tjtr.calc_traj_length(&traj);
@@ -52,10 +59,14 @@ int main(int argc, char** argv) {
     std::string threshold_str = argv[4];
     double subsample_traj_thr = std::stod(threshold_str);
 
+cout<<"trajecotry subsampled\n";
+
     Traj_subsample traj_sub;
     traj_sub.subsample_traj(&traj, subsample_traj_thr);
 
     tjtr.write_traj(&traj, argv[5]);
+
+    cout<<"trajeectory check\n";
 
     FSgraph fsgraph = FSGRAPH_INIT; 
     Discrete_Frechet DF;
@@ -78,9 +89,10 @@ int main(int argc, char** argv) {
     cout<<"finished writing out path"<<endl;
 
     /* run dijkstra on the freespace */
+    Freespace_Dijkstra FD;
     start_frechet = std::chrono::high_resolution_clock::now();
 
-    stack<FSnode*> SP = find_shortest_path(&fsgraph, &after_graph, traj.length, argv[8]); // delete the i
+    stack<FSnode*> SP = FD.find_shortest_path(&fsgraph, &after_graph, traj.length, argv[8]); // delete the i
 
     elapsed_frechet = std::chrono::high_resolution_clock::now() - start_frechet;
     microseconds_frechet = std::chrono::duration_cast<std::chrono::microseconds>(elapsed_frechet).count();

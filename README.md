@@ -54,17 +54,20 @@ _JSON: For each trajectory, it returns one line of vertex OSMIDs and one line of
 
 Building the Tool
 ------------
-1. git clone --recursive https://github.com/MapMatching-research/Map-Matching mapmatching
+1. git clone --recursive https://github.com/MapMatching-research/Map-Matching mapmatching \
+cd mapmatching
 
-2. mkdir 
-<br />build
+2. mkdir build
 <br />cd build
 <br />cmake ../
 <br />make
 
-
-3. cd mapmatching && mkdir build && cd build
-4. cmake -DCMAKE_BUILD_TYPE=lto ../
+Using the Tool
+------------
+preprocess --help \
+hmm_matching --help \
+DFMP_matching --help \
+WDFMP_matching --help 
 
 References:
 ------------

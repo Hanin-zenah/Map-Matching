@@ -187,6 +187,8 @@ FSpair Discrete_Frechet::min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgrap
 
     priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> grid_PQ = gs.GridSearch(graph, grid, traj -> points[0]);
 
+cout<<"gs.GridSearch fine\n";
+
     if(grid_PQ.empty()) {
         cerr << "Error -- couldn't find any node in the grid"<<endl;
         // return -1;
@@ -254,11 +256,20 @@ double Discrete_Frechet::path_cost(FSgraph* fsgraph, Graph* graph, FSpair pair) 
 
 
 void Discrete_Frechet::print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name, FSpair pair) {
-    ofstream file(file_name);
+    // ofstream file(file_name);
+    std::ofstream file;
+    file.open(file_name, std::ios::out | std::ios::app); // append instead of overwrite
+
+    if (!file){
+        cout<<"no previous file\n";
+        std::ofstream file(file_name);
+        }
+
     FSnode* cur = fsgraph -> pair_dict.at(pair);
     while(cur -> parent) {
         file<< graph -> nodes[cur -> vid].longitude <<" "<<graph -> nodes[cur -> vid].lat
         <<" "<<graph -> nodes[cur -> parent -> vid].longitude <<" "<<graph -> nodes[cur -> parent -> vid].lat<<endl;
+        
         cur = cur -> parent;
     }
     file.close();
@@ -290,7 +301,14 @@ void Discrete_Frechet::write_fsgraph(FSgraph* fsgraph, string file_name) {
 } 
 
 void Discrete_Frechet::write_sur_graph(FSgraph* fsgraph, Graph* graph, string file_name) { 
-    ofstream file(file_name);
+    std::ofstream file;
+    file.open(file_name, std::ios::out | std::ios::app); // append instead of overwrite
+    
+    if (!file){
+        cout<<"no previous file\n";
+        std::ofstream file(file_name);
+        }
+
     for(int i = 0; i < fsgraph -> fsedges.size(); i++) {
         //x y x y 
         int source_vid = fsgraph -> fsedges[i] -> src -> vid;
@@ -302,9 +320,39 @@ void Discrete_Frechet::write_sur_graph(FSgraph* fsgraph, Graph* graph, string fi
         trg_lat = graph -> nodes[target_vid].lat;
         trg_lon = graph -> nodes[target_vid].longitude;
 
-
         // file << source_tid<< " " << source_vid << " " << target_tid << " " << target_vid << endl; //what we wanted it to look like originally
-        file << src_lon<< " " << src_lat << " " << trg_lon << " " << trg_lat << endl; // what (Vi, Tj) should looks like
+        file << src_lon<< " " << src_lat << " " << trg_lon << " " << trg_lat << endl;
+         // what (Vi, Tj) should looks like
     }
     file.close();
+}
+
+
+
+void Discrete_Frechet::write_path_json(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name, FSpair pair , vector<double> stats){ 
+    using json = nlohmann::json;
+
+    json j;
+    std::ofstream o; 
+    o.open(file_name, std::ios::out | std::ios::app); // append instead of overwrite
+
+    FSnode* cur = fsgraph -> pair_dict.at(pair);
+
+    vector<int> path_OSM;
+    vector<int> path_id;
+    path_OSM.push_back(graph -> nodes[cur -> vid].osmid);
+    path_id.push_back(graph -> nodes[cur -> vid].id);
+
+    while(cur -> parent) {
+        // while (cur -> vid == cur -> parent -> vid){
+            cur = cur -> parent;
+        // }
+        path_OSM.push_back(graph -> nodes[cur -> vid].osmid);
+        path_id.push_back(graph -> nodes[cur -> vid].id);
+    }
+    j["Statictics"] = stats;
+    j["OSM IDs"] = path_OSM;
+    j["Vertex IDs"] = path_id;
+    o  << j << std::endl;
+    return; 
 }

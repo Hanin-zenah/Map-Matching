@@ -88,7 +88,14 @@ stack<FSnode*> Freespace_Dijkstra::find_shortest_path(FSgraph* fsgraph, Graph* g
     cout<<"shorter frechet distance path length "<< cur -> sp_dist <<endl;
     
     //extract path 
-    ofstream file(file_name);
+    std::ofstream file;
+    file.open(file_name, std::ios::out | std::ios::app); // append instead of overwrite 
+
+    if (!file){
+        cout<<"no previous file\n";
+        std::ofstream file(file_name);
+        }
+
     while(cur -> sp_parent) {
         path.push(cur);
         file << graph -> nodes[cur -> vid].longitude << " " << graph -> nodes[cur -> vid].lat

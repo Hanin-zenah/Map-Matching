@@ -17,6 +17,7 @@
 #include "../grid/graph_grid.h"
 #include "../grid/graph_grid_starting_node.h"
 #include "../trajectories/trajectory.h"
+#include "nlohmann/json.hpp"
 
 #define FSGRAPH_INIT {0}
 
@@ -132,6 +133,8 @@ class Discrete_Frechet{
 
     /* produce a graph that shows the path */
     void print_path(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name, FSpair pair);
+
+    void write_path_json(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name, FSpair pair, vector<double> stats);
 
     void cleanup(FSgraph* fsgraph);
 

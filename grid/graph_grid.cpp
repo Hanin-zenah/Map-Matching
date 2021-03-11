@@ -4,8 +4,12 @@
 void Build_grid::make_grids(Graph* graph, Grid* grid, double size){
     grid -> size = size;
     grid -> num_rows = ceil(graph -> max_lat/size);
+    cout<<"graph -> max_lat: "<<graph -> max_lat<<endl;
+    cout<<"graph -> max_long: "<<graph -> max_long<<endl;
+
     grid -> num_columns = ceil(graph -> max_long/size);
     int num_cells = grid -> num_rows * grid -> num_columns;
+    grid -> max_range = max(grid -> num_columns , grid -> num_rows);
 
     if (grid -> num_columns == graph -> max_long/size){
 		grid -> num_columns++;}

@@ -153,6 +153,23 @@ double Traj::calc_traj_length(Trajectory* traj) {
 /********************************************************************************************************************************/
 /* reading .txt trajectories */
 
+int Traj::num_trajectories(string file_path) { 
+    if(file_path.empty()) {
+        cerr << "No file was provided";
+        return 0;
+    }
+    ifstream file; 
+    file.open(file_path);
+    if(!file) {
+        cerr << "Unable to open file";
+        return 0;
+    }
+    string buffer;
+    int number_trajs;
+    file >> number_trajs;
+    return number_trajs;
+}
+
 vector<Trajectory> Traj::read_txt_trajectories(string file_path, double min_long, double min_lat, double lat_scale, double lon_scale) { 
     Trajectory traj = DEF_TRAJ;
     vector<Trajectory> trajs;
@@ -221,7 +238,6 @@ vector<Trajectory> Traj::read_processed_trajectories(string file_path, double mi
     string buffer;
     int number_trajs;
     file >> number_trajs;
-    cout<<"number_trajs: "<<number_trajs<<endl;
 
     int offset = 0;
     getline(file, buffer); //required to read an extra line somehow?

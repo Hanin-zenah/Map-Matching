@@ -7,7 +7,6 @@
 #include "trajectories/trajectory.h"
 #include "trajectories/trajectory_split.h"
 #include "HMM/HMM.h"
-// #include "freespace_shortest_path.h"
 #include <chrono>
 
 
@@ -57,9 +56,11 @@ int main(int argc, char** argv) {
     double traj_length = tjtr.calc_traj_length(&traj);
     
     Traj_subsample traj_sub;
-    traj_sub.subsample_traj(&traj, argv[4]);
+    std::string threshold_str = argv[4];
+    double subsample_traj_thr = std::stod(threshold_str);
 
-    tjtr.write_traj(&traj, "trajactory.dat");   
+    traj_sub.subsample_traj(&traj, subsample_traj_thr);
+    tjtr.write_traj(&traj, argv[5]);  
 
     HMM hmm;
 
@@ -124,12 +125,12 @@ int main(int argc, char** argv) {
 
     hmm.write_HMM_graph(&after_graph, com_path, argv[9]);
 
-    FSgraph fsgraph = FSGRAPH_INIT; 
-    FSpair last_pair = min_eps(&HMM_graph, &traj, &fsgraph, 750.00);
-    cout<<"final fsgraph.eps: "<<fsgraph.eps<<endl;
-
-    cleanup(&fsgraph);
-    tjtr.cleanup_trajectory(&traj);
+    // FSgraph fsgraph = FSGRAPH_INIT; 
+    // FSpair last_pair = min_eps(&HMM_graph, &traj, &fsgraph, 750.00);
+    // cout<<"final fsgraph.eps: "<<fsgraph.eps<<endl;
+// 
+    // cleanup(&fsgraph);
+    // tjtr.cleanup_trajectory(&traj);
 
     return 0;
 }

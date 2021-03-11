@@ -59,13 +59,13 @@ int main(int argc, char** argv) {
     Graph SCC_graph = GRAPH_INIT;
     scc_graph(&graph, &SCC_graph);    
 
+    cout<<"original graph # edges and nodes: "<<graph.edges.size()<<" #nodes "<<graph.nodes.size()<<endl;
+
     /* sub-sampling */
     cout<<"before subsampling scc # edges and nodes: "<<SCC_graph.edges.size()<<" #nodes "<<SCC_graph.nodes.size()<<endl;
- 
-    char *p;
-    int threshold;
-    long conv = strtol(argv[2], &p, 10);
-    threshold = conv;   
+
+    std::string threshold_str = argv[2];
+    double threshold = std::stod(threshold_str); 
 
     subsampling(&SCC_graph, threshold); 
     outedge_offset_array(&SCC_graph);

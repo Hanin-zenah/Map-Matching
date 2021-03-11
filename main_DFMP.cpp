@@ -12,13 +12,19 @@
 #include <chrono>
 #include <limits.h> 
 #include <stdlib.h> 
-
+#include <nlohmann/json.hpp>
 
 int main(int argc, char** argv) {
    if(argc < 8) {
        cerr << "Not enough arguments; please provide all required inputs";
        return 1;
    }
+
+    Build_grid build_grid;
+    Traj tjtr;
+    Traj_subsample traj_sub;
+    Discrete_Frechet DF;
+    Freespace_Dijkstra FD;
 
     /* read processed graph from a given file */
     Graph after_graph = GRAPH_INIT;
@@ -35,71 +41,82 @@ int main(int argc, char** argv) {
     Grid grid = GRID_INIT;
     std::string grid_size_str = argv[2];
     double grid_size = std::stod(grid_size_str); 
-    Build_grid build_grid;
     build_grid.make_grids(&after_graph, &grid, grid_size);
+
+    cout<<"grid.num_columns and grid.num_rows: "<<grid.num_columns<<" "<<grid.num_rows<<endl;
 
     auto elapsed_grid = std::chrono::high_resolution_clock::now() - start_grid;
     long long microseconds_grid = std::chrono::duration_cast<std::chrono::microseconds>(elapsed_grid).count();
     cout<<"Building Grid Duration in microseconds: " << microseconds_grid << endl;
 
-    Traj tjtr;
-    vector<Trajectory> trajs = tjtr.read_processed_trajectories(argv[3], lon_min, lat_min, lat_scale, lon_scale);
+    
+    vector<Trajectory> trajs = tjtr.read_processed_trajectories(argv[3],lon_min, lat_min, lat_scale, lon_scale);
     /* london-geq50m-clean-unmerged-2016-10-09-greater-london.binTracks */
     /* saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks */
 
-    // Grid grid_copy =grid;
-    Trajectory traj = trajs[0];
-    Point* traj_nd = traj.points[0];
+    int number_traj = tjtr.num_trajectories(argv[3]);  
 
-cout<<"trajectory read\n";
-
-    tjtr.calc_traj_edge_cost(&traj);
-    double traj_length = tjtr.calc_traj_length(&traj);
-
+    cout<< "number_traj: "<<number_traj<<endl;
     std::string threshold_str = argv[4];
     double subsample_traj_thr = std::stod(threshold_str);
-
-cout<<"trajecotry subsampled\n";
-
-    Traj_subsample traj_sub;
-    traj_sub.subsample_traj(&traj, subsample_traj_thr);
-
-    tjtr.write_traj(&traj, argv[5]);
-
-    cout<<"trajeectory check\n";
-
-    FSgraph fsgraph = FSGRAPH_INIT; 
-    Discrete_Frechet DF;
-
-    auto start_frechet = std::chrono::high_resolution_clock::now();
-
-    FSpair last_pair = DF.min_eps(&after_graph, &traj, &fsgraph, &grid);
-
-    auto elapsed_frechet = std::chrono::high_resolution_clock::now() - start_frechet;
-    long long microseconds_frechet = std::chrono::duration_cast<std::chrono::microseconds>(elapsed_frechet).count();
-    cout<<"Frechet matching duration in microseconds: " << microseconds_frechet << endl;
-
-    cout<<"final fsgraph.eps: " << fsgraph.eps << endl;
-     
-    DF.write_sur_graph(&fsgraph, &after_graph, argv[6]);
     
-    cout<<"path cost in m: " << DF.path_cost(&fsgraph, &after_graph, last_pair) << endl;
+    Trajectory traj;
+    Point* traj_nd;
 
-    DF.print_path(&fsgraph, &traj, &after_graph, argv[7], last_pair);
-    cout<<"finished writing out path"<<endl;
+    cout<<"--------###########################################loop: "<<endl;
+    for(int i = 0; i < number_traj; i++) {
+        cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++loop: "<<i<<endl;
+        cout<<"grid -> curr_range: "<<grid.curr_range<<endl;
+        grid.curr_range = 0;
 
-    /* run dijkstra on the freespace */
-    Freespace_Dijkstra FD;
-    start_frechet = std::chrono::high_resolution_clock::now();
+        traj = trajs[i];
+        traj_nd = traj.points[0];
+        tjtr.calc_traj_edge_cost(&traj);
+        double traj_length = tjtr.calc_traj_length(&traj);
 
-    stack<FSnode*> SP = FD.find_shortest_path(&fsgraph, &after_graph, traj.length, argv[8]); // delete the i
+        traj_sub.subsample_traj(&traj, subsample_traj_thr);
+        tjtr.write_traj(&traj, argv[5]);
 
-    elapsed_frechet = std::chrono::high_resolution_clock::now() - start_frechet;
-    microseconds_frechet = std::chrono::duration_cast<std::chrono::microseconds>(elapsed_frechet).count();
-    cout<<"dijk SP Frechet matching duration in microseconds: " << microseconds_frechet << endl;
+        FSgraph fsgraph = FSGRAPH_INIT; // re-initialize?
 
-    DF.cleanup(&fsgraph);
-    tjtr.cleanup_trajectory(&traj);
+        auto start_frechet = std::chrono::high_resolution_clock::now();
+
+        FSpair last_pair = DF.min_eps(&after_graph, &traj, &fsgraph, &grid); 
+
+        // make an error message and terminate the code if the initial traj point is out of the bounding box
+
+        auto elapsed_frechet = std::chrono::high_resolution_clock::now() - start_frechet;
+        long long microseconds_frechet = std::chrono::duration_cast<std::chrono::microseconds>(elapsed_frechet).count();
+        cout<<"Frechet matching duration in microseconds: " << microseconds_frechet << endl;
+
+        cout<<"final fsgraph.eps: " << fsgraph.eps << endl;
+
+        DF.write_sur_graph(&fsgraph, &after_graph, argv[6]);
+
+        cout<<"path cost in m: " << DF.path_cost(&fsgraph, &after_graph, last_pair) << endl;
+
+        DF.print_path(&fsgraph, &traj, &after_graph, argv[7], last_pair);
+
+
+        cout<<"finished writing out path"<<endl;
+
+        /* run dijkstra on the freespace */
+        start_frechet = std::chrono::high_resolution_clock::now();
+
+        stack<FSnode*> SP = FD.find_shortest_path(&fsgraph, &after_graph, traj.length, argv[8]); // delete the i
+
+        elapsed_frechet = std::chrono::high_resolution_clock::now() - start_frechet;
+        microseconds_frechet = std::chrono::duration_cast<std::chrono::microseconds>(elapsed_frechet).count();
+        cout<<"dijk SP Frechet matching duration in microseconds: " << microseconds_frechet << endl;
+
+        vector<double> stats;
+        stats.push_back(fsgraph.eps);
+        stats.push_back(microseconds_frechet);
+        DF.write_path_json(&fsgraph, &traj, &after_graph, argv[9], last_pair, stats);
+
+        DF.cleanup(&fsgraph);
+        tjtr.cleanup_trajectory(&traj);
+    } // end the loop after matching all trajectories
 
 return 0;
 }

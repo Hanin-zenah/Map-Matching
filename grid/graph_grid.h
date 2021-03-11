@@ -26,6 +26,7 @@ typedef struct grid {
     int num_columns;
     int size;
     int curr_range;
+    int max_range;
 
     double dist_to_peak;
 

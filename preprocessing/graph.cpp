@@ -68,8 +68,8 @@ void read_file(string file_name, Graph* graph) {
         graph -> edges.push_back(e);
     }
 
-    //write a .dat file containing the graph's longitude and latitude coordinates
-    write_graph(graph, "graph_lat_lon.dat");   
+    /* write a .dat file containing the graph's longitude and latitude coordinates */
+    // write_graph(graph, "graph_lat_lon.dat");   
 
     file.close();
 
@@ -154,7 +154,7 @@ bool compare_inedge(struct edge edge1, struct edge edge2) { //int , check
 void outedge_offset_array(Graph* graph) {
     vector<struct edge> out_edges = graph -> edges;
     sort(out_edges.begin(), out_edges.end(), compare_outedge);
-    vector<int> offset{0};
+    vector<int> offset;
     int index = 0;
     int k;
     int i;
@@ -184,7 +184,7 @@ void outedge_offset_array(Graph* graph) {
 void inedge_offset_array(Graph* graph) {
     vector<struct edge> in_edges = graph -> edges;
     sort(in_edges.begin(), in_edges.end(), compare_inedge);
-    vector<int> offset{0};
+    vector<int> offset;
     int index = 0;
     int k;
     int i;
@@ -353,11 +353,15 @@ int binary_search_node(int node_id, Graph* graph) {
 void scc_graph(Graph* graph, Graph* SCC_graph) {
     vector<bool> visited_fwd = DFS_fwd(graph);
     vector<bool> visited_bwd = DFS_bwd(graph);
+    cout<<"scc_graph original graph # edges and nodes: "<<graph -> edges.size()<<" #nodes "<<graph -> nodes.size()<<endl;
+
+
 
     //check for any nodes that have both their flags checked
     for(int i = 0; i < graph -> n_nodes; i++) {
         if(visited_fwd[i] && visited_bwd[i]) {
             SCC_graph -> nodes.push_back(graph -> nodes[i]);
+            cout<<"SCC pushed\n";
             SCC_graph -> n_nodes += 1;
         }
     }
@@ -386,7 +390,6 @@ void scc_graph(Graph* graph, Graph* SCC_graph) {
     for(int i = 0; i < SCC_graph -> n_nodes; i++) {
         SCC_graph -> nodes[i].id = i;
     }
-    write_graph(SCC_graph, "SCC_graph.dat");
 
     //compute the inedge and outedge offsets for the graph
     inedge_offset_array(SCC_graph);

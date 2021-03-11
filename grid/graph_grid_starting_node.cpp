@@ -33,6 +33,7 @@ void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int
                 Gpair grid_nd;
                 grid_nd.first  = nd_id;
                 grid_nd.second = dist_from_T0(traj_nd, graph -> nodes[nd_id]);
+                cout<<"horizontal top, nd_id and distance to T0: "<<grid_nd.first<<" "<<grid_nd.second<<endl;
                 PQ.push(grid_nd);
             }}
     
@@ -49,6 +50,7 @@ void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int
                 Gpair grid_nd;
                 grid_nd.first  = nd_id;
                 grid_nd.second = dist_from_T0(traj_nd, graph -> nodes[nd_id]);
+                cout<<"horizontal bottom, nd_id and distance to T0: "<<grid_nd.first<<" "<<grid_nd.second<<endl;
                 PQ.push(grid_nd);
                 }
         }
@@ -67,6 +69,7 @@ void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int
                     Gpair grid_nd;
                     grid_nd.first = nd_id;
                     grid_nd.second = dist_from_T0(traj_nd, graph -> nodes[nd_id]);
+                    cout<<"vertical left, nd_id and distance to T0: "<<grid_nd.first<<" "<<grid_nd.second<<endl;
                     PQ.push(grid_nd);
             }}}
 
@@ -83,8 +86,10 @@ void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int
                         Gpair grid_nd;
                         grid_nd.first = nd_id;
                         grid_nd.second = dist_from_T0(traj_nd, graph -> nodes[nd_id]);
+                        cout<<"vertical right, nd_id and distance to T0: "<<grid_nd.first<<" "<<grid_nd.second<<endl;
                         PQ.push(grid_nd);
                 }}}}
+                cout<<"add_Range to Q fine\n";
     return;
 }
 
@@ -100,10 +105,13 @@ bool Grid_search::range_check(Grid* grid, Point* traj_nd, Graph* graph, priority
 
     if (PQ.empty()){
          while(PQ.empty() && grid -> curr_range <= max(grid -> num_columns - 1, grid -> num_rows - 1)){
-         add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
-         grid -> curr_range++;
+            add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+            grid -> curr_range++;
+            /* when the range contains no cell, the curr range is 0, when is contains 1 cell the curr range is 1, then 9 cells range 2.....*/
      }
-     add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+     if(grid -> curr_range < grid -> max_range){
+         add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+     }
     }
 
     bool within_range = true;
@@ -125,7 +133,8 @@ bool Grid_search::range_check(Grid* grid, Point* traj_nd, Graph* graph, priority
     double lower_bd = lower * grid -> size;
 
     if (left_limit <= left_bd || right_limit >= right_bd || upper_limit >= upper_bd || lower_limit <= lower_bd){ 
-    within_range = false;
+        cout<<"not within range\n";
+        within_range = false;
     }
     return within_range;
 }
@@ -137,36 +146,51 @@ priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> Grid_search::GridSearch(Gra
 
     while(PQ.empty() && grid -> curr_range <= max(grid -> num_columns - 1, grid -> num_rows - 1)){
         add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+        cout<<"before increasing the range\n";
         grid -> curr_range++; 
     }
-    add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+    if (PQ.empty()){
+        cerr<<"The trajectory point is not inside the grid";
+        }
 
-    grid -> dist_to_peak = PQ.top().second; 
-
-    bool enough_range = range_check(grid, traj_nd, graph, PQ);
-    if (!enough_range) {
-        grid -> curr_range++;
-        add_range_to_Q(grid, graph, col, row, grid -> curr_range,traj_nd, PQ);
-        return PQ;
-    }
     else{
-        return PQ;
+        add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+        grid -> dist_to_peak = PQ.top().second; 
+        cout<<"before range checking\n";
+
+        bool enough_range = range_check(grid, traj_nd, graph, PQ);
+        if (!enough_range) {
+            cout<<"range not enough\n";
+            grid -> curr_range++;
+            add_range_to_Q(grid, graph, col, row, grid -> curr_range,traj_nd, PQ);
+            cout<<"added one more range\n";
+        }
     }
+    return PQ;
 }
 
 
 Gpair Grid_search::next_closest_node(Graph* graph, Grid* grid, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ){ 
     int col = floor(traj_nd -> longitude/ grid -> size);
     int row = floor(traj_nd -> latitude/ grid -> size);
+    Gpair closest_nd;
 
-    Gpair closest_nd = PQ.top();
-    PQ.pop();
-    grid -> dist_to_peak = PQ.top().second; 
-    bool enough_range = range_check(grid, traj_nd, graph, PQ);
-    if (!enough_range) {
-        grid -> curr_range++;
-        add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
-    }
+    // if (PQ.empty()){
+        // cerr<<"The trajectory point is not inside the grid";
+    // }
+    // else{
+        closest_nd = PQ.top();
+        PQ.pop();
+        grid -> dist_to_peak = PQ.top().second; 
+        cout<<"PQ.top().first and second: "<<PQ.top().first<<" "<<PQ.top().second<<endl;
+        bool enough_range = range_check(grid, traj_nd, graph, PQ);
+        if (!enough_range) {
+            grid -> curr_range++;
+            cout<<"range not enough after taking the closest node out\n";
+            add_range_to_Q(grid, graph, col, row, grid -> curr_range, traj_nd, PQ);
+            cout<<"range added for next closest node\n";
+        }
+    // }
     return closest_nd;
 }
 

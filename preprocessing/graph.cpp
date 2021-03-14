@@ -155,6 +155,7 @@ void outedge_offset_array(Graph* graph) {
     vector<struct edge> out_edges = graph -> edges;
     sort(out_edges.begin(), out_edges.end(), compare_outedge);
     vector<int> offset;
+    offset.push_back(0);
     int index = 0;
     int k;
     int i;
@@ -174,17 +175,19 @@ void outedge_offset_array(Graph* graph) {
     for(int j = 0; j < to_add; j++) {
         offset.push_back(i);
     }
-    
+
     graph -> out_offsets = offset;
     for(int i = 0; i < out_edges.size(); i++) {
         graph -> out_off_edges.push_back(out_edges[i].id);
     }
+   return;
 }
 
 void inedge_offset_array(Graph* graph) {
     vector<struct edge> in_edges = graph -> edges;
-    sort(in_edges.begin(), in_edges.end(), compare_inedge);
+    sort(in_edges.begin(), in_edges.end(), compare_inedge); //potential bug, sorting notnworking?
     vector<int> offset;
+    offset.push_back(0);
     int index = 0;
     int k;
     int i;
@@ -212,6 +215,7 @@ void inedge_offset_array(Graph* graph) {
     for(int i = 0; i < in_edges.size(); i++) {
         graph -> in_off_edges.push_back(in_edges[i].id);
     }
+    return;
 }
 
 int get_outdeg(Graph* graph, int node_id) {
@@ -259,7 +263,7 @@ vector<int> get_incident(Graph* graph, int node_id) {
     return incidents;
 }
 
-vector<int> trans_get_incident(Graph* graph, int node_id) {
+vector<int> trans_get_incident(Graph* graph, int node_id) { // where the bug is right now, showing node id 0's incident is 0
     vector<int> incidents;
 
     int n_neighbours = graph -> in_offsets[node_id + 1] - graph -> in_offsets[node_id];
@@ -353,15 +357,11 @@ int binary_search_node(int node_id, Graph* graph) {
 void scc_graph(Graph* graph, Graph* SCC_graph) {
     vector<bool> visited_fwd = DFS_fwd(graph);
     vector<bool> visited_bwd = DFS_bwd(graph);
-    cout<<"scc_graph original graph # edges and nodes: "<<graph -> edges.size()<<" #nodes "<<graph -> nodes.size()<<endl;
-
-
 
     //check for any nodes that have both their flags checked
     for(int i = 0; i < graph -> n_nodes; i++) {
         if(visited_fwd[i] && visited_bwd[i]) {
             SCC_graph -> nodes.push_back(graph -> nodes[i]);
-            cout<<"SCC pushed\n";
             SCC_graph -> n_nodes += 1;
         }
     }

@@ -15,6 +15,7 @@
 #include "../preprocessing/scale_projection.h"
 #include "../grid/graph_grid.h"
 #include "../grid/graph_grid_starting_node.h"
+#include "nlohmann/json.hpp" 
 
 
 using namespace std;

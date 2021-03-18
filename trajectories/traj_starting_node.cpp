@@ -24,8 +24,6 @@ vector<FSedge*> SearchNodes(Graph* graph, Point* traj_nd, double radius) {
             FSnode* start_nd = (FSnode*) malloc(sizeof(FSnode));
             se -> src = NULL;
             start_nd -> vid = graph -> nodes[i].id;
-            // cout<<"i: "<<i<<" graph -> nodes[i].id: "<<graph -> nodes[i].id<<endl;
-            // cout<<"dist: "<<dist<<" start_nd -> vid: "<<start_nd -> vid<<" graph -> nodes[i].lat & long: "<< graph -> nodes[i].lat<<" "<< graph -> nodes[i].longitude <<endl;
             start_nd -> tid = 0;
             start_nd -> dist = dist;
             start_nd -> visited = false;

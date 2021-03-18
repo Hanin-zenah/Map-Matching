@@ -106,7 +106,7 @@ void read_processed_graph(string file_name, Graph* graph) {
         getline(file, buffer);
         istringstream vals(buffer);
         struct node n;
-        vals >> n.id >> n.osmid >> n.lat >> n.longitude;
+        vals >> n.id >> n.osmid >> n.lat >> n.longitude >> n.cover_node;
         n.dist = INFINITY;
         n.target = false;
         n.settled = false;
@@ -422,4 +422,17 @@ double lat_min, double lat_max, double lon_min, double lon_max) {
 
     txt_file.close();
     return;
+}
+
+double get_edge_cost(Graph* graph, int source, int target) {
+    int n_neighbours = get_outdeg(graph, source);
+    int index = graph -> out_offsets[source];
+    for(int i = index; i < (index + n_neighbours); i++) {
+        int edge_id = graph -> out_off_edges[i];
+        int neighbour_id = graph -> edges[edge_id].trgtid;
+        if(neighbour_id == target) {
+            return graph -> edges[edge_id].cost;
+        }
+    }
+    return -1;
 }

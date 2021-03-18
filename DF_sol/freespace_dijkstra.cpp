@@ -76,7 +76,7 @@ stack<FSnode*> Freespace_Dijkstra::find_shortest_path(FSgraph* fsgraph, Graph* g
             nd -> settled = true;
         }
     }
-    // cout << "initialized data for dijkstra\n";
+    
     //ready to run dijkstra
     FSnode* cur = dijkstra(fsgraph, graph, m, PQ);
     stack<FSnode*> path;
@@ -85,13 +85,13 @@ stack<FSnode*> Freespace_Dijkstra::find_shortest_path(FSgraph* fsgraph, Graph* g
         cerr << "Dijkstra Failed; returned NULL\n";
         return path;
     }
-    cout<<"shorter frechet distance path length "<< cur -> sp_dist <<endl;
+    cout<<"shorter Frechet distance path length "<< cur -> sp_dist <<endl;
     
     //extract path 
     std::ofstream file;
     file.open(file_name, std::ios::out | std::ios::app); // append instead of overwrite 
 
-    if (!file){
+    if (!file) {
         cout<<"no previous file\n";
         std::ofstream file(file_name);
         }

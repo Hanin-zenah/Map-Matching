@@ -16,14 +16,15 @@ void Traj_subsample::split_traj(Trajectory* traj, int tedge_id) {
 
     pt -> latitude= (x1+x2)/2;   
     pt -> longitude = (y1+y2)/2;
-    traj -> points.push_back(pt);
+    //insert the point right after the original point's position in the list
+    traj -> points.insert(traj -> points.begin() + tedge_id + 1, pt);
 
     tedge2 -> src = pt; 
     tedge2 -> trg = tedge -> trg;
     tedge -> trg = pt; //the original target node
     tedge -> cost = length_new ;
     tedge2 -> cost = length_new ;
-    auto it = traj -> edges.insert(traj -> edges.begin() + tedge_id + 1, tedge2);
+    traj -> edges.insert(traj -> edges.begin() + tedge_id + 1, tedge2);
 
 return;
 }
@@ -37,6 +38,7 @@ void Traj_subsample::subsample_traj(Trajectory* traj, double threshold){
             } 
         }
     }
+    traj -> length = traj -> points.size();
     return;
 }
 

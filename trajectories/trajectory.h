@@ -17,12 +17,7 @@ using namespace std;
 typedef struct point {
     double longitude;
     double latitude;
-    double timestamp; //??
-    //int id;
-
-
-    // struct point* next;
-    // struct point* prev;
+    double timestamp;
 } Point;
 
 typedef struct tedge {
@@ -37,10 +32,7 @@ typedef struct trajectory {
     uint32_t subId; 
     vector<Point*> points;
     vector<Tedge*> edges;
-    // Point* head;
-    // Point* tail;
 } Trajectory;
-
 
 
 class Traj{
@@ -56,6 +48,9 @@ class Traj{
 
     /* reads k consecutive trajectories from a given file and stores it in a Trajectory vector */
     vector<Trajectory> read_trajectories(string file_path, int k, double min_long, double min_lat, double lat_scale, double lon_scale);
+
+    /* extracts the kth trajectory in the file; k >= 0 */
+    Trajectory read_trajectory_k(string file_path, int k, double min_long, double min_lat, double lat_scale, double lon_scale);
 
     void write_traj(Trajectory* traj, string file_name);
 

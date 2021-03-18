@@ -1,4 +1,3 @@
-// #include "graph.h"
 #include "trajectory.h"
 
 
@@ -67,17 +66,13 @@ void Traj::extract_next_trajectory(ifstream& file, int offset, Trajectory* traj,
         latitude = *(int*)buffer;
         latitude /= pow(10, LON_LAT_COMMA_SHIFT);
         /* overwrite the node's latitude in mercator projection */
-        // cout<<"latitude before: "<<latitude<<endl;
         latitude = ed.lat_mercator_proj(latitude, min_lat) * lat_scale;
-        // cout<<"latitude after: "<<latitude<<endl;
-// 
+
         read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
         longitude = *(int*)buffer;
         longitude /= pow(10, LON_LAT_COMMA_SHIFT);
         /* overwrite the node's longitude in mercator projection */
-        // cout<<"longitude before: "<<longitude<<endl;
         longitude = ed.lon_mercator_proj(longitude, min_long) * lon_scale;
-        // cout<<"longitude after: "<<longitude<<endl;
 
         read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
         timestamp = *(int*)buffer;
@@ -106,6 +101,30 @@ vector<Trajectory> Traj::read_trajectories(string file_path, int k, double min_l
     }
     file.close();
     return trajs;
+}
+
+Trajectory Traj::read_trajectory_k(string file_path, int k, double min_long, double min_lat, double lat_scale, double lon_scale) {
+    ifstream file;
+    file.open(file_path, ios::in | ios::binary);
+    file.seekg(0, ios::beg);
+    Trajectory traj = DEF_TRAJ;
+
+    char buffer[4];
+    for(int i = 0; i < k; i++) {
+        //skip trajectories in the file till trajectory number k is reached 
+        if(!file.eof()) {
+            read_next_k_bytes(file, buffer, TRAJ_VAL_SIZE);
+            int length = *(int*)buffer;
+            int offset = file.tellg();
+            int bytes_to_skip = 8 + (length * 12);
+            file.seekg(offset + bytes_to_skip, ios::beg);
+        }
+
+    }
+    int offset = file.tellg();
+    extract_next_trajectory(file, offset, &traj, min_long, min_lat, lat_scale, lon_scale);
+    file.close();
+    return traj;
 }
 
 void Traj::write_traj(Trajectory* traj, string file_name){

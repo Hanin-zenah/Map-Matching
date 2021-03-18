@@ -15,7 +15,7 @@
 
 using namespace std;
 
-class Traj_subsample{
+class Traj_subsample {
     public:
     /* adds a trajectory edge */
     void split_traj(Trajectory* traj, int tedge_id);

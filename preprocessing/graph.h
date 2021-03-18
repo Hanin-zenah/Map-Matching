@@ -8,6 +8,8 @@
 #include <vector> 
 #include <stack>
 #include <algorithm>
+#include <climits>
+
 
 using namespace std;
 
@@ -26,6 +28,7 @@ struct node {
     bool target; 
     bool settled;
     int parent_id;
+    bool cover_node = false; 
 };
 
 struct edge {
@@ -123,5 +126,8 @@ void scc_graph(Graph* graph, Graph* scc_graph);
 
 /* outputs a graph to a text file*/
 void output_graph(Graph* graph, string file_name, double lat_scale, double lon_scale, double lat_min, double lat_max, double lon_min, double lon_max);
+
+/* returns the weight of an edge (i.e. its cost) on the graph */
+double get_edge_cost(Graph* graph, int source, int target);
 
 #endif

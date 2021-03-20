@@ -145,7 +145,6 @@ double build_node(FSgraph_* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsn
 fs_pq_data* traversal(FSgraph_* fsgraph, Graph* graph, Trajectory* traj, fs_pq_data* cur_edge, priority_queue<fs_pq_data*, vector<fs_pq_data*>, 
                 Comp_eps>& bigger_eps, stack <fs_pq_data*>& reachable, SP_Tree* tree, double global_eps) {
     FSnode* fnd = cur_edge->fsedge->trg;
-    cout << fnd -> vid << endl;
     vector<int> incidents = get_incident(graph, fnd -> vid);
     vector<double> btl_neck_vals; 
     double eps = build_node(fsgraph, graph, traj, fnd, fnd -> vid, 0, 1); //build horizontal node 

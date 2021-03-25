@@ -99,6 +99,9 @@ class HMM{
 
         /* convert the path to a graph so that we can calculate the frechet distance between it and the trajectory */
         void make_a_HMM_graph(Graph* graph, vector<int> complete_path, Graph* HMM_graph);
+
+        /* write HMM solution out to a .json file*/
+        void write_hmm_json(Graph* graph, vector<int> complete_path, string file_name, vector<double> stats){ 
 };
 
 #endif

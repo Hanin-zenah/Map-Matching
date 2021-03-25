@@ -422,3 +422,31 @@ void HMM::make_a_HMM_graph(Graph* graph, vector<int> complete_path, Graph* HMM_g
 }
 
 
+void HMM::write_hmm_json(Graph* graph, vector<int> complete_path, string file_name, vector<double> stats){ 
+    using json = nlohmann::json;
+    json j;
+    std::ofstream o; 
+    o.open(file_name, std::ios::out | std::ios::app); // append instead of overwrite
+
+
+    vector<int> path_OSM;
+    vector<int> path_id;
+    int id = complete_path[0];
+    path_OSM.push_back(graph -> nodes[id].osmid);
+    path_id.push_back(id);
+
+    for (int i =  1; i < complete_path.size() - 1; i++){
+    int id2 = complete_path[i];
+    double lat, lon;
+    lat = graph -> nodes[id2].lat;
+    lon = graph -> nodes[id2].longitude;
+    path_OSM.push_back(graph -> nodes[id2].osmid);
+    path_id.push_back(id2);
+    }
+
+    j["Statistics"] = stats;
+    j["OSM IDs"] = path_OSM;
+    j["Vertex IDs"] = path_id;
+    o  << j << std::endl;
+    return; 
+}

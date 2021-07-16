@@ -6,9 +6,9 @@
 class FSgraph_ : public FSgraph {
     public: 
         /* bool flag to indicate whether or not we have passed through a cover node */
-        bool flag = false; 
+        // bool flag = false; 
         /* indicates whether or not a matching path for this source was found */
-        bool done = false;
+        // bool done = false;
         int source; /* source node for the free space graph */ 
         int old_tree_size = 0; //temporary for testing purposes ***REMOVE LATER***
 

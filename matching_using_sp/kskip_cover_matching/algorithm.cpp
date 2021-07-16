@@ -35,13 +35,6 @@ pair<double, double> match(Graph* graph, Trajectory* traj, Grid* grid) {
 
             /* we are done when we have found a shortest path */
             finished = (cost - real_cost <= 0.3);
-
-            // if(!finished) { 
-            //     //tried continuing with the same fsgraph (ie find another mathcing path from the same source) 
-            //     //-> this only caused more computations (space and time) and ended up with same results as ignoring this free space graph as a whole
-            //     cur_edge->fsgraph->done = true;
-            // }
-            // delete cur_edge->fsgraph;
         }
     }
     
@@ -70,19 +63,10 @@ struct fs_pq_data_* traversal(Graph* graph, Trajectory* traj, double* global_eps
         /* only if incident node is also a neighbour of the current node in the sp DAG 
             do we build the freespace nodes + edges on the diagonal and vertical transition */
         if(cur_edge->tree->is_sp_edge(graph, fnd->vid, neighbour_id)) {
-            //if any of the incident nodes is a cover node, dont traverse the other neighbours/ incidents and only build that node/transition in the free space graph 
-            // bool before = cur_edge->fsgraph->flag;
             // build diagonal node 
             build_node(cur_edge, cur_edge->fsgraph, graph, traj, fnd, neighbour_id, 1, 1, global_eps, cover_nodes_sp, bigger_eps, reachable); //change to return edges 
             //build vertical node 
             build_node(cur_edge,cur_edge->fsgraph, graph, traj, fnd, neighbour_id, 1, 0, global_eps, cover_nodes_sp, bigger_eps, reachable); 
-
-            // if(!before) {
-            //     //if we have just passed through a cover node
-            //     if(cur_edge->fsgraph->flag) {
-            //         break;
-            //     }
-            // }
         }
     }
 
@@ -101,8 +85,7 @@ struct fs_pq_data_* traversal(Graph* graph, Trajectory* traj, double* global_eps
             while(!source_set.empty() && source_set.top().second <= *global_eps) {
                 backup_super_edge(source_set, bigger_eps, graph, cover_nodes_sp);
             }
-        }    
-        else { 
+        } else { 
             /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
                 the current cell, might be from the previous cells if there are no reachable nodes in this cell */
             next_edge = (fs_pq_data_*) travel_reachable(reachable);
@@ -118,13 +101,10 @@ struct fs_pq_data_* traversal(Graph* graph, Trajectory* traj, double* global_eps
 void build_node(struct fs_pq_data_* cur_edge, FSgraph_* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right, double* global_eps, unordered_map<int, SP_Tree*>& cover_nodes_sp,
                     priority_queue<fs_pq_data_*, vector<fs_pq_data_*>, Comp_eps>& bigger_eps, stack<fs_pq_data*>& reachable) {
     FSedge* fedge = (FSedge*) malloc(sizeof(FSedge));
-    FSpair pair; 
+    fedge -> src = fsnd; 
 
-    if(up == 0) {
-        pair.first = fsnd -> vid;
-    } else {
-        pair.first = neighbor_id;
-    }
+    FSpair pair; 
+    pair.first = up ? neighbor_id : fsnd -> vid;
     pair.second = fsnd -> tid + right;
 
     /* we check if the corner/node pair already exists, if not, build a new node, but need to build a new edge regardless */
@@ -141,32 +121,25 @@ void build_node(struct fs_pq_data_* cur_edge, FSgraph_* fsgraph, Graph* graph, T
 
         fedge -> trg = fnd; 
 
-        // if(!fsgraph->flag) {
-        //if this is the first time cover node 
         //only change if current sp tree root is not a cover node 
         int cur_root = cur_edge->tree->root;
         if(!graph->nodes[cur_root].cover_node) {
             if(graph->nodes[fnd->vid].cover_node) {
-                // fsgraph->flag = true;
                 //check if a tree for this node exists or not 
                 if(cover_nodes_sp.find(fnd->vid) == cover_nodes_sp.end()) {
                     //first time passing through this tree 
                     cover_nodes_sp[fnd->vid] = new SP_Tree(fnd->vid); 
                 }
 
-                //destruct current tree (free memory); becasue we will never need it again 
                 cur_edge->fsgraph->old_tree_size = cur_edge->tree->nodes.size();
                 cur_edge -> tree = cover_nodes_sp.at(fnd->vid);
             }
         }
-        // }
-    }
-    else { 
+    } else { 
          /* node already exists on free space graph */
         fedge -> trg = fsgraph->pair_dict.at(pair); //no need to access map twice :: change this to be stored in a variable and checked in if statement
     }
 
-    fedge -> src = fsnd; 
     fedge -> botlneck_val = max(fedge -> trg -> dist, *global_eps); // the fnd.dist would be the same regardless the prior existence of this new corner
     fsgraph -> fsedges.push_back(fedge);
 
@@ -174,12 +147,10 @@ void build_node(struct fs_pq_data_* cur_edge, FSgraph_* fsgraph, Graph* graph, T
     next_edge -> fsedge = fedge;
     next_edge -> fsgraph = cur_edge -> fsgraph;
     next_edge -> tree = cur_edge -> tree;
-    // next_edge -> flag = fsgraph->flag;
 
     if(fedge->botlneck_val > *global_eps) {
         bigger_eps.push(next_edge);
-    }
-    else {  
+    } else {  
         reachable.push(next_edge);
     }
 }
@@ -214,7 +185,6 @@ void backup_super_edge(priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& sou
 
         if(graph->nodes[s.first].cover_node) {
             //if the root itself is a cover node 
-            // fsgraph->flag = true; //this is what i need to remove 
             if(cover_nodes_sp.find(s.first) == cover_nodes_sp.end()) {
                 //this cover node has not been reached before 
                 cover_nodes_sp[s.first] = new SP_Tree(s.first);

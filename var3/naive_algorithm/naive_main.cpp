@@ -3,7 +3,7 @@
 int main(int argc, char** argv) {
     /* read processed graph from a given file */
     Graph after_graph = GRAPH_INIT;
-    read_processed_graph("../graphs/saarland_all_preprocessed.txt", &after_graph);
+    read_processed_graph("../../saarland_all_preprocessed.txt", &after_graph);
     double lat_min = after_graph.original_min_lat;
     double lon_min = after_graph.original_min_long;
     double lat_scale = after_graph.lat_scale;
@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
     Traj t;
     Traj_subsample ts;
     for(int i = 0; i < indices.size(); i++) {
-        Trajectory traj = t.read_trajectory_k("../trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", indices[i], lon_min, lat_min, lat_scale, lon_scale);
+        Trajectory traj = t.read_trajectory_k("../../trajectories/saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks", indices[i], lon_min, lat_min, lat_scale, lon_scale);
         t.calc_traj_edge_cost(&traj);
         ts.subsample_traj(&traj, 15);
 

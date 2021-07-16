@@ -45,92 +45,94 @@ int main(int argc, char** argv) {
     Traj tjtr;
 
     vector<Trajectory> trajs = tjtr.read_trajectories(argv[3], 5, lon_min, lat_min, lat_scale, lon_scale);
-    Trajectory traj = trajs[0];
-    Point* traj_nd = traj.points[0];
+    int number_traj = tjtr.num_trajectories(argv[3]);  
 
     /* london-geq50m-clean-unmerged-2016-10-09-greater-london.binTracks */
     /* saarland-geq50m-clean-unmerged-2016-10-09-saarland.binTracks */
-
-    cout << "finished extracting the trajectory\n";
-    tjtr.calc_traj_edge_cost(&traj);
-    double traj_length = tjtr.calc_traj_length(&traj);
     
     Traj_subsample traj_sub;
     std::string threshold_str = argv[4];
     double subsample_traj_thr = std::stod(threshold_str);
 
-    traj_sub.subsample_traj(&traj, subsample_traj_thr);
-    tjtr.write_traj(&traj, argv[5]);  
+    Trajectory traj;
+    Point* traj_nd;
 
-    HMM hmm;
+    for(int i = 0; i < number_traj; i++) {
+        cout<<"grid -> curr_range: "<<grid.curr_range<<endl;
+        grid.curr_range = 0;
 
-    std::string sigma_str = argv[5];
-    double sigma = std::stod(sigma_str);
-    // double sigma = hmm.sigma_est(&after_graph, &grid, &traj); // this can be the default value if the input is missing
+        traj = trajs[i];
+        traj_nd = traj.points[0];
+        tjtr.calc_traj_edge_cost(&traj);
+        double traj_length = tjtr.calc_traj_length(&traj);
+        traj_sub.subsample_traj(&traj, subsample_traj_thr);
+        tjtr.write_traj(&traj, argv[5]);  
 
-    std::string beta_str = argv[6];
-    double beta = std::stod(beta_str);
-    // double beta = hmm.beta_est(0.5, 100, 30); // this can be the default value if the input is missing
+        HMM hmm;
 
-    std::string radius_str = argv[7];
-    double radius = std::stod(radius_str);
+        std::string sigma_str = argv[5];
+        double sigma = std::stod(sigma_str);
+        // double sigma = hmm.sigma_est(&after_graph, &grid, &traj); // this can be the default value if the input is missing
 
-    std::string num_candidate_str = argv[8];
-    int num_candidate = std::stoi(num_candidate_str);
+        std::string beta_str = argv[6];
+        double beta = std::stod(beta_str);
+        // double beta = hmm.beta_est(0.5, 100, 30); // this can be the default value if the input is missing
 
-    auto start_HMM = std::chrono::high_resolution_clock::now();
+        std::string radius_str = argv[7];
+        double radius = std::stod(radius_str);
 
-    vector<int> best = hmm.best_path(&after_graph, &grid, &traj, num_candidate, sigma, beta, radius);
+        std::string num_candidate_str = argv[8];
+        int num_candidate = std::stoi(num_candidate_str);
 
-    vector<int> com_path = hmm.best_path_dijkstra(&after_graph, best);
+        auto start_HMM = std::chrono::high_resolution_clock::now();
 
-    auto elapsed_HMM = std::chrono::high_resolution_clock::now() - start_HMM;
-    long long microseconds_HMM = std::chrono::duration_cast<std::chrono::microseconds>(elapsed_HMM).count();
+        vector<int> best = hmm.best_path(&after_graph, &grid, &traj, num_candidate, sigma, beta, radius);
 
+        vector<int> com_path = hmm.best_path_dijkstra(&after_graph, best);
 
-    cout<<"finished nodes to nodes dijkstra\n";
+        auto elapsed_HMM = std::chrono::high_resolution_clock::now() - start_HMM;
+        long long microseconds_HMM = std::chrono::duration_cast<std::chrono::microseconds>(elapsed_HMM).count();
 
-    double HMM_length = hmm.HMM_path_cost(&after_graph, com_path);
+        cout<<"finished nodes to nodes dijkstra\n";
 
-    cout<<"Building Grid Duration in microseconds: " << microseconds_grid << endl;
+        double HMM_length = hmm.HMM_path_cost(&after_graph, com_path);
 
-    cout<<"grid size: "<<grid_size<<endl;
+        cout<<"Building Grid Duration in microseconds: " << microseconds_grid << endl;
+        cout<<"grid size: "<<grid_size<<endl;
+        cout<<"HMM sigma: "<<sigma<<endl;
+        cout<<"HMM beta: "<<beta<<endl;
+        cout<<"HMM radius: "<<radius<<endl;
+        cout<<"HMM num candidate: "<<num_candidate<<endl;
+        cout<<"HMM in microseconds: " << microseconds_HMM << endl;
+        cout <<"length of trajectory :"<< traj.length << endl;
+        cout<<"length of the traj: "<<traj_length<<endl;
+        cout<<"length of the HMM matching path: "<<HMM_length<<endl;
 
-    cout<<"HMM sigma: "<<sigma<<endl;
+        /* try to fit the HMM results into a freespace and see what's the frechet distance between this HMM results and traj */
 
-    cout<<"HMM beta: "<<beta<<endl;
+        Graph HMM_graph = GRAPH_INIT;
 
-    cout<<"HMM radius: "<<radius<<endl;
+        hmm.make_a_HMM_graph(&after_graph, com_path, &HMM_graph);
 
-    cout<<"HMM num candidate: "<<num_candidate<<endl;
+        outedge_offset_array(&HMM_graph);
+        inedge_offset_array(&HMM_graph);
 
-    cout<<"HMM in microseconds: " << microseconds_HMM << endl;
+        cout<<"convert the path to graph\n";
 
-    cout <<"length of trajectory :"<< traj.length << endl;
+        hmm.write_HMM_graph(&after_graph, com_path, argv[9]);
 
-    cout<<"length of the traj: "<<traj_length<<endl;
+        vector<double> stats;
+        // stats.push_back(fsgraph.eps);
+        stats.push_back(microseconds_HMM);
+        DF.write_path_json(&fsgraph, &traj, &after_graph, argv[10], stats);
 
-    cout<<"length of the HMM matching path: "<<HMM_length<<endl;
+        // FSgraph fsgraph = FSGRAPH_INIT; 
+        // FSpair last_pair = min_eps(&HMM_graph, &traj, &fsgraph, 750.00);
+        // cout<<"final fsgraph.eps: "<<fsgraph.eps<<endl;
 
-    /* try to fit the HMM results into a freespace and see what's the frechet distance between this HMM results and traj */
-
-    Graph HMM_graph = GRAPH_INIT;
-
-    hmm.make_a_HMM_graph(&after_graph, com_path, &HMM_graph);
-
-    outedge_offset_array(&HMM_graph);
-    inedge_offset_array(&HMM_graph);
-
-    cout<<"convert the path to graph\n";
-
-    hmm.write_HMM_graph(&after_graph, com_path, argv[9]);
-
-    // FSgraph fsgraph = FSGRAPH_INIT; 
-    // FSpair last_pair = min_eps(&HMM_graph, &traj, &fsgraph, 750.00);
-    // cout<<"final fsgraph.eps: "<<fsgraph.eps<<endl;
-// 
-    // cleanup(&fsgraph);
-    // tjtr.cleanup_trajectory(&traj);
+        // cleanup(&fsgraph);
+        // tjtr.cleanup_trajectory(&traj);
+    }
 
     return 0;
 }

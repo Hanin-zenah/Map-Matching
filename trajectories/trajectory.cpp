@@ -1,5 +1,5 @@
 #include "trajectory.h"
-
+#include <cstring>
 
 void Traj::add_point(Trajectory* traj, double longitude, double latitude, int timestamp) {
     Point* point = (Point*) malloc(sizeof(Point));

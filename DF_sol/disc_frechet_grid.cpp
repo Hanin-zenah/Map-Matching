@@ -350,7 +350,7 @@ void Discrete_Frechet::write_path_json(FSgraph* fsgraph, Trajectory* traj, Graph
         path_OSM.push_back(graph -> nodes[cur -> vid].osmid);
         path_id.push_back(graph -> nodes[cur -> vid].id);
     }
-    j["Statictics"] = stats;
+    j["Statistics"] = stats;
     j["OSM IDs"] = path_OSM;
     j["Vertex IDs"] = path_id;
     o  << j << std::endl;

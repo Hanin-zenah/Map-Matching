@@ -63,9 +63,7 @@ int main(int argc, char** argv) {
     Trajectory traj;
     Point* traj_nd;
 
-    cout<<"--------###########################################loop: "<<endl;
     for(int i = 0; i < number_traj; i++) {
-        cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++loop: "<<i<<endl;
         cout<<"grid -> curr_range: "<<grid.curr_range<<endl;
         grid.curr_range = 0;
 

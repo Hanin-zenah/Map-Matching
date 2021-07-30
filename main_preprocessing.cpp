@@ -1,5 +1,6 @@
 /* here goes the main function which will call all the necessary function to preprocess the graph */
 #include "preprocessing/graph.h"
+#include "preprocessing/k_skip_cover.cpp"
 #include "Stats/graph_for_hist.h"
 #include "grid/graph_grid.h"
 #include "grid/graph_grid.h"
@@ -13,7 +14,7 @@
 
 int main(int argc, char** argv) {
     if(argc < 4) {
-        cerr << "Not enough arguments; please provide a file name next to the program name to be read\n\nExample: ./preprocess inGraph.txt subSampleThreshold outGraoh.txt\n";
+        cerr << "Not enough arguments; please provide a file name next to the program name to be read\n\nExample: ./preprocess inGraph.txt subSampleThreshold outGraoh.txt kSkip\n";
         return 1;
     }
  
@@ -71,6 +72,14 @@ int main(int argc, char** argv) {
     outedge_offset_array(&SCC_graph);
     inedge_offset_array(&SCC_graph); 
     
+    // COMPUTE kSKIP cover in SCC_graph
+    if( argc >= 5 ){
+        int skipk = std::stoi(argv[4]);
+        cout << "Computing Skip Cover for k="   << skipk << " ..." << endl;
+        int nof_cover_nodes = k_skip_cover( skipk, &SCC_graph );
+        cout << "   Picked nofCoverNodes="      << nof_cover_nodes << endl;
+    }
+
     output_graph(&SCC_graph, argv[3], lat_scale, lon_scale, lat_min, lat_max, lon_min, lon_max); //"greater-london-_sub_50_projected.txt"
     
     /* checking sub-sampling results */

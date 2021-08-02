@@ -71,10 +71,6 @@ int main(int argc, char** argv) {
     subsampling(&SCC_graph, threshold); 
     outedge_offset_array(&SCC_graph);
     inedge_offset_array(&SCC_graph); 
-
-    int cover_nodes = k_skip_cover(10, &SCC_graph);
-
-    cout << "#cover nodes for a " << 10 << "-skip cover: " << cover_nodes << endl;
     
     // COMPUTE kSKIP cover in SCC_graph
     if( argc >= 5 ) {

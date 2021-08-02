@@ -131,6 +131,14 @@ bool dijkstra(Graph* graph, SP_Tree* tree, int hops) {
 }
 
 int k_skip_cover(int k, Graph* graph) {
+    if(k <= 0) 
+        return 0; 
+    if(k == 1) {
+        for(node v: graph -> nodes) {
+            graph -> nodes[v.id].cover_node = true;
+        }
+        return graph -> n_nodes;
+    }
     int total_cover_nodes = 0;
     vector<node> vertices = random_permutate(graph->nodes);
 
@@ -149,6 +157,5 @@ int k_skip_cover(int k, Graph* graph) {
         }
         delete tree;
     }
-    cout << endl;
     return total_cover_nodes;
 }

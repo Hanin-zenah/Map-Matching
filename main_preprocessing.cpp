@@ -13,8 +13,8 @@
 
 int main(int argc, char** argv) {
     if(argc < 4) {
-        cerr << "Not enough arguments. Program accepts exactly 3 command line arguments as follows: \
-        \n\nExample: ./a.out <original graph file path> <subsampling threshold> <preprocessed graph file name> \n";
+        cerr << "Not enough arguments. Program accepts exactly 4 command line arguments as follows: \
+        \n\nExample: ./preprocess <original graph file path> <subsampling threshold> <preprocessed graph file name> <desired k-skip value>\n";
         return 1;
     }
  
@@ -76,7 +76,15 @@ int main(int argc, char** argv) {
 
     cout << "#cover nodes for a " << 10 << "-skip cover: " << cover_nodes << endl;
     
-    output_graph(&SCC_graph, argv[3], lat_scale, lon_scale, lat_min, lat_max, lon_min, lon_max); //"greater-london-_sub_50_projected.txt"
+    // COMPUTE kSKIP cover in SCC_graph
+    if( argc >= 5 ) {
+        int skipk = stoi(argv[4]);
+        cout << "Computing Skip Cover for k="   << skipk << " ..." << endl;
+        int nof_cover_nodes = k_skip_cover( skipk, &SCC_graph );
+        cout << "   Picked nofCoverNodes="      << nof_cover_nodes << endl;
+    }
+
+    output_graph(&SCC_graph, argv[3], lat_scale, lon_scale, lat_min, lat_max, lon_min, lon_max); 
     
     /* checking sub-sampling results */
     cout<<"before second SCC # edges: "<<SCC_graph.edges.size()<<" #nodes "<<SCC_graph.nodes.size()<<endl;

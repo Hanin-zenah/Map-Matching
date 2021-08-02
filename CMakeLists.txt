@@ -22,17 +22,5 @@ set_property(TARGET naive_matching PROPERTY CXX_STANDARD 17)
 add_executable(interleaved_matching preprocessing/graph.cpp preprocessing/scale_projection.cpp grid/graph_grid.cpp grid/graph_grid_starting_node.cpp trajectories/trajectory.cpp trajectories/trajectory_split.cpp var3/shared/shared.cpp var3/interleaved_algorithm/interleaved.cpp var3/interleaved_algorithm/interleaved_main.cpp)
 set_property(TARGET interleaved_matching PROPERTY CXX_STANDARD 17)
 
-<<<<<<< HEAD
-# add_executable(naive_matching preprocessing/graph.cpp preprocessing/scale_projection.cpp grid/graph_grid.cpp grid/graph_grid_starting_node.cpp trajectories/trajectory.cpp trajectories/trajectory_split.cpp matching_using_sp/shared/shared.cpp matching_using_sp/naive_algorithm/naive.cpp matching_using_sp/naive_algorithm/naive_main.cpp)
-# set_property(TARGET naive_matching PROPERTY CXX_STANDARD 17)
-
-# add_executable(interleaved_matching preprocessing/graph.cpp preprocessing/scale_projection.cpp grid/graph_grid.cpp grid/graph_grid_starting_node.cpp trajectories/trajectory.cpp trajectories/trajectory_split.cpp matching_using_sp/shared/shared.cpp matching_using_sp/interleaved_algorithm/interleaved.cpp matching_using_sp/interleaved_algorithm/interleaved_main.cpp)
-# set_property(TARGET interleaved_matching PROPERTY CXX_STANDARD 17)
-
-# add_executable(kskip_matching preprocessing/graph.cpp preprocessing/scale_projection.cpp grid/graph_grid.cpp grid/graph_grid_starting_node.cpp trajectories/trajectory.cpp trajectories/trajectory_split.cpp matching_using_sp/shared/shared.cpp matching_using_sp/kskip_cover_matching/algorithm.cpp matching_using_sp/kskip_cover_matching/main.cpp)
-# set_property(TARGET kskip_matching PROPERTY CXX_STANDARD 11)
-
-=======
 add_executable(kskip_matching preprocessing/graph.cpp preprocessing/scale_projection.cpp grid/graph_grid.cpp grid/graph_grid_starting_node.cpp trajectories/trajectory.cpp trajectories/trajectory_split.cpp var3/shared/shared.cpp var3/kskip_cover_matching/algorithm.cpp var3/kskip_cover_matching/main.cpp)
 set_property(TARGET kskip_matching PROPERTY CXX_STANDARD 17)
->>>>>>> f157918aaf7e2eb158fcb0419fe770665894f290

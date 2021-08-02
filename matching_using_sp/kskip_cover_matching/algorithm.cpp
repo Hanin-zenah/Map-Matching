@@ -49,7 +49,7 @@ struct fs_pq_data_* traversal(Graph* graph, Trajectory* traj, double* global_eps
     FSnode* fnd = cur_edge->fsedge->trg; 
     vector<int> incidents = get_incident(graph, fnd -> vid);
 
-    //build horizontal node (ie the step forward on trajectory only)
+    //build horizontal node 
     build_node(cur_edge, cur_edge->fsgraph, graph, traj, fnd, fnd -> vid, 0, 1, global_eps, cover_nodes_sp, bigger_eps, reachable);
     for(int i = 0; i < incidents.size(); i++) {
         int neighbour_id = incidents[i];
@@ -107,8 +107,10 @@ void build_node(struct fs_pq_data_* cur_edge, FSgraph_* fsgraph, Graph* graph, T
     pair.first = up ? neighbor_id : fsnd -> vid;
     pair.second = fsnd -> tid + right;
 
+    unordered_map<FSpair, FSnode*, KeyPairHash>::const_iterator node_pair = fsgraph -> pair_dict.find(pair);
+
     /* we check if the corner/node pair already exists, if not, build a new node, but need to build a new edge regardless */
-    if(fsgraph -> pair_dict.find(pair) == fsgraph -> pair_dict.end()) {
+    if(node_pair == fsgraph -> pair_dict.end()) {
         FSnode* fnd = (FSnode*) malloc(sizeof(FSnode));
         fnd -> vid = pair.first; 
         fnd -> tid = pair.second;
@@ -137,7 +139,7 @@ void build_node(struct fs_pq_data_* cur_edge, FSgraph_* fsgraph, Graph* graph, T
         }
     } else { 
          /* node already exists on free space graph */
-        fedge -> trg = fsgraph->pair_dict.at(pair); //no need to access map twice :: change this to be stored in a variable and checked in if statement
+        fedge -> trg = node_pair -> second; 
     }
 
     fedge -> botlneck_val = max(fedge -> trg -> dist, *global_eps); // the fnd.dist would be the same regardless the prior existence of this new corner

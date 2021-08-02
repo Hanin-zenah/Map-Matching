@@ -10,14 +10,12 @@
 #include <algorithm>
 #include <climits>
 
-
-using namespace std;
-
 #define MAX_BUFF (100)
 #define IGNORE_LINES (5)
 #define GRAPH_INIT {0, 0, INT_MAX, INT_MIN, INT_MAX, INT_MIN}
 #define DEF_NODE {0, 0, 0, 0}
 
+using namespace std;
 
 struct node {
     double longitude;

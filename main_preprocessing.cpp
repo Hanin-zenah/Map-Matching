@@ -1,5 +1,6 @@
 /* here goes the main function which will call all the necessary function to preprocess the graph */
 #include "preprocessing/graph.h"
+#include "preprocessing/k_skip_cover.h"
 #include "Stats/graph_for_hist.h"
 #include "grid/graph_grid.h"
 #include "grid/graph_grid.h"
@@ -10,10 +11,10 @@
 #include <limits.h> 
 #include <stdlib.h> 
 
-
 int main(int argc, char** argv) {
     if(argc < 4) {
-        cerr << "Not enough arguments; please provide a file name next to the program name to be read\n\nExample: ./a.out saarland.txt\n";
+        cerr << "Not enough arguments. Program accepts exactly 3 command line arguments as follows: \
+        \n\nExample: ./a.out <original graph file path> <subsampling threshold> <preprocessed graph file name> \n";
         return 1;
     }
  
@@ -59,17 +60,21 @@ int main(int argc, char** argv) {
     Graph SCC_graph = GRAPH_INIT;
     scc_graph(&graph, &SCC_graph);    
 
-    cout<<"original graph # edges and nodes: "<<graph.edges.size()<<" #nodes "<<graph.nodes.size()<<endl;
+    cout<<"original graph # edges: "<<graph.edges.size()<<", #nodes "<<graph.nodes.size()<<endl;
 
     /* sub-sampling */
-    cout<<"before subsampling scc # edges and nodes: "<<SCC_graph.edges.size()<<" #nodes "<<SCC_graph.nodes.size()<<endl;
+    cout<<"before subsampling scc # edges: "<<SCC_graph.edges.size()<<", #nodes "<<SCC_graph.nodes.size()<<endl;
 
-    std::string threshold_str = argv[2];
-    double threshold = std::stod(threshold_str); 
+    string threshold_str = argv[2];
+    double threshold = stod(threshold_str); 
 
     subsampling(&SCC_graph, threshold); 
     outedge_offset_array(&SCC_graph);
     inedge_offset_array(&SCC_graph); 
+
+    int cover_nodes = k_skip_cover(10, &SCC_graph);
+
+    cout << "#cover nodes for a " << 10 << "-skip cover: " << cover_nodes << endl;
     
     output_graph(&SCC_graph, argv[3], lat_scale, lon_scale, lat_min, lat_max, lon_min, lon_max); //"greater-london-_sub_50_projected.txt"
     

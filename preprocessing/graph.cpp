@@ -411,9 +411,8 @@ double lat_min, double lat_max, double lon_min, double lon_max) {
     txt_file << lon_min << endl;
     txt_file << lon_max << endl;
 
-
     for(int i = 0; i < all_nodes.size(); i++) {
-        txt_file << all_nodes[i].id << " " << all_nodes[i].osmid << " " << all_nodes[i].lat << " " << all_nodes[i].longitude << endl;
+        txt_file << all_nodes[i].id << " " << all_nodes[i].osmid << " " << all_nodes[i].lat << " " << all_nodes[i].longitude << " " << (all_nodes[i].cover_node? 1 : 0) << endl;
     }
 
     for(int i = 0; i < all_edges.size(); i++) {

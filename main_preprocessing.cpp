@@ -13,10 +13,12 @@
 
 int main(int argc, char** argv) {
     if(argc < 4) {
-        cerr << "Not enough arguments. Program accepts exactly 4 command line arguments as follows: \
-        \n\nExample: ./preprocess <original graph file path> <subsampling threshold> <preprocessed graph file name> <desired k-skip value>\n";
+        cerr << "Not enough arguments. Program accepts 4 command line arguments as follows: \
+        \n\nExample: ./preprocess <original graph file path> <subsampling threshold> <preprocessed graph file name> <desired k-skip value (optional)>\n";
         return 1;
     }
+
+    srand((unsigned)time(NULL));
  
     /* read graph from given file */
     Graph graph = GRAPH_INIT;

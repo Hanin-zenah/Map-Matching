@@ -33,7 +33,7 @@ void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int
                 Gpair grid_nd;
                 grid_nd.first  = nd_id;
                 grid_nd.second = dist_from_T0(traj_nd, graph -> nodes[nd_id]);
-                cout<<"horizontal top, nd_id and distance to T0: "<<grid_nd.first<<" "<<grid_nd.second<<endl;
+                // cout<<"horizontal top, nd_id and distance to T0: "<<grid_nd.first<<" "<<grid_nd.second<<endl;
                 PQ.push(grid_nd);
             }}
     
@@ -50,7 +50,7 @@ void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int
                 Gpair grid_nd;
                 grid_nd.first  = nd_id;
                 grid_nd.second = dist_from_T0(traj_nd, graph -> nodes[nd_id]);
-                cout<<"horizontal bottom, nd_id and distance to T0: "<<grid_nd.first<<" "<<grid_nd.second<<endl;
+                // cout<<"horizontal bottom, nd_id and distance to T0: "<<grid_nd.first<<" "<<grid_nd.second<<endl;
                 PQ.push(grid_nd);
                 }
         }
@@ -69,7 +69,7 @@ void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int
                     Gpair grid_nd;
                     grid_nd.first = nd_id;
                     grid_nd.second = dist_from_T0(traj_nd, graph -> nodes[nd_id]);
-                    cout<<"vertical left, nd_id and distance to T0: "<<grid_nd.first<<" "<<grid_nd.second<<endl;
+                    // cout<<"vertical left, nd_id and distance to T0: "<<grid_nd.first<<" "<<grid_nd.second<<endl;
                     PQ.push(grid_nd);
             }}}
 
@@ -86,10 +86,10 @@ void Grid_search::add_range_to_Q(Grid* grid, Graph* graph, int col, int row, int
                         Gpair grid_nd;
                         grid_nd.first = nd_id;
                         grid_nd.second = dist_from_T0(traj_nd, graph -> nodes[nd_id]);
-                        cout<<"vertical right, nd_id and distance to T0: "<<grid_nd.first<<" "<<grid_nd.second<<endl;
+                        // cout<<"vertical right, nd_id and distance to T0: "<<grid_nd.first<<" "<<grid_nd.second<<endl;
                         PQ.push(grid_nd);
                 }}}}
-                cout<<"add_Range to Q fine\n";
+                // cout<<"add_Range to Q fine\n";
     return;
 }
 

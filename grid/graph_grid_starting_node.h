@@ -12,7 +12,6 @@
 #include "../preprocessing/scale_projection.h"
 #include "graph_grid.h"
 
-using namespace std;
 
 typedef struct GridPair_key {
     //this pair will store node id and distance to T0 as a pair to be used as a key for the hashmap 
@@ -43,24 +42,24 @@ class Grid_search{
         
         /* expand the included grid cells from n*n to (n+1)*(n+1) */
         void add_range_to_Q(Grid* grid, Graph* graph, int col, int row,
-        int range, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ);
+            int range, Point* traj_nd, std::priority_queue<Gpair, std::vector<Gpair>, Comp_dist_to_t>& PQ);
         
         /* check if the outer layer of cells is touched by the radius of distance to peak */
-        bool range_check(Grid* grid, Point* traj_nd, Graph* graph, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> PQ);
+        bool range_check(Grid* grid, Point* traj_nd, Graph* graph, std::priority_queue<Gpair, std::vector<Gpair>, Comp_dist_to_t> PQ);
         
         /* all the node IDs in touches cells which are found using grid look up */
-        priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> GridSearch(Graph* graph, Grid* grid, Point* traj_nd);
+        std::priority_queue<Gpair, std::vector<Gpair>, Comp_dist_to_t> GridSearch(Graph* graph, Grid* grid, Point* traj_nd);
         
         /* compute the next available closest node from the query point */
-        Gpair next_closest_node(Graph* graph, Grid* grid, Point* traj_nd, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ);
+        Gpair next_closest_node(Graph* graph, Grid* grid, Point* traj_nd, std::priority_queue<Gpair, std::vector<Gpair>, Comp_dist_to_t>& PQ);
         
         /* compute a list of next closest nodes sorted ascendingly by their distance to query point */
-        vector<Gpair> next_n_nodes(Graph* graph, Grid* grid, Point* traj_nd, int n_cans, double radius);
-        // vector<Gpair> next_n_nodes(Graph* graph, Grid* grid, Point* traj_nd, 
-        // priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, int n, double radius);
+        std::vector<Gpair> next_n_nodes(Graph* graph, Grid* grid, Point* traj_nd, int n_cans, double radius);
+        // std::vector<Gpair> next_n_nodes(Graph* graph, Grid* grid, Point* traj_nd, 
+        // std::priority_queue<Gpair, std::vector<Gpair>, Comp_dist_to_t>& PQ, int n, double radius);
 
         /* compute a PQ of next k closest nodes sorted ascendingly by their distance to query point */
-        priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> k_nodes(Graph* graph, Grid* grid, Point* traj_nd, int k);
+        std::priority_queue<Gpair, std::vector<Gpair>, Comp_dist_to_t> k_nodes(Graph* graph, Grid* grid, Point* traj_nd, int k);
 
 };
 

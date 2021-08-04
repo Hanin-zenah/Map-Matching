@@ -3,8 +3,6 @@
 
 #define INF_D (numeric_limits<double>::max())
 
-using namespace std;
-
 
 struct KeyHash {
     size_t operator()(const FSnode* node) const {
@@ -26,15 +24,15 @@ struct Comp_dijkstra_pq {
 class Freespace_Dijkstra{
     public:
     
-    /* returns a vector of the freespace graph with tid = given tid */
-    vector<FSnode*> get_corresponding_FSnodes(FSgraph* fsgraph, int tid);
+    /* returns a std::vector of the freespace graph with tid = given tid */
+    std::vector<FSnode*> get_corresponding_FSnodes(FSgraph* fsgraph, int tid);
 
     /* returns the edge cost (either 0 or the cost of the original graph edge */
     double edge_cost(FSedge* fedge, Graph* graph);
 
     /* runs dijkstra on the freespace */
     FSnode* dijkstra(FSgraph* fsgraph, Graph* graph, int m,
-                    priority_queue<pair<FSedge*, double>, vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ);
+                    std::priority_queue<pair<FSedge*, double>, std::vector<pair<FSedge*, double>>, Comp_dijkstra_pq>& PQ);
 
     /* returns the shortest matching path of the freespace */
     stack<FSnode*> find_shortest_path(FSgraph* fsgraph, Graph* graph, int m, string file_name);

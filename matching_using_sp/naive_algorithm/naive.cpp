@@ -37,9 +37,9 @@ pair<double, double> naive_matching(Graph* graph, Trajectory* traj, Grid* grid) 
             super_edge -> trg = start_nd;
             super_edge -> botlneck_val = s.second;
 
-            start_nd -> vid = s.first;
-            start_nd -> tid = 0;
-            start_nd -> dist = s.second;
+            start_nd -> vid = s.first; // Set the vertex ID
+            start_nd -> tid = 0; // ???
+            start_nd -> dist = s.second; // Set the distance from T0
             start_nd -> visited = true;
             start_nd -> parent = NULL;
             

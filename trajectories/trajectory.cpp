@@ -9,6 +9,7 @@ void Traj::add_point(Trajectory* traj, double longitude, double latitude, int ti
     // int index = traj -> points.size();
     traj -> points.push_back(point);
     int size = traj -> points.size();
+    
     if(size > 1) {
         //add an edge between the two most recent points
         Tedge* edge = (Tedge*) malloc(sizeof(Tedge));
@@ -119,7 +120,6 @@ Trajectory Traj::read_trajectory_k(string file_path, int k, double min_long, dou
             int bytes_to_skip = 8 + (length * 12);
             file.seekg(offset + bytes_to_skip, ios::beg);
         }
-
     }
     int offset = file.tellg();
     extract_next_trajectory(file, offset, &traj, min_long, min_lat, lat_scale, lon_scale);
@@ -281,9 +281,89 @@ vector<Trajectory> Traj::read_processed_trajectories(string file_path, double mi
             traj = DEF_TRAJ;
         }
         else {
-            return trajs;
+            break;
         }
     }
     file.close();
+    cout << "before return: " << trajs[0].points.size() << endl;
     return trajs;
+}
+
+
+vector<Trajectory> Traj::read_processed_trajectories(string file_path, double add_noise) { 
+    srand(1);
+
+    Trajectory traj = DEF_TRAJ;
+    vector<Trajectory> trajs;
+    if(file_path.empty()) {
+        cerr << "No file was provided";
+        return trajs;
+    }
+    ifstream file; 
+    file.open(file_path);
+    if(!file) {
+        cerr << "Unable to open file";
+        return trajs;
+    }
+    string buffer;
+    int number_trajs;
+    file >> number_trajs;
+
+    int offset = 0;
+    getline(file, buffer); //required to read an extra line somehow?
+
+    for(int i = 0; i < number_trajs; i++) {
+        if(!file.eof()) {
+            /* get the number of sampled points in the trajectory, trace id, sub id */
+            getline(file, buffer);
+            istringstream vals(buffer);
+            vals >> traj.length >> traj.traceId >> traj.subId;
+            
+            double longitude, latitude; 
+            int timestamp; 
+            for(int i = 0; i < traj.length; i++) {
+                getline(file, buffer);
+                istringstream vals(buffer);
+                vals >> latitude >> longitude >> timestamp;
+                latitude += add_noise * (2*((double)rand() / RAND_MAX)-1);
+                longitude += add_noise * (2*((double)rand() / RAND_MAX)-1);
+                add_point(&traj, longitude, latitude, timestamp);
+            }
+
+            trajs.push_back(traj);
+            traj = DEF_TRAJ;
+        }
+        else {
+            break;
+        }
+    }
+    file.close();
+    cout << "before return: " << trajs[0].points.size() << endl;
+    return trajs;
+}
+
+
+void Traj::write_processed_trajectories(vector<Trajectory>& trajs, string file_path)
+{
+    ofstream file;
+    file.open(file_path);
+
+    int number_trajs = trajs.size();
+
+    file << number_trajs << '\n';
+
+    for (int i=0; i<number_trajs; i++)
+    {
+        Trajectory& traj = trajs[i];
+
+        file << traj.points.size() << " " << traj.traceId << " " << traj.subId << '\n';
+
+        for (int j=0; j<traj.points.size(); j++)
+        {
+            Point* point = traj.points[j];
+            file << point->latitude << " " << point->longitude << " " << point->timestamp << '\n';
+        }
+    }
+
+    file.close();
 }

@@ -6,6 +6,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <vector>
+#include <cstring>
 #include "../preprocessing/scale_projection.h"
 
 #define TRAJ_VAL_SIZE (4)
@@ -72,6 +73,9 @@ class Traj{
     /* to read pre-processed .txt input files */
     vector<Trajectory> read_processed_trajectories(string file_path, double min_long, double min_lat, double lat_scale, double lon_scale);
 
+    vector<Trajectory> read_processed_trajectories(string file_path, double add_noise);
+
+    void write_processed_trajectories(vector<Trajectory>& trajs, string file_path);
 };
 
 #endif

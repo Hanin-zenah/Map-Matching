@@ -124,7 +124,8 @@ int main(int argc, char** argv) {
         vector<double> stats;
         // stats.push_back(fsgraph.eps);
         stats.push_back(microseconds_HMM);
-        DF.write_path_json(&fsgraph, &traj, &after_graph, argv[10], stats);
+
+        // DF.write_path_json(&fsgraph, &traj, &after_graph, argv[10], stats);
 
         // FSgraph fsgraph = FSGRAPH_INIT; 
         // FSpair last_pair = min_eps(&HMM_graph, &traj, &fsgraph, 750.00);

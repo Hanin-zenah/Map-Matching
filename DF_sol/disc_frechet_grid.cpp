@@ -6,10 +6,10 @@ double Discrete_Frechet::nodes_dist(struct node g_nd, Point* t_nd) {
     return dist;
 }
 
-Grid_search gs;
-void Discrete_Frechet::back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, Graph* graph, Point* traj_nd, Grid* grid) {
+Grid_search gs2;
+void Discrete_Frechet::back_up_se(FSgraph* fsgraph, std::priority_queue<FSedge*, std::vector<FSedge*>, Comp_eps>& bigger_eps, std::priority_queue<Gpair, std::vector<Gpair>, Comp_dist_to_t>& PQ, Graph* graph, Point* traj_nd, Grid* grid) {
     if(!PQ.empty()) {
-        Gpair gp = gs.next_closest_node(graph, grid, traj_nd, PQ);
+        Gpair gp = gs2.next_closest_node(graph, grid, traj_nd, PQ);
         PQ.pop();
         double dist = gp.second;
         FSedge* se = (FSedge*) malloc(sizeof(FSedge));
@@ -38,14 +38,14 @@ void Discrete_Frechet::back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vect
 
         fsgraph -> fsnodes.push_back(fnd_b);
         fsgraph -> source_set.push_back(fnd_b);
-        vector<FSedge*> vec;
+        std::vector<FSedge*> vec;
         fsgraph -> adj_list[fnd_b] = vec;
     }
     return;
 }
 
-FSnode* Discrete_Frechet::increase_eps(priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, 
-priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, Point* traj_nd, Graph* graph, Grid* grid){
+FSnode* Discrete_Frechet::increase_eps(std::priority_queue<FSedge*, std::vector<FSedge*>, Comp_eps>& bigger_eps, FSgraph* fsgraph, 
+std::priority_queue<Gpair, std::vector<Gpair>, Comp_dist_to_t>& PQ, Point* traj_nd, Graph* graph, Grid* grid){
     FSedge* min_eps_fedge = bigger_eps.top();
     bigger_eps.pop(); 
     /* check if it is a super edge and put the next super edge in the queue  */
@@ -100,7 +100,7 @@ double Discrete_Frechet::build_node(FSgraph* fsgraph, Graph* graph, Trajectory* 
         fsgraph -> pair_dict[pair] = fnd; //fsgraph -> pair_dict.insert({pair, &fnd});
 
         fedge -> trg = fnd; 
-        vector<FSedge*> vec;
+        std::vector<FSedge*> vec;
         fsgraph -> adj_list[fnd] = vec;
         if(fnd -> tid == 0) {
             fsgraph -> source_set.push_back(fnd);
@@ -122,13 +122,13 @@ double Discrete_Frechet::build_node(FSgraph* fsgraph, Graph* graph, Trajectory* 
     return fedge -> botlneck_val;
 }
 
-FSpair Discrete_Frechet::traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner, priority_queue<FSedge*, vector<FSedge*>, 
-                Comp_eps>& bigger_eps, stack <FSedge*>& Stack, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, 
+FSpair Discrete_Frechet::traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner, std::priority_queue<FSedge*, std::vector<FSedge*>, 
+                Comp_eps>& bigger_eps, stack <FSedge*>& Stack, std::priority_queue<Gpair, std::vector<Gpair>, Comp_dist_to_t>& PQ, 
                 Point* traj_nd, Grid* grid) {
     auto it = fsgraph -> pair_dict.find(corner);
     FSnode* fnd = it -> second;
-    vector<int> incidents = get_incident(graph, fnd -> vid);
-    vector<double> btl_neck_vals; 
+    std::vector<int> incidents = get_incident(graph, fnd -> vid);
+    std::vector<double> btl_neck_vals; 
     double eps = build_node(fsgraph, graph, traj, fnd, fnd -> vid, 0, 1);
     //fsgraph
     btl_neck_vals.push_back(eps); // QH: maybe we can sort this and make the diagonal ones always traverse last?
@@ -178,14 +178,14 @@ FSpair Discrete_Frechet::min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgrap
     int m = traj -> length;
     Point* traj_nd = traj -> points[0];
 
-    priority_queue<FSedge*, vector<FSedge*>, Comp_eps> bigger_eps;
+    std::priority_queue<FSedge*, std::vector<FSedge*>, Comp_eps> bigger_eps;
     stack <FSedge*> Stack;
     /*
      * find the initial closest nodes to the first point in the trajectory using the grid
      * sorted by descending distance 
      */
 
-    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> grid_PQ = gs.GridSearch(graph, grid, traj -> points[0]);
+    std::priority_queue<Gpair, std::vector<Gpair>, Comp_dist_to_t> grid_PQ = gs2.GridSearch(graph, grid, traj -> points[0]);
 
 cout<<"gs.GridSearch fine\n";
 
@@ -219,7 +219,7 @@ cout<<"gs.GridSearch fine\n";
     pair.second = start_nd -> tid;
     // cout<<"starting pair: "<<pair.first<<"  " <<pair.second<<endl; 
     fsgraph -> pair_dict[pair] = start_nd;
-    vector<FSedge*> vec;
+    std::vector<FSedge*> vec;
     fsgraph -> adj_list[start_nd] = vec;
 
     back_up_se(fsgraph, bigger_eps, grid_PQ, graph, traj_nd, grid);
@@ -329,7 +329,7 @@ void Discrete_Frechet::write_sur_graph(FSgraph* fsgraph, Graph* graph, string fi
 
 
 
-void Discrete_Frechet::write_path_json(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name, FSpair pair , vector<double> stats){ 
+void Discrete_Frechet::write_path_json(FSgraph* fsgraph, Trajectory* traj, Graph* graph, string file_name, FSpair pair , std::vector<double> stats){ 
     using json = nlohmann::json;
 
     json j;
@@ -338,8 +338,8 @@ void Discrete_Frechet::write_path_json(FSgraph* fsgraph, Trajectory* traj, Graph
 
     FSnode* cur = fsgraph -> pair_dict.at(pair);
 
-    vector<int> path_OSM;
-    vector<int> path_id;
+    std::vector<int> path_OSM;
+    std::vector<int> path_id;
     path_OSM.push_back(graph -> nodes[cur -> vid].osmid);
     path_id.push_back(graph -> nodes[cur -> vid].id);
 

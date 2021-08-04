@@ -21,11 +21,16 @@
 #include "../../preprocessing/scale_projection.h"
 #include "float.h"
 
+#include "../../hub_labels/hub_labels.h"
+
+
 #define FSGRAPH_INIT {0}
 #define DOUBLE_CMP_EPS (0.000000000001)
 #define GRID_SIZE (250.00)
 
 using namespace std;
+
+extern int visit_count;
 
 typedef struct fsnode {
     int vid;
@@ -103,6 +108,8 @@ struct Comp_eps {
 
 class SP_Tree {
     public:
+        bool root_hubs_added = false;
+
         /* the node id of the tree root on the graph */
         int root; 
         /* this will store the distances to each node from the root */
@@ -120,7 +127,8 @@ class SP_Tree {
         }
         bool is_sp_edge(Graph* graph, int vid, int neighbour_id) {
             double edge_cost = get_edge_cost(graph, vid, neighbour_id);
-            return (edge_cost - (nodes.at(neighbour_id) -> distance - nodes.at(vid) -> distance) <= DOUBLE_CMP_EPS);
+            return (edge_cost - (nodes.at(neighbour_id) -> distance - nodes.at(vid) -> distance) <= 0.01); // Adjusted to 0.01 to account for inconsistent precision between hub label distances and graph distances
+            // return (edge_cost - (nodes.at(neighbour_id) -> distance - nodes.at(vid) -> distance) <= DOUBLE_CMP_EPS);
         }
         /* returns true if given node is settled in the tree,
              false otherwise (if node does not exist or if node is not settled) */
@@ -136,6 +144,60 @@ class SP_Tree {
                 free(node.second);
             }
         }
+
+        /* Gets the sequence of vertices comprising the shortest path from the root to a target vertex for a SP tree which is already computed.
+        Returns true if the path is found, false otherwise. */
+        bool get_shortest_path(vector<int>& output_path, int target, Graph* graph)
+        {
+            output_path.clear();
+
+            int root_node = root;
+
+            // Start the search from the target
+            int current_node = target;
+            while (true)
+            {
+                output_path.push_back(current_node);
+
+                // Stop the search once the root node is found
+                if (current_node == root_node)
+                {
+                    std::reverse(output_path.begin(), output_path.end());
+                    return true;
+                }
+                bool break_flag = false;
+                int n_incoming_neighbours = get_indeg(graph, current_node);
+                for (int i=0; i<n_incoming_neighbours; i++)
+                {
+                    int edge = get_in_edge(graph, current_node, i);
+                    if (edge == -1) { throw std::logic_error("Invalid edge"); }
+
+                    int neighbour = graph->edges[edge].srcid;
+
+                    // The node with this distance is the preceding node to the current node in the SP tree
+                    double shortest_dist_target = nodes[current_node]->distance - graph->edges[edge].cost;
+
+                    // If neighbouring node is not in tree
+                    auto it = nodes.find(neighbour);
+                    if (it == nodes.end()) {
+                        continue;
+                    }
+                    if (!it->second->settled)
+                    {
+                        continue;
+                    }
+                    double neighbour_shortest_dist = it->second->distance;
+                    
+                    if (fabs(neighbour_shortest_dist-shortest_dist_target) < 0.01)
+                    {
+                        current_node = neighbour;
+                        break_flag = true;
+                        break;
+                    }
+                }
+                if (!break_flag) { return false; }
+            }
+        }
 };
 
 /* returns the distance between a node on G and a point on the trajectory */
@@ -143,10 +205,21 @@ double nodes_dist(node g_nd, Point* t_nd);
 
 /* returns the next reachable free space transition */
 struct fs_pq_data* travel_reachable(stack <struct fs_pq_data*>& reachable);
-
+ 
 /* runs Dijkstra's shortest path algorithm on graph to continue constructing the SP tree/DAG structure
     until a node on graph with vid = target is settled */
 void Dijkstra(Graph* graph, SP_Tree* tree, int target);
+
+int DijkstraUntilRankFound(Graph* graph, SP_Tree* tree, int target_rank, bool* all_vertices_searched);
+
+/* constructs the SP tree structure until the target node is found using hub labels */
+void hubLabelShortestPath(Graph* graph, SP_Tree* tree, int target, HubLabelOffsetList& hub_labels);
+
+double getDistanceSortedDistance(Graph* graph, SP_Tree* tree, int target, HubLabelOffsetList& hub_labels, unordered_map<int,double>& root_hub_distance_map);
+
+void hubLabelDistanceSortedShortestPath(Graph* graph, SP_Tree* tree, int target, HubLabelOffsetList& hub_labels, double initial_upper_bound);
+
+void hubLabelDistanceSortedShortestPath(Graph* graph, SP_Tree* tree, int target, HubLabelOffsetList& hub_labels);
 
 /* returns the real cost of a matching path on graph */
 double matching_path_cost(Graph* graph, FSnode* final_node);

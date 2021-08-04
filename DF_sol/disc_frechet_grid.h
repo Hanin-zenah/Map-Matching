@@ -21,7 +21,7 @@
 
 #define FSGRAPH_INIT {0}
 
-using namespace std;
+// using namespace std;
 
 typedef struct fsnode {
     int vid;
@@ -82,8 +82,8 @@ struct keyNodeHash {
 
 typedef struct fsgraph {
     double eps; //the min traversal distance, initial = distance(v1, t1) // global leashlength value for the freespace graph
-    unordered_map<FSpair, FSnode*, KeyPairHash> pair_dict; 
-    unordered_map<FSnode*, vector<FSedge*>, keyNodeHash> adj_list;
+    std::unordered_map<FSpair, FSnode*, KeyPairHash> pair_dict; 
+    std::unordered_map<FSnode*, vector<FSedge*>, keyNodeHash> adj_list;
     vector<FSnode*> fsnodes;// can be changed to pointers?? only used them to count the number of nodes/edges in the FSgraph so far
     vector<FSedge*> fsedges;
     vector<FSnode*> source_set;

@@ -66,8 +66,7 @@ typedef struct graph {
 } Graph;
 
 /* writes the longitude, latitude of the end points of every edge of a given graph to a given file */
-void write_graph(Graph* graph, string file_name);
-
+void write_graph(Graph* graph, string file_name); 
 /* checks and updates the graph's bounding box corners accordingly */
 void check_boundaries(double latitude, double longitude, Graph* g);
 

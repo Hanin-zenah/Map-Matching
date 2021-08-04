@@ -1,5 +1,6 @@
 #include "interleaved.h"
 
+
 Grid_search gs;
 pair<double, double> interleaved_matching(Graph* graph, Trajectory* traj, Grid* grid) {
     double global_eps = INFINITY;
@@ -23,8 +24,17 @@ pair<double, double> interleaved_matching(Graph* graph, Trajectory* traj, Grid* 
     while(!finished) {
         cur_edge = traversal(graph, traj, &global_eps, bigger_eps, reachable, cur_edge, source_set);
 
+        // We are finished if the current free space edge leads to an path with length m-1 in the free space (covers m nodes)
         finished = (cur_edge -> fsedge -> trg -> tid >= m - 1);
     }
+
+    print_path(graph, "saarland_long_matched_path_plot.dat", cur_edge->fsedge->trg);
+
+    // #if USE_HUB_LABELS
+    //     print_path(graph, "hub_trajectory.dat", cur_edge->fsedge->trg);
+    // #else
+    //     print_path(graph, "djikstra_trajectory.dat", cur_edge->fsedge->trg);
+    // #endif
 
     double cost = matching_path_cost(graph, cur_edge->fsedge->trg);
     return make_pair(global_eps, cost);
@@ -47,7 +57,7 @@ struct fs_pq_data_* increase_eps(priority_queue<Gpair, vector<Gpair>, Comp_dist_
     return next_min_eps;
 }
 
-
+// Builds an edge from fsnd to another node in the free space and returns the bottleneck value of the new edge
 double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd, int neighbor_id, int up, int right, double* global_eps) {
     FSedge* fedge = (FSedge*) malloc(sizeof(FSedge));
     FSpair pair; 
@@ -87,20 +97,36 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
     return fedge -> botlneck_val;
 }
 
+
 struct fs_pq_data_* traversal(Graph* graph, Trajectory* traj, double* global_eps, priority_queue<struct fs_pq_data_*, vector<struct fs_pq_data_*>, Comp_eps>& bigger_eps,
                     stack<struct fs_pq_data*>& reachable, struct fs_pq_data_* cur_edge, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& source_set) {
+    
+    // Target node of the current free space edge
     FSnode* fnd = cur_edge->fsedge->trg;
+
+    // Get neighbouring vertices in the graph
     vector<int> incidents = get_incident(graph, fnd -> vid);
+
     vector<double> btl_neck_vals; 
+
     double eps = build_node(cur_edge->fsgraph, graph, traj, fnd, fnd -> vid, 0, 1, global_eps); //build horizontal node 
     btl_neck_vals.push_back(eps);
+    
     for(int i = 0; i < incidents.size(); i++) {
         int neighbour_id = incidents[i];
         //if the neighbour is not in the sp DAG rooted at 'root' or if neighbour not settled yet -> continue sp computation until a sp is found to this neighbour
         if(!cur_edge->tree-> node_settled(neighbour_id)) {
             int tree_nodes_before = cur_edge->tree->nodes.size();
-            auto t1 = chrono::high_resolution_clock::now(); 
-            Dijkstra(graph, cur_edge->tree, neighbour_id);
+            auto t1 = chrono::high_resolution_clock::now();
+            #if USE_HUB_LABELS
+                int edge_id = get_out_edge(graph, fnd->vid, i);
+                double init_upper_bound = graph->edges[edge_id].cost + cur_edge->tree->nodes[fnd->vid]->distance;
+                hubLabelDistanceSortedShortestPath(graph, cur_edge->tree, neighbour_id, hl, init_upper_bound);
+                
+                // hubLabelShortestPath(graph, cur_edge->tree, neighbour_id, hl);
+            #else
+                Dijkstra(graph, cur_edge->tree, neighbour_id);
+            #endif
             auto t2 = chrono::high_resolution_clock::now(); 
             int duration = chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
 
@@ -155,14 +181,22 @@ struct fs_pq_data_* traversal(Graph* graph, Trajectory* traj, double* global_eps
     return next_edge;
 }
 
+
+// Constructs a super edge to the next closest vertex
+// source_set: priority queue of source nodes sorted by distance to T
+// bigger_eps: priority queue of free space edges sorted by their epsilon value
 void backup_super_edge(priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& source_set, priority_queue<struct fs_pq_data_*, vector<struct fs_pq_data_*>, Comp_eps>& bigger_eps) {
     if(!source_set.empty()) {
+
+        // Get the next closest vertex in the graph
         Gpair s = source_set.top();
         source_set.pop();
 
+        // Instantiate a shortest path tree at the vertex and a new free space graph
         SP_Tree* tree = new SP_Tree(s.first);
         FSgraph* fsgraph = new FSgraph();
         
+        // Create a free space node and a super edge to that node
         FSedge* se = (FSedge*) malloc(sizeof(FSedge));
         FSnode* node = (FSnode*) malloc(sizeof(FSnode));
         node -> vid = s.first;
@@ -174,11 +208,12 @@ void backup_super_edge(priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& sou
         se -> trg = node;
         se -> botlneck_val = s.second;
 
+        // Add the node to the data structures
         FSpair pair = {node -> vid, node -> tid};
         fsgraph->pair_dict[pair] = node;
         fsgraph->fsnodes.push_back(node);
 
-
+        // Store the super edge and its corresponding free space graph and SP tree in the priority queue
         fs_pq_data_* data_ptr = (fs_pq_data_*) malloc(sizeof(fs_pq_data_));
         data_ptr -> fsedge = se;
         data_ptr -> fsgraph = fsgraph;

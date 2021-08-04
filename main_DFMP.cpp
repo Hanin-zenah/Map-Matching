@@ -1,4 +1,5 @@
 /* here goes the main function which will call all the necessary function to preprocess the graph */
+
 #include "preprocessing/graph.h"
 #include "Stats/graph_for_hist.h"
 #include "grid/graph_grid.h"
@@ -14,11 +15,12 @@
 #include <stdlib.h> 
 #include <nlohmann/json.hpp>
 
+
 int main(int argc, char** argv) {
-   if(argc < 8) {
-       cerr << "Not enough arguments; please provide all required inputs";
-       return 1;
-   }
+    if(argc < 8) {
+        cerr << "Not enough arguments; please provide all required inputs";
+        return 1;
+    }
 
     Build_grid build_grid;
     Traj tjtr;
@@ -116,6 +118,6 @@ int main(int argc, char** argv) {
         tjtr.cleanup_trajectory(&traj);
     } // end the loop after matching all trajectories
 
-return 0;
+    return 0;
 }
 

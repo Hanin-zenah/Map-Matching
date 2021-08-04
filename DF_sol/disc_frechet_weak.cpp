@@ -1,5 +1,10 @@
 #include "disc_frechet_grid.h"
 #include "../grid/graph_grid.h"
+<<<<<<< HEAD
+=======
+
+Grid_search gs;
+>>>>>>> Hub labels
 
 double nodes_dist(struct node g_nd, Point* t_nd) {
     double dist = sqrt(pow((t_nd -> latitude - g_nd.lat), 2.0) + pow((t_nd -> longitude - g_nd.longitude), 2.0));
@@ -18,7 +23,7 @@ bool found_fsnode_vec(FSgraph* fsgraph, FSnode* node) {
 
 void back_up_se(FSgraph* fsgraph, priority_queue<FSedge*, vector<FSedge*>, Comp_eps>& bigger_eps, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, Graph* graph, Point* traj_nd, Grid* grid) {
     if(!PQ.empty()) {
-        Gpair gp = next_closest_node(graph, grid, traj_nd, PQ);
+        Gpair gp = gs.next_closest_node(graph, grid, traj_nd, PQ);
         PQ.pop();
         double dist = gp.second;
         FSedge* se = (FSedge*) malloc(sizeof(FSedge));
@@ -68,7 +73,7 @@ priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, Point* traj_nd, Graph*
     return next_nd;
 }
 
-FSnode* travel_reachable(FSgraph* fsgraph, stack <FSedge*>& Stack){
+FSnode* travel_reachable(FSgraph* fsgraph, std::stack <FSedge*>& Stack){
     /* case 2: proceed to the next reachable node, favouring diagonal movement. this node might be from 
         the current cell, might be from the previous cells if there are no reachable nodes in this cell */
     // cout<<"stack size: "<<Stack.size()<<endl;
@@ -133,7 +138,7 @@ double build_node(FSgraph* fsgraph, Graph* graph, Trajectory* traj, fsnode* fsnd
 }
 
 FSpair traversal(FSgraph* fsgraph, Graph* graph, Trajectory* traj, FSpair corner, priority_queue<FSedge*, vector<FSedge*>, 
-                Comp_eps>& bigger_eps, stack <FSedge*>& Stack, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, 
+                Comp_eps>& bigger_eps, std::stack <FSedge*>& Stack, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& PQ, 
                 Point* traj_nd, Grid* grid) {
     auto it = fsgraph -> pair_dict.find(corner);
     FSnode* fnd = it -> second;
@@ -192,13 +197,13 @@ FSpair min_eps(Graph* graph, Trajectory* traj, FSgraph* fsgraph, Grid* grid) {
     Point* traj_nd = traj -> points[0];
 
     priority_queue<FSedge*, vector<FSedge*>, Comp_eps> bigger_eps;
-    stack <FSedge*> Stack;
+    std::stack <FSedge*> Stack;
     /*
      * find the initial closest nodes to the first point in the trajectory using the grid
      * sorted by descending distance 
      */
 
-    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> grid_PQ = GridSearch(graph, grid, traj -> points[0]);
+    priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t> grid_PQ = gs.GridSearch(graph, grid, traj -> points[0]);
 
     if(grid_PQ.empty()) {
         cerr << "Error -- couldn't find any node in the grid"<<endl;

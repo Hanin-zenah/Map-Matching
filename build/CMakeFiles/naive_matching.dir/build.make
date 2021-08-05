@@ -69,10 +69,24 @@ include CMakeFiles/naive_matching.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/naive_matching.dir/flags.make
 
+CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.o: CMakeFiles/naive_matching.dir/flags.make
+CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.o: ../hub_labels/hub_labels.cpp
+CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.o: CMakeFiles/naive_matching.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.o -MF CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.o.d -o CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/hub_labels/hub_labels.cpp
+
+CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/hub_labels/hub_labels.cpp > CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.i
+
+CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/hub_labels/hub_labels.cpp -o CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.s
+
 CMakeFiles/naive_matching.dir/preprocessing/graph.cpp.o: CMakeFiles/naive_matching.dir/flags.make
 CMakeFiles/naive_matching.dir/preprocessing/graph.cpp.o: ../preprocessing/graph.cpp
 CMakeFiles/naive_matching.dir/preprocessing/graph.cpp.o: CMakeFiles/naive_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/naive_matching.dir/preprocessing/graph.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/naive_matching.dir/preprocessing/graph.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/naive_matching.dir/preprocessing/graph.cpp.o -MF CMakeFiles/naive_matching.dir/preprocessing/graph.cpp.o.d -o CMakeFiles/naive_matching.dir/preprocessing/graph.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/preprocessing/graph.cpp
 
 CMakeFiles/naive_matching.dir/preprocessing/graph.cpp.i: cmake_force
@@ -86,7 +100,7 @@ CMakeFiles/naive_matching.dir/preprocessing/graph.cpp.s: cmake_force
 CMakeFiles/naive_matching.dir/preprocessing/scale_projection.cpp.o: CMakeFiles/naive_matching.dir/flags.make
 CMakeFiles/naive_matching.dir/preprocessing/scale_projection.cpp.o: ../preprocessing/scale_projection.cpp
 CMakeFiles/naive_matching.dir/preprocessing/scale_projection.cpp.o: CMakeFiles/naive_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/naive_matching.dir/preprocessing/scale_projection.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/naive_matching.dir/preprocessing/scale_projection.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/naive_matching.dir/preprocessing/scale_projection.cpp.o -MF CMakeFiles/naive_matching.dir/preprocessing/scale_projection.cpp.o.d -o CMakeFiles/naive_matching.dir/preprocessing/scale_projection.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/preprocessing/scale_projection.cpp
 
 CMakeFiles/naive_matching.dir/preprocessing/scale_projection.cpp.i: cmake_force
@@ -100,7 +114,7 @@ CMakeFiles/naive_matching.dir/preprocessing/scale_projection.cpp.s: cmake_force
 CMakeFiles/naive_matching.dir/grid/graph_grid.cpp.o: CMakeFiles/naive_matching.dir/flags.make
 CMakeFiles/naive_matching.dir/grid/graph_grid.cpp.o: ../grid/graph_grid.cpp
 CMakeFiles/naive_matching.dir/grid/graph_grid.cpp.o: CMakeFiles/naive_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/naive_matching.dir/grid/graph_grid.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/naive_matching.dir/grid/graph_grid.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/naive_matching.dir/grid/graph_grid.cpp.o -MF CMakeFiles/naive_matching.dir/grid/graph_grid.cpp.o.d -o CMakeFiles/naive_matching.dir/grid/graph_grid.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/grid/graph_grid.cpp
 
 CMakeFiles/naive_matching.dir/grid/graph_grid.cpp.i: cmake_force
@@ -114,7 +128,7 @@ CMakeFiles/naive_matching.dir/grid/graph_grid.cpp.s: cmake_force
 CMakeFiles/naive_matching.dir/grid/graph_grid_starting_node.cpp.o: CMakeFiles/naive_matching.dir/flags.make
 CMakeFiles/naive_matching.dir/grid/graph_grid_starting_node.cpp.o: ../grid/graph_grid_starting_node.cpp
 CMakeFiles/naive_matching.dir/grid/graph_grid_starting_node.cpp.o: CMakeFiles/naive_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/naive_matching.dir/grid/graph_grid_starting_node.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/naive_matching.dir/grid/graph_grid_starting_node.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/naive_matching.dir/grid/graph_grid_starting_node.cpp.o -MF CMakeFiles/naive_matching.dir/grid/graph_grid_starting_node.cpp.o.d -o CMakeFiles/naive_matching.dir/grid/graph_grid_starting_node.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/grid/graph_grid_starting_node.cpp
 
 CMakeFiles/naive_matching.dir/grid/graph_grid_starting_node.cpp.i: cmake_force
@@ -128,7 +142,7 @@ CMakeFiles/naive_matching.dir/grid/graph_grid_starting_node.cpp.s: cmake_force
 CMakeFiles/naive_matching.dir/trajectories/trajectory.cpp.o: CMakeFiles/naive_matching.dir/flags.make
 CMakeFiles/naive_matching.dir/trajectories/trajectory.cpp.o: ../trajectories/trajectory.cpp
 CMakeFiles/naive_matching.dir/trajectories/trajectory.cpp.o: CMakeFiles/naive_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/naive_matching.dir/trajectories/trajectory.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/naive_matching.dir/trajectories/trajectory.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/naive_matching.dir/trajectories/trajectory.cpp.o -MF CMakeFiles/naive_matching.dir/trajectories/trajectory.cpp.o.d -o CMakeFiles/naive_matching.dir/trajectories/trajectory.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/trajectories/trajectory.cpp
 
 CMakeFiles/naive_matching.dir/trajectories/trajectory.cpp.i: cmake_force
@@ -142,7 +156,7 @@ CMakeFiles/naive_matching.dir/trajectories/trajectory.cpp.s: cmake_force
 CMakeFiles/naive_matching.dir/trajectories/trajectory_split.cpp.o: CMakeFiles/naive_matching.dir/flags.make
 CMakeFiles/naive_matching.dir/trajectories/trajectory_split.cpp.o: ../trajectories/trajectory_split.cpp
 CMakeFiles/naive_matching.dir/trajectories/trajectory_split.cpp.o: CMakeFiles/naive_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/naive_matching.dir/trajectories/trajectory_split.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/naive_matching.dir/trajectories/trajectory_split.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/naive_matching.dir/trajectories/trajectory_split.cpp.o -MF CMakeFiles/naive_matching.dir/trajectories/trajectory_split.cpp.o.d -o CMakeFiles/naive_matching.dir/trajectories/trajectory_split.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/trajectories/trajectory_split.cpp
 
 CMakeFiles/naive_matching.dir/trajectories/trajectory_split.cpp.i: cmake_force
@@ -153,75 +167,77 @@ CMakeFiles/naive_matching.dir/trajectories/trajectory_split.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/naive_matching.dir/trajectories/trajectory_split.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/trajectories/trajectory_split.cpp -o CMakeFiles/naive_matching.dir/trajectories/trajectory_split.cpp.s
 
-CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.o: CMakeFiles/naive_matching.dir/flags.make
-CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.o: ../var3/shared/shared.cpp
-CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.o: CMakeFiles/naive_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.o -MF CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.o.d -o CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/var3/shared/shared.cpp
+CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.o: CMakeFiles/naive_matching.dir/flags.make
+CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.o: ../matching_using_sp/shared/shared.cpp
+CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.o: CMakeFiles/naive_matching.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.o -MF CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.o.d -o CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/shared/shared.cpp
 
-CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/var3/shared/shared.cpp > CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.i
+CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/shared/shared.cpp > CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.i
 
-CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/var3/shared/shared.cpp -o CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.s
+CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/shared/shared.cpp -o CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.s
 
-CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.o: CMakeFiles/naive_matching.dir/flags.make
-CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.o: ../var3/naive_algorithm/naive.cpp
-CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.o: CMakeFiles/naive_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.o -MF CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.o.d -o CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/var3/naive_algorithm/naive.cpp
+CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.o: CMakeFiles/naive_matching.dir/flags.make
+CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.o: ../matching_using_sp/naive_algorithm/naive.cpp
+CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.o: CMakeFiles/naive_matching.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.o -MF CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.o.d -o CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/naive_algorithm/naive.cpp
 
-CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/var3/naive_algorithm/naive.cpp > CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.i
+CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/naive_algorithm/naive.cpp > CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.i
 
-CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/var3/naive_algorithm/naive.cpp -o CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.s
+CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/naive_algorithm/naive.cpp -o CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.s
 
-CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.o: CMakeFiles/naive_matching.dir/flags.make
-CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.o: ../var3/naive_algorithm/naive_main.cpp
-CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.o: CMakeFiles/naive_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.o -MF CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.o.d -o CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/var3/naive_algorithm/naive_main.cpp
+CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.o: CMakeFiles/naive_matching.dir/flags.make
+CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.o: ../matching_using_sp/naive_algorithm/naive_main.cpp
+CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.o: CMakeFiles/naive_matching.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.o -MF CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.o.d -o CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/naive_algorithm/naive_main.cpp
 
-CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/var3/naive_algorithm/naive_main.cpp > CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.i
+CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/naive_algorithm/naive_main.cpp > CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.i
 
-CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/var3/naive_algorithm/naive_main.cpp -o CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.s
+CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/naive_algorithm/naive_main.cpp -o CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.s
 
 # Object files for target naive_matching
 naive_matching_OBJECTS = \
+"CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.o" \
 "CMakeFiles/naive_matching.dir/preprocessing/graph.cpp.o" \
 "CMakeFiles/naive_matching.dir/preprocessing/scale_projection.cpp.o" \
 "CMakeFiles/naive_matching.dir/grid/graph_grid.cpp.o" \
 "CMakeFiles/naive_matching.dir/grid/graph_grid_starting_node.cpp.o" \
 "CMakeFiles/naive_matching.dir/trajectories/trajectory.cpp.o" \
 "CMakeFiles/naive_matching.dir/trajectories/trajectory_split.cpp.o" \
-"CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.o" \
-"CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.o" \
-"CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.o"
+"CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.o" \
+"CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.o" \
+"CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.o"
 
 # External object files for target naive_matching
 naive_matching_EXTERNAL_OBJECTS =
 
+naive_matching: CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.o
 naive_matching: CMakeFiles/naive_matching.dir/preprocessing/graph.cpp.o
 naive_matching: CMakeFiles/naive_matching.dir/preprocessing/scale_projection.cpp.o
 naive_matching: CMakeFiles/naive_matching.dir/grid/graph_grid.cpp.o
 naive_matching: CMakeFiles/naive_matching.dir/grid/graph_grid_starting_node.cpp.o
 naive_matching: CMakeFiles/naive_matching.dir/trajectories/trajectory.cpp.o
 naive_matching: CMakeFiles/naive_matching.dir/trajectories/trajectory_split.cpp.o
-naive_matching: CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.o
-naive_matching: CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.o
-naive_matching: CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.o
+naive_matching: CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.o
+naive_matching: CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.o
+naive_matching: CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.o
 naive_matching: CMakeFiles/naive_matching.dir/build.make
 naive_matching: CMakeFiles/naive_matching.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable naive_matching"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable naive_matching"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/naive_matching.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

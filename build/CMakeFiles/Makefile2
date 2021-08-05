@@ -68,7 +68,6 @@ all: CMakeFiles/naive_matching.dir/all
 all: CMakeFiles/WDFMP_matching.dir/all
 all: CMakeFiles/DFMP_matching.dir/all
 all: CMakeFiles/kskip_matching.dir/all
-all: CMakeFiles/hmm_matching.dir/all
 all: CMakeFiles/preprocess.dir/all
 .PHONY : all
 
@@ -82,7 +81,6 @@ clean: CMakeFiles/naive_matching.dir/clean
 clean: CMakeFiles/WDFMP_matching.dir/clean
 clean: CMakeFiles/DFMP_matching.dir/clean
 clean: CMakeFiles/kskip_matching.dir/clean
-clean: CMakeFiles/hmm_matching.dir/clean
 clean: CMakeFiles/preprocess.dir/clean
 .PHONY : clean
 
@@ -93,7 +91,7 @@ clean: CMakeFiles/preprocess.dir/clean
 CMakeFiles/interleaved_matching.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=31,32,33,34,35,36,37,38,39,40,41 "Built target interleaved_matching"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=22,23,24,25,26,27,28,29,30,31,32 "Built target interleaved_matching"
 .PHONY : CMakeFiles/interleaved_matching.dir/all
 
 # Build rule for subdir invocation for target.
@@ -119,12 +117,12 @@ CMakeFiles/interleaved_matching.dir/clean:
 CMakeFiles/naive_matching.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=53,54,55,56,57,58,59,60,61,62 "Built target naive_matching"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=44,45,46,47,48,49,50,51,52,53,54 "Built target naive_matching"
 .PHONY : CMakeFiles/naive_matching.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/naive_matching.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles 10
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles 11
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/naive_matching.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles 0
 .PHONY : CMakeFiles/naive_matching.dir/rule
@@ -197,7 +195,7 @@ CMakeFiles/DFMP_matching.dir/clean:
 CMakeFiles/kskip_matching.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=42,43,44,45,46,47,48,49,50,51,52 "Built target kskip_matching"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=33,34,35,36,37,38,39,40,41,42,43 "Built target kskip_matching"
 .PHONY : CMakeFiles/kskip_matching.dir/all
 
 # Build rule for subdir invocation for target.
@@ -217,44 +215,18 @@ CMakeFiles/kskip_matching.dir/clean:
 .PHONY : CMakeFiles/kskip_matching.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/hmm_matching.dir
-
-# All Build rule for target.
-CMakeFiles/hmm_matching.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=22,23,24,25,26,27,28,29,30 "Built target hmm_matching"
-.PHONY : CMakeFiles/hmm_matching.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/hmm_matching.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles 9
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/hmm_matching.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles 0
-.PHONY : CMakeFiles/hmm_matching.dir/rule
-
-# Convenience name for target.
-hmm_matching: CMakeFiles/hmm_matching.dir/rule
-.PHONY : hmm_matching
-
-# clean rule for target.
-CMakeFiles/hmm_matching.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/clean
-.PHONY : CMakeFiles/hmm_matching.dir/clean
-
-#=============================================================================
 # Target rules for target CMakeFiles/preprocess.dir
 
 # All Build rule for target.
 CMakeFiles/preprocess.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/preprocess.dir/build.make CMakeFiles/preprocess.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/preprocess.dir/build.make CMakeFiles/preprocess.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=63,64,65,66,67 "Built target preprocess"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=55,56,57,58,59,60 "Built target preprocess"
 .PHONY : CMakeFiles/preprocess.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/preprocess.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles 6
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/preprocess.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles 0
 .PHONY : CMakeFiles/preprocess.dir/rule

@@ -243,6 +243,7 @@ void HubLabelOffsetList::writeHubLabelsBinary(std::string target_filename)
 
 void HubLabelOffsetList::importHubLabelsBinary(std::string input_filename)
 {
+    std::cout << "Reading binary hub  file" << std::endl; 
     auto t1 = chrono::high_resolution_clock::now();
     
     std::ifstream input_file;

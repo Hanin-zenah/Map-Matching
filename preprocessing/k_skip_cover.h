@@ -31,6 +31,7 @@
 #include <queue>
 #include <cmath>
 #include <time.h>
+#include <algorithm>
 #define DOUBLE_CMP_EPS (0.000000000001)
 #define NEW_LEVEL (INT_MIN)
 #define K (10)

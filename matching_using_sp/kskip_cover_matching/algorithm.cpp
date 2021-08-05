@@ -220,4 +220,3 @@ void backup_super_edge(priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& sou
         bigger_eps.push(data_ptr);
     }
 }
-

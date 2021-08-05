@@ -69,10 +69,24 @@ include CMakeFiles/preprocess.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/preprocess.dir/flags.make
 
+CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.o: CMakeFiles/preprocess.dir/flags.make
+CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.o: ../preprocessing/k_skip_cover.cpp
+CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.o: CMakeFiles/preprocess.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.o -MF CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.o.d -o CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/preprocessing/k_skip_cover.cpp
+
+CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/preprocessing/k_skip_cover.cpp > CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.i
+
+CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/preprocessing/k_skip_cover.cpp -o CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.s
+
 CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o: CMakeFiles/preprocess.dir/flags.make
 CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o: ../preprocessing/scale_projection.cpp
 CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o: CMakeFiles/preprocess.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o -MF CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o.d -o CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/preprocessing/scale_projection.cpp
 
 CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.i: cmake_force
@@ -86,7 +100,7 @@ CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.s: cmake_force
 CMakeFiles/preprocess.dir/preprocessing/graph.cpp.o: CMakeFiles/preprocess.dir/flags.make
 CMakeFiles/preprocess.dir/preprocessing/graph.cpp.o: ../preprocessing/graph.cpp
 CMakeFiles/preprocess.dir/preprocessing/graph.cpp.o: CMakeFiles/preprocess.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/preprocess.dir/preprocessing/graph.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/preprocess.dir/preprocessing/graph.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/preprocess.dir/preprocessing/graph.cpp.o -MF CMakeFiles/preprocess.dir/preprocessing/graph.cpp.o.d -o CMakeFiles/preprocess.dir/preprocessing/graph.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/preprocessing/graph.cpp
 
 CMakeFiles/preprocess.dir/preprocessing/graph.cpp.i: cmake_force
@@ -100,7 +114,7 @@ CMakeFiles/preprocess.dir/preprocessing/graph.cpp.s: cmake_force
 CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.o: CMakeFiles/preprocess.dir/flags.make
 CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.o: ../preprocessing/graph_subsampling.cpp
 CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.o: CMakeFiles/preprocess.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.o -MF CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.o.d -o CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/preprocessing/graph_subsampling.cpp
 
 CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.i: cmake_force
@@ -114,7 +128,7 @@ CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.s: cmake_force
 CMakeFiles/preprocess.dir/main_preprocessing.cpp.o: CMakeFiles/preprocess.dir/flags.make
 CMakeFiles/preprocess.dir/main_preprocessing.cpp.o: ../main_preprocessing.cpp
 CMakeFiles/preprocess.dir/main_preprocessing.cpp.o: CMakeFiles/preprocess.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/preprocess.dir/main_preprocessing.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/preprocess.dir/main_preprocessing.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/preprocess.dir/main_preprocessing.cpp.o -MF CMakeFiles/preprocess.dir/main_preprocessing.cpp.o.d -o CMakeFiles/preprocess.dir/main_preprocessing.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/main_preprocessing.cpp
 
 CMakeFiles/preprocess.dir/main_preprocessing.cpp.i: cmake_force
@@ -127,6 +141,7 @@ CMakeFiles/preprocess.dir/main_preprocessing.cpp.s: cmake_force
 
 # Object files for target preprocess
 preprocess_OBJECTS = \
+"CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.o" \
 "CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o" \
 "CMakeFiles/preprocess.dir/preprocessing/graph.cpp.o" \
 "CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.o" \
@@ -135,13 +150,14 @@ preprocess_OBJECTS = \
 # External object files for target preprocess
 preprocess_EXTERNAL_OBJECTS =
 
+preprocess: CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.o
 preprocess: CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o
 preprocess: CMakeFiles/preprocess.dir/preprocessing/graph.cpp.o
 preprocess: CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.o
 preprocess: CMakeFiles/preprocess.dir/main_preprocessing.cpp.o
 preprocess: CMakeFiles/preprocess.dir/build.make
 preprocess: CMakeFiles/preprocess.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable preprocess"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable preprocess"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/preprocess.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

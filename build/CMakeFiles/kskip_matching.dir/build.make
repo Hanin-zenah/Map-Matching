@@ -167,47 +167,47 @@ CMakeFiles/kskip_matching.dir/trajectories/trajectory_split.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kskip_matching.dir/trajectories/trajectory_split.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/trajectories/trajectory_split.cpp -o CMakeFiles/kskip_matching.dir/trajectories/trajectory_split.cpp.s
 
-CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.o: CMakeFiles/kskip_matching.dir/flags.make
-CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.o: ../var3/shared/shared.cpp
-CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.o: CMakeFiles/kskip_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.o -MF CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.o.d -o CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/var3/shared/shared.cpp
+CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.o: CMakeFiles/kskip_matching.dir/flags.make
+CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.o: ../matching_using_sp/shared/shared.cpp
+CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.o: CMakeFiles/kskip_matching.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.o -MF CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.o.d -o CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/shared/shared.cpp
 
-CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/var3/shared/shared.cpp > CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.i
+CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/shared/shared.cpp > CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.i
 
-CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/var3/shared/shared.cpp -o CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.s
+CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/shared/shared.cpp -o CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.s
 
-CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.o: CMakeFiles/kskip_matching.dir/flags.make
-CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.o: ../var3/kskip_cover_matching/algorithm.cpp
-CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.o: CMakeFiles/kskip_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.o -MF CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.o.d -o CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/var3/kskip_cover_matching/algorithm.cpp
+CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.o: CMakeFiles/kskip_matching.dir/flags.make
+CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.o: ../matching_using_sp/kskip_cover_matching/algorithm.cpp
+CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.o: CMakeFiles/kskip_matching.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.o -MF CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.o.d -o CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/kskip_cover_matching/algorithm.cpp
 
-CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/var3/kskip_cover_matching/algorithm.cpp > CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.i
+CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/kskip_cover_matching/algorithm.cpp > CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.i
 
-CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/var3/kskip_cover_matching/algorithm.cpp -o CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.s
+CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/kskip_cover_matching/algorithm.cpp -o CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.s
 
-CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.o: CMakeFiles/kskip_matching.dir/flags.make
-CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.o: ../var3/kskip_cover_matching/main.cpp
-CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.o: CMakeFiles/kskip_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.o -MF CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.o.d -o CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/var3/kskip_cover_matching/main.cpp
+CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.o: CMakeFiles/kskip_matching.dir/flags.make
+CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.o: ../matching_using_sp/kskip_cover_matching/main.cpp
+CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.o: CMakeFiles/kskip_matching.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.o -MF CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.o.d -o CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/kskip_cover_matching/main.cpp
 
-CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/var3/kskip_cover_matching/main.cpp > CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.i
+CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/kskip_cover_matching/main.cpp > CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.i
 
-CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/var3/kskip_cover_matching/main.cpp -o CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.s
+CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/kskip_cover_matching/main.cpp -o CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.s
 
 # Object files for target kskip_matching
 kskip_matching_OBJECTS = \
@@ -218,9 +218,9 @@ kskip_matching_OBJECTS = \
 "CMakeFiles/kskip_matching.dir/grid/graph_grid_starting_node.cpp.o" \
 "CMakeFiles/kskip_matching.dir/trajectories/trajectory.cpp.o" \
 "CMakeFiles/kskip_matching.dir/trajectories/trajectory_split.cpp.o" \
-"CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.o" \
-"CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.o" \
-"CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.o"
+"CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.o" \
+"CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.o" \
+"CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.o"
 
 # External object files for target kskip_matching
 kskip_matching_EXTERNAL_OBJECTS =
@@ -232,9 +232,9 @@ kskip_matching: CMakeFiles/kskip_matching.dir/grid/graph_grid.cpp.o
 kskip_matching: CMakeFiles/kskip_matching.dir/grid/graph_grid_starting_node.cpp.o
 kskip_matching: CMakeFiles/kskip_matching.dir/trajectories/trajectory.cpp.o
 kskip_matching: CMakeFiles/kskip_matching.dir/trajectories/trajectory_split.cpp.o
-kskip_matching: CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.o
-kskip_matching: CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.o
-kskip_matching: CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.o
+kskip_matching: CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.o
+kskip_matching: CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.o
+kskip_matching: CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.o
 kskip_matching: CMakeFiles/kskip_matching.dir/build.make
 kskip_matching: CMakeFiles/kskip_matching.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable kskip_matching"

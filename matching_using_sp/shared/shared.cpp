@@ -6,6 +6,11 @@
 int visit_count = 0;
 
 double nodes_dist(struct node g_nd, Point* t_nd) {
+    // if (t_nd == NULL)
+    // {
+
+    // }
+    assert(t_nd != NULL);
     double dist = sqrt(pow((t_nd -> latitude - g_nd.lat), 2.0) + pow((t_nd -> longitude - g_nd.longitude), 2.0));
     return dist;
 }

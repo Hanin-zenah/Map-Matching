@@ -3,11 +3,11 @@
 
 #include "../shared/shared.h"
 
-#define USE_HUB_LABELS (true)
+#define USE_HUB_LABELS (false)
 
-#if USE_HUB_LABELS
-    extern HubLabelOffsetList hl;
-#endif
+// #if USE_HUB_LABELS
+//     extern HubLabelOffsetList hl;
+// #endif
 
 struct fs_pq_data_ : public fs_pq_data {
     FSgraph* fsgraph;

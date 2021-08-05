@@ -167,47 +167,47 @@ CMakeFiles/interleaved_matching.dir/trajectories/trajectory_split.cpp.s: cmake_f
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/interleaved_matching.dir/trajectories/trajectory_split.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/trajectories/trajectory_split.cpp -o CMakeFiles/interleaved_matching.dir/trajectories/trajectory_split.cpp.s
 
-CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.o: CMakeFiles/interleaved_matching.dir/flags.make
-CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.o: ../var3/shared/shared.cpp
-CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.o: CMakeFiles/interleaved_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.o -MF CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.o.d -o CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/var3/shared/shared.cpp
+CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.o: CMakeFiles/interleaved_matching.dir/flags.make
+CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.o: ../matching_using_sp/shared/shared.cpp
+CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.o: CMakeFiles/interleaved_matching.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.o -MF CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.o.d -o CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/shared/shared.cpp
 
-CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/var3/shared/shared.cpp > CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.i
+CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/shared/shared.cpp > CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.i
 
-CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/var3/shared/shared.cpp -o CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.s
+CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/shared/shared.cpp -o CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.s
 
-CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.o: CMakeFiles/interleaved_matching.dir/flags.make
-CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.o: ../var3/interleaved_algorithm/interleaved.cpp
-CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.o: CMakeFiles/interleaved_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.o -MF CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.o.d -o CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/var3/interleaved_algorithm/interleaved.cpp
+CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.o: CMakeFiles/interleaved_matching.dir/flags.make
+CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.o: ../matching_using_sp/interleaved_algorithm/interleaved.cpp
+CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.o: CMakeFiles/interleaved_matching.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.o -MF CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.o.d -o CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/interleaved_algorithm/interleaved.cpp
 
-CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/var3/interleaved_algorithm/interleaved.cpp > CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.i
+CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/interleaved_algorithm/interleaved.cpp > CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.i
 
-CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/var3/interleaved_algorithm/interleaved.cpp -o CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.s
+CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/interleaved_algorithm/interleaved.cpp -o CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.s
 
-CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.o: CMakeFiles/interleaved_matching.dir/flags.make
-CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.o: ../var3/interleaved_algorithm/interleaved_main.cpp
-CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.o: CMakeFiles/interleaved_matching.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.o -MF CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.o.d -o CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/var3/interleaved_algorithm/interleaved_main.cpp
+CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.o: CMakeFiles/interleaved_matching.dir/flags.make
+CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.o: ../matching_using_sp/interleaved_algorithm/interleaved_main.cpp
+CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.o: CMakeFiles/interleaved_matching.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.o -MF CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.o.d -o CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.o -c /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/interleaved_algorithm/interleaved_main.cpp
 
-CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/var3/interleaved_algorithm/interleaved_main.cpp > CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.i
+CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/interleaved_algorithm/interleaved_main.cpp > CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.i
 
-CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/var3/interleaved_algorithm/interleaved_main.cpp -o CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.s
+CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/Roast/wsl/Map-Matching/matching_using_sp/interleaved_algorithm/interleaved_main.cpp -o CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.s
 
 # Object files for target interleaved_matching
 interleaved_matching_OBJECTS = \
@@ -218,9 +218,9 @@ interleaved_matching_OBJECTS = \
 "CMakeFiles/interleaved_matching.dir/grid/graph_grid_starting_node.cpp.o" \
 "CMakeFiles/interleaved_matching.dir/trajectories/trajectory.cpp.o" \
 "CMakeFiles/interleaved_matching.dir/trajectories/trajectory_split.cpp.o" \
-"CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.o" \
-"CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.o" \
-"CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.o"
+"CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.o" \
+"CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.o" \
+"CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.o"
 
 # External object files for target interleaved_matching
 interleaved_matching_EXTERNAL_OBJECTS =
@@ -232,9 +232,9 @@ interleaved_matching: CMakeFiles/interleaved_matching.dir/grid/graph_grid.cpp.o
 interleaved_matching: CMakeFiles/interleaved_matching.dir/grid/graph_grid_starting_node.cpp.o
 interleaved_matching: CMakeFiles/interleaved_matching.dir/trajectories/trajectory.cpp.o
 interleaved_matching: CMakeFiles/interleaved_matching.dir/trajectories/trajectory_split.cpp.o
-interleaved_matching: CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.o
-interleaved_matching: CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.o
-interleaved_matching: CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.o
+interleaved_matching: CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.o
+interleaved_matching: CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.o
+interleaved_matching: CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.o
 interleaved_matching: CMakeFiles/interleaved_matching.dir/build.make
 interleaved_matching: CMakeFiles/interleaved_matching.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/Users/Roast/wsl/Map-Matching/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable interleaved_matching"

@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/mnt/c/Users/Roast/wsl/Map-Matching/vendors/json/include
 
-CXX_FLAGS = -std=gnu++17
+CXX_FLAGS =  -fsanitize=address -g -std=gnu++17
 

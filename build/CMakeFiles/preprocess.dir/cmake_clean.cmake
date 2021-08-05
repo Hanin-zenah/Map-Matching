@@ -5,6 +5,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/preprocess.dir/preprocessing/graph.cpp.o.d"
   "CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.o"
   "CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.o.d"
+  "CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.o"
+  "CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.o.d"
   "CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o"
   "CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o.d"
   "preprocess"

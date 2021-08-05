@@ -11,6 +11,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/mnt/c/Users/Roast/wsl/Map-Matching/main_preprocessing.cpp" "CMakeFiles/preprocess.dir/main_preprocessing.cpp.o" "gcc" "CMakeFiles/preprocess.dir/main_preprocessing.cpp.o.d"
   "/mnt/c/Users/Roast/wsl/Map-Matching/preprocessing/graph.cpp" "CMakeFiles/preprocess.dir/preprocessing/graph.cpp.o" "gcc" "CMakeFiles/preprocess.dir/preprocessing/graph.cpp.o.d"
   "/mnt/c/Users/Roast/wsl/Map-Matching/preprocessing/graph_subsampling.cpp" "CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.o" "gcc" "CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.o.d"
+  "/mnt/c/Users/Roast/wsl/Map-Matching/preprocessing/k_skip_cover.cpp" "CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.o" "gcc" "CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.o.d"
   "/mnt/c/Users/Roast/wsl/Map-Matching/preprocessing/scale_projection.cpp" "CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o" "gcc" "CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o.d"
   )
 

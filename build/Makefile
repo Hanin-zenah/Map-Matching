@@ -182,19 +182,6 @@ kskip_matching/fast:
 .PHONY : kskip_matching/fast
 
 #=============================================================================
-# Target rules for targets named hmm_matching
-
-# Build rule for target.
-hmm_matching: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 hmm_matching
-.PHONY : hmm_matching
-
-# fast build rule for target.
-hmm_matching/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/build
-.PHONY : hmm_matching/fast
-
-#=============================================================================
 # Target rules for targets named preprocess
 
 # Build rule for target.
@@ -285,30 +272,6 @@ DF_sol/freespace_dijkstra.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/DF_sol/freespace_dijkstra.cpp.s
 .PHONY : DF_sol/freespace_dijkstra.cpp.s
 
-HMM/HMM.o: HMM/HMM.cpp.o
-.PHONY : HMM/HMM.o
-
-# target to build an object file
-HMM/HMM.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/HMM/HMM.cpp.o
-.PHONY : HMM/HMM.cpp.o
-
-HMM/HMM.i: HMM/HMM.cpp.i
-.PHONY : HMM/HMM.i
-
-# target to preprocess a source file
-HMM/HMM.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/HMM/HMM.cpp.i
-.PHONY : HMM/HMM.cpp.i
-
-HMM/HMM.s: HMM/HMM.cpp.s
-.PHONY : HMM/HMM.s
-
-# target to generate assembly for a file
-HMM/HMM.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/HMM/HMM.cpp.s
-.PHONY : HMM/HMM.cpp.s
-
 grid/graph_grid.o: grid/graph_grid.cpp.o
 .PHONY : grid/graph_grid.o
 
@@ -319,7 +282,6 @@ grid/graph_grid.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/grid/graph_grid.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/grid/graph_grid.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/grid/graph_grid.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/grid/graph_grid.cpp.o
 .PHONY : grid/graph_grid.cpp.o
 
 grid/graph_grid.i: grid/graph_grid.cpp.i
@@ -332,7 +294,6 @@ grid/graph_grid.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/grid/graph_grid.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/grid/graph_grid.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/grid/graph_grid.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/grid/graph_grid.cpp.i
 .PHONY : grid/graph_grid.cpp.i
 
 grid/graph_grid.s: grid/graph_grid.cpp.s
@@ -345,7 +306,6 @@ grid/graph_grid.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/grid/graph_grid.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/grid/graph_grid.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/grid/graph_grid.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/grid/graph_grid.cpp.s
 .PHONY : grid/graph_grid.cpp.s
 
 grid/graph_grid_starting_node.o: grid/graph_grid_starting_node.cpp.o
@@ -358,7 +318,6 @@ grid/graph_grid_starting_node.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/grid/graph_grid_starting_node.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/grid/graph_grid_starting_node.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/grid/graph_grid_starting_node.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/grid/graph_grid_starting_node.cpp.o
 .PHONY : grid/graph_grid_starting_node.cpp.o
 
 grid/graph_grid_starting_node.i: grid/graph_grid_starting_node.cpp.i
@@ -371,7 +330,6 @@ grid/graph_grid_starting_node.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/grid/graph_grid_starting_node.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/grid/graph_grid_starting_node.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/grid/graph_grid_starting_node.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/grid/graph_grid_starting_node.cpp.i
 .PHONY : grid/graph_grid_starting_node.cpp.i
 
 grid/graph_grid_starting_node.s: grid/graph_grid_starting_node.cpp.s
@@ -384,7 +342,6 @@ grid/graph_grid_starting_node.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/grid/graph_grid_starting_node.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/grid/graph_grid_starting_node.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/grid/graph_grid_starting_node.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/grid/graph_grid_starting_node.cpp.s
 .PHONY : grid/graph_grid_starting_node.cpp.s
 
 hub_labels/hub_labels.o: hub_labels/hub_labels.cpp.o
@@ -393,6 +350,7 @@ hub_labels/hub_labels.o: hub_labels/hub_labels.cpp.o
 # target to build an object file
 hub_labels/hub_labels.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/hub_labels/hub_labels.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/hub_labels/hub_labels.cpp.o
 .PHONY : hub_labels/hub_labels.cpp.o
 
@@ -402,6 +360,7 @@ hub_labels/hub_labels.i: hub_labels/hub_labels.cpp.i
 # target to preprocess a source file
 hub_labels/hub_labels.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/hub_labels/hub_labels.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/hub_labels/hub_labels.cpp.i
 .PHONY : hub_labels/hub_labels.cpp.i
 
@@ -411,6 +370,7 @@ hub_labels/hub_labels.s: hub_labels/hub_labels.cpp.s
 # target to generate assembly for a file
 hub_labels/hub_labels.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/hub_labels/hub_labels.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/hub_labels/hub_labels.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/hub_labels/hub_labels.cpp.s
 .PHONY : hub_labels/hub_labels.cpp.s
 
@@ -441,30 +401,6 @@ main_DFMP.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/main_DFMP.cpp.s
 .PHONY : main_DFMP.cpp.s
 
-main_HMM.o: main_HMM.cpp.o
-.PHONY : main_HMM.o
-
-# target to build an object file
-main_HMM.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/main_HMM.cpp.o
-.PHONY : main_HMM.cpp.o
-
-main_HMM.i: main_HMM.cpp.i
-.PHONY : main_HMM.i
-
-# target to preprocess a source file
-main_HMM.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/main_HMM.cpp.i
-.PHONY : main_HMM.cpp.i
-
-main_HMM.s: main_HMM.cpp.s
-.PHONY : main_HMM.s
-
-# target to generate assembly for a file
-main_HMM.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/main_HMM.cpp.s
-.PHONY : main_HMM.cpp.s
-
 main_preprocessing.o: main_preprocessing.cpp.o
 .PHONY : main_preprocessing.o
 
@@ -489,6 +425,180 @@ main_preprocessing.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/preprocess.dir/build.make CMakeFiles/preprocess.dir/main_preprocessing.cpp.s
 .PHONY : main_preprocessing.cpp.s
 
+matching_using_sp/interleaved_algorithm/interleaved.o: matching_using_sp/interleaved_algorithm/interleaved.cpp.o
+.PHONY : matching_using_sp/interleaved_algorithm/interleaved.o
+
+# target to build an object file
+matching_using_sp/interleaved_algorithm/interleaved.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.o
+.PHONY : matching_using_sp/interleaved_algorithm/interleaved.cpp.o
+
+matching_using_sp/interleaved_algorithm/interleaved.i: matching_using_sp/interleaved_algorithm/interleaved.cpp.i
+.PHONY : matching_using_sp/interleaved_algorithm/interleaved.i
+
+# target to preprocess a source file
+matching_using_sp/interleaved_algorithm/interleaved.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.i
+.PHONY : matching_using_sp/interleaved_algorithm/interleaved.cpp.i
+
+matching_using_sp/interleaved_algorithm/interleaved.s: matching_using_sp/interleaved_algorithm/interleaved.cpp.s
+.PHONY : matching_using_sp/interleaved_algorithm/interleaved.s
+
+# target to generate assembly for a file
+matching_using_sp/interleaved_algorithm/interleaved.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved.cpp.s
+.PHONY : matching_using_sp/interleaved_algorithm/interleaved.cpp.s
+
+matching_using_sp/interleaved_algorithm/interleaved_main.o: matching_using_sp/interleaved_algorithm/interleaved_main.cpp.o
+.PHONY : matching_using_sp/interleaved_algorithm/interleaved_main.o
+
+# target to build an object file
+matching_using_sp/interleaved_algorithm/interleaved_main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.o
+.PHONY : matching_using_sp/interleaved_algorithm/interleaved_main.cpp.o
+
+matching_using_sp/interleaved_algorithm/interleaved_main.i: matching_using_sp/interleaved_algorithm/interleaved_main.cpp.i
+.PHONY : matching_using_sp/interleaved_algorithm/interleaved_main.i
+
+# target to preprocess a source file
+matching_using_sp/interleaved_algorithm/interleaved_main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.i
+.PHONY : matching_using_sp/interleaved_algorithm/interleaved_main.cpp.i
+
+matching_using_sp/interleaved_algorithm/interleaved_main.s: matching_using_sp/interleaved_algorithm/interleaved_main.cpp.s
+.PHONY : matching_using_sp/interleaved_algorithm/interleaved_main.s
+
+# target to generate assembly for a file
+matching_using_sp/interleaved_algorithm/interleaved_main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/matching_using_sp/interleaved_algorithm/interleaved_main.cpp.s
+.PHONY : matching_using_sp/interleaved_algorithm/interleaved_main.cpp.s
+
+matching_using_sp/kskip_cover_matching/algorithm.o: matching_using_sp/kskip_cover_matching/algorithm.cpp.o
+.PHONY : matching_using_sp/kskip_cover_matching/algorithm.o
+
+# target to build an object file
+matching_using_sp/kskip_cover_matching/algorithm.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.o
+.PHONY : matching_using_sp/kskip_cover_matching/algorithm.cpp.o
+
+matching_using_sp/kskip_cover_matching/algorithm.i: matching_using_sp/kskip_cover_matching/algorithm.cpp.i
+.PHONY : matching_using_sp/kskip_cover_matching/algorithm.i
+
+# target to preprocess a source file
+matching_using_sp/kskip_cover_matching/algorithm.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.i
+.PHONY : matching_using_sp/kskip_cover_matching/algorithm.cpp.i
+
+matching_using_sp/kskip_cover_matching/algorithm.s: matching_using_sp/kskip_cover_matching/algorithm.cpp.s
+.PHONY : matching_using_sp/kskip_cover_matching/algorithm.s
+
+# target to generate assembly for a file
+matching_using_sp/kskip_cover_matching/algorithm.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/algorithm.cpp.s
+.PHONY : matching_using_sp/kskip_cover_matching/algorithm.cpp.s
+
+matching_using_sp/kskip_cover_matching/main.o: matching_using_sp/kskip_cover_matching/main.cpp.o
+.PHONY : matching_using_sp/kskip_cover_matching/main.o
+
+# target to build an object file
+matching_using_sp/kskip_cover_matching/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.o
+.PHONY : matching_using_sp/kskip_cover_matching/main.cpp.o
+
+matching_using_sp/kskip_cover_matching/main.i: matching_using_sp/kskip_cover_matching/main.cpp.i
+.PHONY : matching_using_sp/kskip_cover_matching/main.i
+
+# target to preprocess a source file
+matching_using_sp/kskip_cover_matching/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.i
+.PHONY : matching_using_sp/kskip_cover_matching/main.cpp.i
+
+matching_using_sp/kskip_cover_matching/main.s: matching_using_sp/kskip_cover_matching/main.cpp.s
+.PHONY : matching_using_sp/kskip_cover_matching/main.s
+
+# target to generate assembly for a file
+matching_using_sp/kskip_cover_matching/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/matching_using_sp/kskip_cover_matching/main.cpp.s
+.PHONY : matching_using_sp/kskip_cover_matching/main.cpp.s
+
+matching_using_sp/naive_algorithm/naive.o: matching_using_sp/naive_algorithm/naive.cpp.o
+.PHONY : matching_using_sp/naive_algorithm/naive.o
+
+# target to build an object file
+matching_using_sp/naive_algorithm/naive.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.o
+.PHONY : matching_using_sp/naive_algorithm/naive.cpp.o
+
+matching_using_sp/naive_algorithm/naive.i: matching_using_sp/naive_algorithm/naive.cpp.i
+.PHONY : matching_using_sp/naive_algorithm/naive.i
+
+# target to preprocess a source file
+matching_using_sp/naive_algorithm/naive.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.i
+.PHONY : matching_using_sp/naive_algorithm/naive.cpp.i
+
+matching_using_sp/naive_algorithm/naive.s: matching_using_sp/naive_algorithm/naive.cpp.s
+.PHONY : matching_using_sp/naive_algorithm/naive.s
+
+# target to generate assembly for a file
+matching_using_sp/naive_algorithm/naive.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive.cpp.s
+.PHONY : matching_using_sp/naive_algorithm/naive.cpp.s
+
+matching_using_sp/naive_algorithm/naive_main.o: matching_using_sp/naive_algorithm/naive_main.cpp.o
+.PHONY : matching_using_sp/naive_algorithm/naive_main.o
+
+# target to build an object file
+matching_using_sp/naive_algorithm/naive_main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.o
+.PHONY : matching_using_sp/naive_algorithm/naive_main.cpp.o
+
+matching_using_sp/naive_algorithm/naive_main.i: matching_using_sp/naive_algorithm/naive_main.cpp.i
+.PHONY : matching_using_sp/naive_algorithm/naive_main.i
+
+# target to preprocess a source file
+matching_using_sp/naive_algorithm/naive_main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.i
+.PHONY : matching_using_sp/naive_algorithm/naive_main.cpp.i
+
+matching_using_sp/naive_algorithm/naive_main.s: matching_using_sp/naive_algorithm/naive_main.cpp.s
+.PHONY : matching_using_sp/naive_algorithm/naive_main.s
+
+# target to generate assembly for a file
+matching_using_sp/naive_algorithm/naive_main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/matching_using_sp/naive_algorithm/naive_main.cpp.s
+.PHONY : matching_using_sp/naive_algorithm/naive_main.cpp.s
+
+matching_using_sp/shared/shared.o: matching_using_sp/shared/shared.cpp.o
+.PHONY : matching_using_sp/shared/shared.o
+
+# target to build an object file
+matching_using_sp/shared/shared.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.o
+.PHONY : matching_using_sp/shared/shared.cpp.o
+
+matching_using_sp/shared/shared.i: matching_using_sp/shared/shared.cpp.i
+.PHONY : matching_using_sp/shared/shared.i
+
+# target to preprocess a source file
+matching_using_sp/shared/shared.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.i
+.PHONY : matching_using_sp/shared/shared.cpp.i
+
+matching_using_sp/shared/shared.s: matching_using_sp/shared/shared.cpp.s
+.PHONY : matching_using_sp/shared/shared.s
+
+# target to generate assembly for a file
+matching_using_sp/shared/shared.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/matching_using_sp/shared/shared.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/matching_using_sp/shared/shared.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/matching_using_sp/shared/shared.cpp.s
+.PHONY : matching_using_sp/shared/shared.cpp.s
+
 preprocessing/graph.o: preprocessing/graph.cpp.o
 .PHONY : preprocessing/graph.o
 
@@ -499,7 +609,6 @@ preprocessing/graph.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/preprocessing/graph.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/preprocessing/graph.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/preprocessing/graph.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/preprocessing/graph.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/preprocess.dir/build.make CMakeFiles/preprocess.dir/preprocessing/graph.cpp.o
 .PHONY : preprocessing/graph.cpp.o
 
@@ -513,7 +622,6 @@ preprocessing/graph.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/preprocessing/graph.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/preprocessing/graph.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/preprocessing/graph.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/preprocessing/graph.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/preprocess.dir/build.make CMakeFiles/preprocess.dir/preprocessing/graph.cpp.i
 .PHONY : preprocessing/graph.cpp.i
 
@@ -527,7 +635,6 @@ preprocessing/graph.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/preprocessing/graph.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/preprocessing/graph.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/preprocessing/graph.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/preprocessing/graph.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/preprocess.dir/build.make CMakeFiles/preprocess.dir/preprocessing/graph.cpp.s
 .PHONY : preprocessing/graph.cpp.s
 
@@ -555,6 +662,30 @@ preprocessing/graph_subsampling.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/preprocess.dir/build.make CMakeFiles/preprocess.dir/preprocessing/graph_subsampling.cpp.s
 .PHONY : preprocessing/graph_subsampling.cpp.s
 
+preprocessing/k_skip_cover.o: preprocessing/k_skip_cover.cpp.o
+.PHONY : preprocessing/k_skip_cover.o
+
+# target to build an object file
+preprocessing/k_skip_cover.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/preprocess.dir/build.make CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.o
+.PHONY : preprocessing/k_skip_cover.cpp.o
+
+preprocessing/k_skip_cover.i: preprocessing/k_skip_cover.cpp.i
+.PHONY : preprocessing/k_skip_cover.i
+
+# target to preprocess a source file
+preprocessing/k_skip_cover.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/preprocess.dir/build.make CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.i
+.PHONY : preprocessing/k_skip_cover.cpp.i
+
+preprocessing/k_skip_cover.s: preprocessing/k_skip_cover.cpp.s
+.PHONY : preprocessing/k_skip_cover.s
+
+# target to generate assembly for a file
+preprocessing/k_skip_cover.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/preprocess.dir/build.make CMakeFiles/preprocess.dir/preprocessing/k_skip_cover.cpp.s
+.PHONY : preprocessing/k_skip_cover.cpp.s
+
 preprocessing/scale_projection.o: preprocessing/scale_projection.cpp.o
 .PHONY : preprocessing/scale_projection.o
 
@@ -565,7 +696,6 @@ preprocessing/scale_projection.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/preprocessing/scale_projection.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/preprocessing/scale_projection.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/preprocessing/scale_projection.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/preprocessing/scale_projection.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/preprocess.dir/build.make CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.o
 .PHONY : preprocessing/scale_projection.cpp.o
 
@@ -579,7 +709,6 @@ preprocessing/scale_projection.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/preprocessing/scale_projection.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/preprocessing/scale_projection.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/preprocessing/scale_projection.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/preprocessing/scale_projection.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/preprocess.dir/build.make CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.i
 .PHONY : preprocessing/scale_projection.cpp.i
 
@@ -593,7 +722,6 @@ preprocessing/scale_projection.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/preprocessing/scale_projection.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/preprocessing/scale_projection.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/preprocessing/scale_projection.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/preprocessing/scale_projection.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/preprocess.dir/build.make CMakeFiles/preprocess.dir/preprocessing/scale_projection.cpp.s
 .PHONY : preprocessing/scale_projection.cpp.s
 
@@ -607,7 +735,6 @@ trajectories/trajectory.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/trajectories/trajectory.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/trajectories/trajectory.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/trajectories/trajectory.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/trajectories/trajectory.cpp.o
 .PHONY : trajectories/trajectory.cpp.o
 
 trajectories/trajectory.i: trajectories/trajectory.cpp.i
@@ -620,7 +747,6 @@ trajectories/trajectory.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/trajectories/trajectory.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/trajectories/trajectory.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/trajectories/trajectory.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/trajectories/trajectory.cpp.i
 .PHONY : trajectories/trajectory.cpp.i
 
 trajectories/trajectory.s: trajectories/trajectory.cpp.s
@@ -633,7 +759,6 @@ trajectories/trajectory.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/trajectories/trajectory.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/trajectories/trajectory.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/trajectories/trajectory.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/trajectories/trajectory.cpp.s
 .PHONY : trajectories/trajectory.cpp.s
 
 trajectories/trajectory_split.o: trajectories/trajectory_split.cpp.o
@@ -646,7 +771,6 @@ trajectories/trajectory_split.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/trajectories/trajectory_split.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/trajectories/trajectory_split.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/trajectories/trajectory_split.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/trajectories/trajectory_split.cpp.o
 .PHONY : trajectories/trajectory_split.cpp.o
 
 trajectories/trajectory_split.i: trajectories/trajectory_split.cpp.i
@@ -659,7 +783,6 @@ trajectories/trajectory_split.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/trajectories/trajectory_split.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/trajectories/trajectory_split.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/trajectories/trajectory_split.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/trajectories/trajectory_split.cpp.i
 .PHONY : trajectories/trajectory_split.cpp.i
 
 trajectories/trajectory_split.s: trajectories/trajectory_split.cpp.s
@@ -672,182 +795,7 @@ trajectories/trajectory_split.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WDFMP_matching.dir/build.make CMakeFiles/WDFMP_matching.dir/trajectories/trajectory_split.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/DFMP_matching.dir/build.make CMakeFiles/DFMP_matching.dir/trajectories/trajectory_split.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/trajectories/trajectory_split.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/hmm_matching.dir/build.make CMakeFiles/hmm_matching.dir/trajectories/trajectory_split.cpp.s
 .PHONY : trajectories/trajectory_split.cpp.s
-
-var3/interleaved_algorithm/interleaved.o: var3/interleaved_algorithm/interleaved.cpp.o
-.PHONY : var3/interleaved_algorithm/interleaved.o
-
-# target to build an object file
-var3/interleaved_algorithm/interleaved.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.o
-.PHONY : var3/interleaved_algorithm/interleaved.cpp.o
-
-var3/interleaved_algorithm/interleaved.i: var3/interleaved_algorithm/interleaved.cpp.i
-.PHONY : var3/interleaved_algorithm/interleaved.i
-
-# target to preprocess a source file
-var3/interleaved_algorithm/interleaved.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.i
-.PHONY : var3/interleaved_algorithm/interleaved.cpp.i
-
-var3/interleaved_algorithm/interleaved.s: var3/interleaved_algorithm/interleaved.cpp.s
-.PHONY : var3/interleaved_algorithm/interleaved.s
-
-# target to generate assembly for a file
-var3/interleaved_algorithm/interleaved.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved.cpp.s
-.PHONY : var3/interleaved_algorithm/interleaved.cpp.s
-
-var3/interleaved_algorithm/interleaved_main.o: var3/interleaved_algorithm/interleaved_main.cpp.o
-.PHONY : var3/interleaved_algorithm/interleaved_main.o
-
-# target to build an object file
-var3/interleaved_algorithm/interleaved_main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.o
-.PHONY : var3/interleaved_algorithm/interleaved_main.cpp.o
-
-var3/interleaved_algorithm/interleaved_main.i: var3/interleaved_algorithm/interleaved_main.cpp.i
-.PHONY : var3/interleaved_algorithm/interleaved_main.i
-
-# target to preprocess a source file
-var3/interleaved_algorithm/interleaved_main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.i
-.PHONY : var3/interleaved_algorithm/interleaved_main.cpp.i
-
-var3/interleaved_algorithm/interleaved_main.s: var3/interleaved_algorithm/interleaved_main.cpp.s
-.PHONY : var3/interleaved_algorithm/interleaved_main.s
-
-# target to generate assembly for a file
-var3/interleaved_algorithm/interleaved_main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/var3/interleaved_algorithm/interleaved_main.cpp.s
-.PHONY : var3/interleaved_algorithm/interleaved_main.cpp.s
-
-var3/kskip_cover_matching/algorithm.o: var3/kskip_cover_matching/algorithm.cpp.o
-.PHONY : var3/kskip_cover_matching/algorithm.o
-
-# target to build an object file
-var3/kskip_cover_matching/algorithm.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.o
-.PHONY : var3/kskip_cover_matching/algorithm.cpp.o
-
-var3/kskip_cover_matching/algorithm.i: var3/kskip_cover_matching/algorithm.cpp.i
-.PHONY : var3/kskip_cover_matching/algorithm.i
-
-# target to preprocess a source file
-var3/kskip_cover_matching/algorithm.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.i
-.PHONY : var3/kskip_cover_matching/algorithm.cpp.i
-
-var3/kskip_cover_matching/algorithm.s: var3/kskip_cover_matching/algorithm.cpp.s
-.PHONY : var3/kskip_cover_matching/algorithm.s
-
-# target to generate assembly for a file
-var3/kskip_cover_matching/algorithm.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/algorithm.cpp.s
-.PHONY : var3/kskip_cover_matching/algorithm.cpp.s
-
-var3/kskip_cover_matching/main.o: var3/kskip_cover_matching/main.cpp.o
-.PHONY : var3/kskip_cover_matching/main.o
-
-# target to build an object file
-var3/kskip_cover_matching/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.o
-.PHONY : var3/kskip_cover_matching/main.cpp.o
-
-var3/kskip_cover_matching/main.i: var3/kskip_cover_matching/main.cpp.i
-.PHONY : var3/kskip_cover_matching/main.i
-
-# target to preprocess a source file
-var3/kskip_cover_matching/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.i
-.PHONY : var3/kskip_cover_matching/main.cpp.i
-
-var3/kskip_cover_matching/main.s: var3/kskip_cover_matching/main.cpp.s
-.PHONY : var3/kskip_cover_matching/main.s
-
-# target to generate assembly for a file
-var3/kskip_cover_matching/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/var3/kskip_cover_matching/main.cpp.s
-.PHONY : var3/kskip_cover_matching/main.cpp.s
-
-var3/naive_algorithm/naive.o: var3/naive_algorithm/naive.cpp.o
-.PHONY : var3/naive_algorithm/naive.o
-
-# target to build an object file
-var3/naive_algorithm/naive.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.o
-.PHONY : var3/naive_algorithm/naive.cpp.o
-
-var3/naive_algorithm/naive.i: var3/naive_algorithm/naive.cpp.i
-.PHONY : var3/naive_algorithm/naive.i
-
-# target to preprocess a source file
-var3/naive_algorithm/naive.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.i
-.PHONY : var3/naive_algorithm/naive.cpp.i
-
-var3/naive_algorithm/naive.s: var3/naive_algorithm/naive.cpp.s
-.PHONY : var3/naive_algorithm/naive.s
-
-# target to generate assembly for a file
-var3/naive_algorithm/naive.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive.cpp.s
-.PHONY : var3/naive_algorithm/naive.cpp.s
-
-var3/naive_algorithm/naive_main.o: var3/naive_algorithm/naive_main.cpp.o
-.PHONY : var3/naive_algorithm/naive_main.o
-
-# target to build an object file
-var3/naive_algorithm/naive_main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.o
-.PHONY : var3/naive_algorithm/naive_main.cpp.o
-
-var3/naive_algorithm/naive_main.i: var3/naive_algorithm/naive_main.cpp.i
-.PHONY : var3/naive_algorithm/naive_main.i
-
-# target to preprocess a source file
-var3/naive_algorithm/naive_main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.i
-.PHONY : var3/naive_algorithm/naive_main.cpp.i
-
-var3/naive_algorithm/naive_main.s: var3/naive_algorithm/naive_main.cpp.s
-.PHONY : var3/naive_algorithm/naive_main.s
-
-# target to generate assembly for a file
-var3/naive_algorithm/naive_main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/var3/naive_algorithm/naive_main.cpp.s
-.PHONY : var3/naive_algorithm/naive_main.cpp.s
-
-var3/shared/shared.o: var3/shared/shared.cpp.o
-.PHONY : var3/shared/shared.o
-
-# target to build an object file
-var3/shared/shared.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.o
-.PHONY : var3/shared/shared.cpp.o
-
-var3/shared/shared.i: var3/shared/shared.cpp.i
-.PHONY : var3/shared/shared.i
-
-# target to preprocess a source file
-var3/shared/shared.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.i
-.PHONY : var3/shared/shared.cpp.i
-
-var3/shared/shared.s: var3/shared/shared.cpp.s
-.PHONY : var3/shared/shared.s
-
-# target to generate assembly for a file
-var3/shared/shared.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/interleaved_matching.dir/build.make CMakeFiles/interleaved_matching.dir/var3/shared/shared.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/naive_matching.dir/build.make CMakeFiles/naive_matching.dir/var3/shared/shared.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/kskip_matching.dir/build.make CMakeFiles/kskip_matching.dir/var3/shared/shared.cpp.s
-.PHONY : var3/shared/shared.cpp.s
 
 # Help Target
 help:
@@ -859,7 +807,6 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... DFMP_matching"
 	@echo "... WDFMP_matching"
-	@echo "... hmm_matching"
 	@echo "... interleaved_matching"
 	@echo "... kskip_matching"
 	@echo "... naive_matching"
@@ -873,9 +820,6 @@ help:
 	@echo "... DF_sol/freespace_dijkstra.o"
 	@echo "... DF_sol/freespace_dijkstra.i"
 	@echo "... DF_sol/freespace_dijkstra.s"
-	@echo "... HMM/HMM.o"
-	@echo "... HMM/HMM.i"
-	@echo "... HMM/HMM.s"
 	@echo "... grid/graph_grid.o"
 	@echo "... grid/graph_grid.i"
 	@echo "... grid/graph_grid.s"
@@ -888,18 +832,39 @@ help:
 	@echo "... main_DFMP.o"
 	@echo "... main_DFMP.i"
 	@echo "... main_DFMP.s"
-	@echo "... main_HMM.o"
-	@echo "... main_HMM.i"
-	@echo "... main_HMM.s"
 	@echo "... main_preprocessing.o"
 	@echo "... main_preprocessing.i"
 	@echo "... main_preprocessing.s"
+	@echo "... matching_using_sp/interleaved_algorithm/interleaved.o"
+	@echo "... matching_using_sp/interleaved_algorithm/interleaved.i"
+	@echo "... matching_using_sp/interleaved_algorithm/interleaved.s"
+	@echo "... matching_using_sp/interleaved_algorithm/interleaved_main.o"
+	@echo "... matching_using_sp/interleaved_algorithm/interleaved_main.i"
+	@echo "... matching_using_sp/interleaved_algorithm/interleaved_main.s"
+	@echo "... matching_using_sp/kskip_cover_matching/algorithm.o"
+	@echo "... matching_using_sp/kskip_cover_matching/algorithm.i"
+	@echo "... matching_using_sp/kskip_cover_matching/algorithm.s"
+	@echo "... matching_using_sp/kskip_cover_matching/main.o"
+	@echo "... matching_using_sp/kskip_cover_matching/main.i"
+	@echo "... matching_using_sp/kskip_cover_matching/main.s"
+	@echo "... matching_using_sp/naive_algorithm/naive.o"
+	@echo "... matching_using_sp/naive_algorithm/naive.i"
+	@echo "... matching_using_sp/naive_algorithm/naive.s"
+	@echo "... matching_using_sp/naive_algorithm/naive_main.o"
+	@echo "... matching_using_sp/naive_algorithm/naive_main.i"
+	@echo "... matching_using_sp/naive_algorithm/naive_main.s"
+	@echo "... matching_using_sp/shared/shared.o"
+	@echo "... matching_using_sp/shared/shared.i"
+	@echo "... matching_using_sp/shared/shared.s"
 	@echo "... preprocessing/graph.o"
 	@echo "... preprocessing/graph.i"
 	@echo "... preprocessing/graph.s"
 	@echo "... preprocessing/graph_subsampling.o"
 	@echo "... preprocessing/graph_subsampling.i"
 	@echo "... preprocessing/graph_subsampling.s"
+	@echo "... preprocessing/k_skip_cover.o"
+	@echo "... preprocessing/k_skip_cover.i"
+	@echo "... preprocessing/k_skip_cover.s"
 	@echo "... preprocessing/scale_projection.o"
 	@echo "... preprocessing/scale_projection.i"
 	@echo "... preprocessing/scale_projection.s"
@@ -909,27 +874,6 @@ help:
 	@echo "... trajectories/trajectory_split.o"
 	@echo "... trajectories/trajectory_split.i"
 	@echo "... trajectories/trajectory_split.s"
-	@echo "... var3/interleaved_algorithm/interleaved.o"
-	@echo "... var3/interleaved_algorithm/interleaved.i"
-	@echo "... var3/interleaved_algorithm/interleaved.s"
-	@echo "... var3/interleaved_algorithm/interleaved_main.o"
-	@echo "... var3/interleaved_algorithm/interleaved_main.i"
-	@echo "... var3/interleaved_algorithm/interleaved_main.s"
-	@echo "... var3/kskip_cover_matching/algorithm.o"
-	@echo "... var3/kskip_cover_matching/algorithm.i"
-	@echo "... var3/kskip_cover_matching/algorithm.s"
-	@echo "... var3/kskip_cover_matching/main.o"
-	@echo "... var3/kskip_cover_matching/main.i"
-	@echo "... var3/kskip_cover_matching/main.s"
-	@echo "... var3/naive_algorithm/naive.o"
-	@echo "... var3/naive_algorithm/naive.i"
-	@echo "... var3/naive_algorithm/naive.s"
-	@echo "... var3/naive_algorithm/naive_main.o"
-	@echo "... var3/naive_algorithm/naive_main.i"
-	@echo "... var3/naive_algorithm/naive_main.s"
-	@echo "... var3/shared/shared.o"
-	@echo "... var3/shared/shared.i"
-	@echo "... var3/shared/shared.s"
 .PHONY : help
 
 

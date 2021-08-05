@@ -3,12 +3,8 @@
 int main(int argc, char** argv) {
     /* read processed graph from a given file */
     Graph after_graph = GRAPH_INIT;
-<<<<<<< HEAD
-    read_processed_graph("../example_files/saarland_all_preprocessed_cover_10.txt", &after_graph);
-=======
     // read_processed_graph("../example_files/saarland_all_preprocessed_cover_10.txt", &after_graph);
     read_processed_graph("saarland_kskip.txt", &after_graph);
->>>>>>> kskip not working
     double lat_min = after_graph.original_min_lat;
     double lon_min = after_graph.original_min_long;
     double lat_scale = after_graph.lat_scale;

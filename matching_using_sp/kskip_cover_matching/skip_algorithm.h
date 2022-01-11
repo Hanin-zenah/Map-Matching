@@ -3,6 +3,10 @@
 
 #include "../shared/shared.h"
 
+extern bool use_hub_labels;
+
+// #define LOG_OUTPUT
+
 class FSgraph_ : public FSgraph {
     public: 
         /* bool flag to indicate whether or not we have passed through a cover node */
@@ -48,5 +52,7 @@ void backup_super_edge(priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& sou
                             priority_queue<struct fs_pq_data_*, vector<struct fs_pq_data_*>, Comp_eps>& bigger_eps,
                             Graph* graph, unordered_map<int, SP_Tree*>& cover_nodes_sp);
 
+
+void dijkstra_hub(Graph* graph, SP_Tree* tree, int target, HubLabelOffsetList& hub_labels);
 
 #endif

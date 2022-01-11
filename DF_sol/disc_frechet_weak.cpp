@@ -1,10 +1,7 @@
 #include "disc_frechet_grid.h"
 #include "../grid/graph_grid.h"
-<<<<<<< HEAD
-=======
 
 Grid_search gs;
->>>>>>> Hub labels
 
 double nodes_dist(struct node g_nd, Point* t_nd) {
     double dist = sqrt(pow((t_nd -> latitude - g_nd.lat), 2.0) + pow((t_nd -> longitude - g_nd.longitude), 2.0));

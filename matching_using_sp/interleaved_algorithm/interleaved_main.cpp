@@ -3,7 +3,7 @@
 void test_queries(Graph* graph, HubLabelOffsetList& hl);
 void construct_path(Graph* graph);
 vector<Trajectory> generate_trajectories(Graph* graph, int max_num_trajectories, int init_dijkstra_rank, int dijkstra_rank_multiplier, double add_noise);
-
+void trajectory_add_noise(Trajectory traj, double noise);
 
 // #if USE_HUB_LABELS
 //     HubLabelOffsetList hl;
@@ -89,10 +89,24 @@ int main(int argc, char** argv) {
     Traj_subsample ts;
 
 
-    // vector<Trajectory> trajectories = generate_trajectories(&after_graph, 50, 100, 2, 50);
-    // t.write_processed_trajectories(trajectories, "saarland_trajectories.txt");
+    // vector<Trajectory> trajectories = generate_trajectories(&after_graph, 50, 100, 2, 0);
+    // t.write_processed_trajectories(trajectories, "saarland_trajectories_noise0.txt");
 
-    vector<Trajectory> trajectories = t.read_processed_trajectories("saarland_trajectories.txt", 0);
+    // trajectories = generate_trajectories(&after_graph, 50, 100, 2, 50);
+    // t.write_processed_trajectories(trajectories, "saarland_trajectories_noise50.txt");
+
+    // trajectories = generate_trajectories(&after_graph, 50, 100, 2, 100);
+    // t.write_processed_trajectories(trajectories, "saarland_trajectories_noise100.txt");
+
+    // trajectories = generate_trajectories(&after_graph, 50, 100, 2, 200);
+    // t.write_processed_trajectories(trajectories, "saarland_trajectories_noise200.txt");
+
+    // trajectories = generate_trajectories(&after_graph, 50, 100, 2, 400);
+    // t.write_processed_trajectories(trajectories, "saarland_trajectories_noise400.txt");
+
+    // exit(0);
+
+    vector<Trajectory> trajectories = t.read_processed_trajectories("saarland_trajectories_noise100.txt", 0);
 
 
     int total_duration = 0;
@@ -219,6 +233,10 @@ vector<Trajectory> generate_trajectories(Graph* graph, int max_num_trajectories,
     return trajectories;
 }
 
+void trajectory_add_noise(Trajectory traj, double noise)
+{
+
+}
 
 void test_queries(Graph* graph, HubLabelOffsetList& hl)
 {

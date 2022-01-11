@@ -3,14 +3,17 @@
 // Try longer queries
 // Plot outputs
 
+bool use_hub_labels = false;
+
 int visit_count = 0;
 
 double nodes_dist(struct node g_nd, Point* t_nd) {
-    // if (t_nd == NULL)
-    // {
-
-    // }
-    assert(t_nd != NULL);
+    if (t_nd == nullptr)
+    {
+        cout << "t_nd is null" << endl;
+        exit(1);
+    }
+    assert(t_nd != nullptr);
     double dist = sqrt(pow((t_nd -> latitude - g_nd.lat), 2.0) + pow((t_nd -> longitude - g_nd.longitude), 2.0));
     return dist;
 }

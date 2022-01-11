@@ -1,7 +1,28 @@
 #include "skip_algorithm.h"
 
+int n_fs_edges = 0;
+int n_local_sources = 0;
+int n_cover_sources = 0;
+int n_local_dist_comp = 0;
+int n_cover_dist_comp = 0;
+
+int distance_time = 0;
+int final_check_time = 0;
+
+// std::ofstream log_output;
+extern std::ofstream log_output;
+
 Grid_search gs;
 pair<double, double> match(Graph* graph, Trajectory* traj, Grid* grid) {
+
+    n_fs_edges = 0;
+    n_local_sources = 0;
+    n_cover_sources = 0;
+    n_local_dist_comp = 0;
+    n_cover_dist_comp = 0;
+    final_check_time = 0;
+    distance_time = 0;
+
     unordered_map<int, SP_Tree*> cover_nodes_sp; //stores the sp trees for the reached cover nodes -> to be reused by other sources 
     double global_eps = INFINITY; //optimal eps value for the matching 
     priority_queue<struct fs_pq_data_*, vector<struct fs_pq_data_*>, Comp_eps> bigger_eps; //global pq to hold all the non-reachable free space transitions for all the reached source nodes
@@ -28,18 +49,59 @@ pair<double, double> match(Graph* graph, Trajectory* traj, Grid* grid) {
             //get the matching path cost 
             cost = matching_path_cost(graph, cur_edge->fsedge->trg); //change this to be computed for every transition as it is being built (to save time) 
             
+            // SP_Tree* t2 = new SP_Tree(cur_edge->fsgraph->source);
+            // // Dijkstra(graph, t, cur_edge->fsedge->trg->vid); //replace this with hub labels
+            // hubLabelShortestPath(graph, t2, cur_edge->fsedge->trg->vid, hl);
+            // double hub_real_cost = t2->nodes.at(cur_edge->fsedge->trg->vid)->distance;
+
+            auto t1 = chrono::high_resolution_clock::now();          
+
             //get the real sp cost/distance value between source and target
             SP_Tree* t = new SP_Tree(cur_edge->fsgraph->source);
-            Dijkstra(graph, t, cur_edge->fsedge->trg->vid); //replace this with hub labels
+            if (use_hub_labels) {
+                hubLabelShortestPath(graph, t, cur_edge->fsedge->trg->vid, hl);
+            } else {
+                Dijkstra(graph, t, cur_edge->fsedge->trg->vid);
+            }
+            n_cover_dist_comp++;
             double real_cost = t->nodes.at(cur_edge->fsedge->trg->vid)->distance;
 
+            auto t2 = chrono::high_resolution_clock::now();
+            auto duration = chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+            final_check_time += duration;
+
+            // cout << "Final check duration in microseconds: " << duration << endl;
+
+            // cout << "dijkstra_cost: " << real_cost << "hub_cost: " << hub_real_cost << '\n';
+
             /* we are done when we have found a shortest path */
-            finished = (cost - real_cost <= 0.3);
+            // finished = (cost - real_cost <= 0.3);
+            finished = (cost - real_cost <= 3); // Increased threshold to 3 to account for rounding errors from different precision in stored hub label distances
         }
     }
-    
-    print_path(graph, "shortest_matching_path.dat", cur_edge->fsedge->trg);
-    write_sur_graph(cur_edge->fsgraph, graph, "survived_graph.dat");
+
+    cout << "n_fs_edges: " << n_fs_edges << endl;
+    cout << "n_local_sources: " << n_local_sources << endl;
+    cout << "n_cover_sources: " << n_cover_sources << endl;
+    cout << "n_local_dist_comp: " << n_local_dist_comp << endl;
+    cout << "n_cover_dist_comp: " << n_cover_dist_comp << endl;
+    cout << "final check total time: " << final_check_time << " microseconds" << endl;
+    cout << "distance check total time: " << distance_time << " microseconds" << endl;
+    cout << endl;
+    cout << n_fs_edges << endl;
+    cout << n_local_sources << endl;
+    cout << n_cover_sources << endl;
+    cout << n_local_dist_comp << endl;
+    cout << n_cover_dist_comp << endl;
+    cout << final_check_time << endl;
+    cout << distance_time << endl;
+
+    #ifdef LOG_OUTPUT    
+    log_output << n_fs_edges << ", " << n_local_sources << ", " << n_cover_sources << ", " << n_local_dist_comp << ", " << n_cover_dist_comp << ", " << final_check_time << ", " << distance_time << '\n';
+    #endif
+
+    // print_path(graph, "shortest_matching_path.dat", cur_edge->fsedge->trg);
+    // write_sur_graph(cur_edge->fsgraph, graph, "survived_graph.dat");
 
     return make_pair(global_eps, cost);
 }
@@ -47,6 +109,7 @@ pair<double, double> match(Graph* graph, Trajectory* traj, Grid* grid) {
 struct fs_pq_data_* traversal(Graph* graph, Trajectory* traj, double* global_eps, priority_queue<fs_pq_data_*, vector<fs_pq_data_*>, Comp_eps>& bigger_eps,
                     stack<fs_pq_data*>& reachable, struct fs_pq_data_* cur_edge, priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& source_set, unordered_map<int, SP_Tree*>& cover_nodes_sp) {
     FSnode* fnd = cur_edge->fsedge->trg; 
+    n_fs_edges++;
     vector<int> incidents = get_incident(graph, fnd -> vid);
 
     //build horizontal node 
@@ -57,7 +120,16 @@ struct fs_pq_data_* traversal(Graph* graph, Trajectory* traj, double* global_eps
         /* if the neighbour is not in the sp DAG rooted at 'root' or if neighbour not settled yet 
             -> continue sp computation until a sp is found to this neighbour */
         if(!cur_edge->tree->node_settled(neighbour_id)) {
-            Dijkstra(graph, cur_edge->tree, neighbour_id);
+            auto t1 = chrono::high_resolution_clock::now();
+            if (use_hub_labels) {
+                dijkstra_hub(graph, cur_edge->tree, neighbour_id, hl);
+            } else {
+                Dijkstra(graph, cur_edge->tree, neighbour_id);
+            }            
+            auto t2 = chrono::high_resolution_clock::now();
+            auto duration = chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+            distance_time += duration;
+            n_local_dist_comp++;
         }
 
         /* only if incident node is also a neighbour of the current node in the sp DAG 
@@ -131,6 +203,7 @@ void build_node(struct fs_pq_data_* cur_edge, FSgraph_* fsgraph, Graph* graph, T
                 if(cover_nodes_sp.find(fnd->vid) == cover_nodes_sp.end()) {
                     //first time passing through this tree 
                     cover_nodes_sp[fnd->vid] = new SP_Tree(fnd->vid); 
+                    n_cover_sources++;
                 }
 
                 cur_edge->fsgraph->old_tree_size = cur_edge->tree->nodes.size();
@@ -190,10 +263,12 @@ void backup_super_edge(priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& sou
             if(cover_nodes_sp.find(s.first) == cover_nodes_sp.end()) {
                 //this cover node has not been reached before 
                 cover_nodes_sp[s.first] = new SP_Tree(s.first);
+                n_cover_sources++;
             }
             tree = cover_nodes_sp.at(s.first);
         } else {
             tree = new SP_Tree(s.first);
+            n_local_sources++;
         }
 
         fsgraph -> source = s.first;
@@ -219,4 +294,100 @@ void backup_super_edge(priority_queue<Gpair, vector<Gpair>, Comp_dist_to_t>& sou
         data_ptr -> tree = tree;
         bigger_eps.push(data_ptr);
     }
+}
+
+/**
+ * Finds the minimum distance to the target node using a local Dijkstra search to find local
+ * skip nodes, then takes the minimum distance path of all possible paths through each skip node.
+*/
+void dijkstra_hub(Graph* graph, SP_Tree* tree, int target, HubLabelOffsetList& hub_labels)
+{
+    // cout << "start1" 
+
+    if (tree->nodes.find(target) != tree->nodes.end()) { return; }
+
+    // Perform a Dijkstra search along the backwards edges from the target to get all surrounding skip nodes
+    std::set<int> skip_nodes;
+
+    SP_Tree* local_tree = new SP_Tree(target);
+
+    while (!local_tree->sp_pq.empty())
+    {
+        pair<pair<int, int>, double> cur_edge = local_tree->sp_pq.top();
+        int edge_target = cur_edge.first.second;
+
+        local_tree->sp_pq.pop();
+
+        if(local_tree->nodes.at(edge_target)->settled) {
+            continue; 
+        }
+
+        visit_count++;
+        local_tree->nodes.at(edge_target)->settled = true;
+
+        // If the node is a cover node
+        if (graph->nodes[edge_target].cover_node)
+        {
+            // cout << "adding skip node" << edge_target << endl;
+            skip_nodes.insert(edge_target);
+            continue;
+        }
+
+        for(int i=0; i < get_indeg(graph, edge_target); i++)
+        {
+            int in_edge = get_in_edge(graph, edge_target, i);
+            double dist = local_tree->nodes.at(edge_target)->distance + graph->edges[in_edge].cost;
+            int neighbour = graph->edges[in_edge].srcid;
+
+            // cout << edge_target << " " << graph->edges[in_edge].trgtid << " " << graph->edges[in_edge].srcid << endl;
+
+            //check if tree[neighbour] exists
+            if(local_tree->nodes.find(neighbour) == local_tree->nodes.end()) {
+                local_tree->nodes[neighbour] = (spTreeNodeData*)malloc(sizeof(spTreeNodeData));
+                // visit_count++;
+                local_tree->nodes.at(neighbour)->settled = false; 
+                local_tree->nodes.at(neighbour)->distance = INFINITY; 
+            }
+            if(local_tree->nodes.at(neighbour)->settled) {
+                continue;
+            }
+            if(dist < local_tree->nodes.at(neighbour)->distance) {
+                local_tree->nodes.at(neighbour)->distance = dist;
+                local_tree->nodes.at(neighbour)->settled = false;
+                local_tree->sp_pq.push(make_pair(make_pair(edge_target, neighbour), dist));
+            }
+        }
+    }
+    
+    cout << "n_skip_nodes: " << skip_nodes.size() << endl;
+    if (skip_nodes.empty())
+    {
+        cout << "SKIP NODES NOT FOUND" << endl;
+        exit(0);
+    }
+
+    // Find the minimum distance path to the target by taking the minimum distance path of the path
+    // passing through each skip node
+    double min_distance = std::numeric_limits<double>::infinity();
+    for (int skip_node : skip_nodes)
+    {        
+        // Perform a hub label call if the skip node is not already stored in the shortest path tree
+        if (tree->nodes.find(skip_node) == tree->nodes.end())
+        {
+            hubLabelShortestPath(graph, tree, skip_node, hub_labels);
+        }
+
+        double local_dist = local_tree->nodes[skip_node]->distance;
+        double global_dist = tree->nodes[skip_node]->distance;
+        double total_dist = local_dist + global_dist;
+        min_distance = std::min(min_distance, total_dist);
+    }
+    
+    tree->nodes[target] = (spTreeNodeData*)malloc(sizeof(spTreeNodeData));
+    tree->nodes[target]->settled = true;
+    tree->nodes[target]->distance = min_distance;
+
+    delete local_tree;
+
+    // cout << "min_dist: " << min_distance << endl;
 }

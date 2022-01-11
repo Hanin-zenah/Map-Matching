@@ -3,6 +3,12 @@
 
 void Traj::add_point(Trajectory* traj, double longitude, double latitude, int timestamp) {
     Point* point = (Point*) malloc(sizeof(Point));
+    if (point == NULL)
+    {
+        cerr << "malloc of point failed" << endl;
+        exit(0);
+    }
+
     point -> longitude = longitude; 
     point -> latitude = latitude;
     point -> timestamp = timestamp;
@@ -13,6 +19,11 @@ void Traj::add_point(Trajectory* traj, double longitude, double latitude, int ti
     if(size > 1) {
         //add an edge between the two most recent points
         Tedge* edge = (Tedge*) malloc(sizeof(Tedge));
+        if (edge == NULL)
+        {
+            cerr << "malloc of edge failed" << endl;
+            exit(0);
+        }
         edge -> src = traj -> points[size - 2];
         edge -> trg = traj -> points[size - 1];
         traj -> edges.push_back(edge);

@@ -11,6 +11,8 @@
 #include <queue> 
 #include <stack>
 #include <unordered_map> 
+#include <unordered_set>
+#include <set>
 #include <cstdlib>
 #include <chrono>
 #include "../../grid/graph_grid.h"
@@ -31,6 +33,7 @@
 using namespace std;
 
 extern int visit_count;
+extern HubLabelOffsetList hl;
 
 typedef struct fsnode {
     int vid;
@@ -124,8 +127,17 @@ class SP_Tree {
             nodes.at(root)->distance = 0.0;
             nodes.at(root)->settled = false;
             sp_pq.push(make_pair(make_pair(-1, root), 0.0));
-        }
+        } 
         bool is_sp_edge(Graph* graph, int vid, int neighbour_id) {
+            if (nodes.find(vid) == nodes.end())
+            {
+                cout << "START NODE NOT FOUND" << endl;
+            }
+            if (nodes.find(neighbour_id) == nodes.end())
+            {
+                cout << "END NODE NOT FOUND" << endl;
+            }
+
             double edge_cost = get_edge_cost(graph, vid, neighbour_id);
             return (edge_cost - (nodes.at(neighbour_id) -> distance - nodes.at(vid) -> distance) <= 0.01); // Adjusted to 0.01 to account for inconsistent precision between hub label distances and graph distances
             // return (edge_cost - (nodes.at(neighbour_id) -> distance - nodes.at(vid) -> distance) <= DOUBLE_CMP_EPS);

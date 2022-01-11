@@ -13,17 +13,14 @@
 #include <limits>
 
 // Check file reading time
-// Print32_t average and max label sizes
-// Print32_t distance query times, how many labels checked
+// Print average and max label sizes
+// Print distance query times, how many labels checked
 // Sort hl lists
 // interleaved: check if a vertex has a HL list and use it for distance query if list exists
-// issue: hl distance outputs are int32_tegers -> change to int32_ts
+// issue: hl distance outputs are integers -> change to ints
 // gnuplot
 
 // Allocate larger buffer for IO
-
-// store labels in binary file
-
 
 
 using namespace std;
